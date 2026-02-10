@@ -4,60 +4,65 @@ import { useEffect, useRef, useState } from "react";
 
 const plans = [
   {
-    name: "Basic",
-    description: "Perfect for solo practitioners getting started",
-    price: "49",
-    period: "month",
+    name: "Bronze",
+    price: "4",
+    period: "Per Filing",
     features: [
-      "Up to 25 filings per month",
-      "Basic document templates",
-      "Email support",
-      "Case management dashboard",
-      "Mobile access",
-      "Document storage (5GB)",
+      "Pay-per-filing plan",
+      "Single user account",
+      "Electronic service",
+      "Case history",
+      "Document access",
+      "Support",
     ],
     highlighted: false,
-    cta: "Get Started",
+    cta: "Sign up now!",
   },
   {
-    name: "Professional",
-    description: "Ideal for small to medium law firms",
-    price: "149",
-    period: "month",
+    name: "Silver",
+    price: "25",
+    period: "Per Month",
     features: [
-      "Unlimited filings",
-      "Advanced document templates",
-      "Priority email & phone support",
-      "Advanced case management",
-      "Mobile & tablet apps",
-      "Document storage (50GB)",
-      "Team collaboration tools",
-      "Custom notifications",
-      "Calendar integration",
+      "Single attorney plan",
+      "Allow paralegals and staff to file under single attorney",
+      "Electronic service",
+      "Case history",
+      "Document access",
+      "Support",
+    ],
+    highlighted: false,
+    cta: "Sign up now!",
+  },
+  {
+    name: "Gold",
+    price: "21",
+    period: "Per Month (Starting)",
+    badge: "MOST POPULAR",
+    features: [
+      "Multiple attorneys at reduced prices",
+      "Paralegal & staff use",
+      "Electronic service",
+      "Case history",
+      "Document access",
+      "Support",
     ],
     highlighted: true,
-    badge: "Most Popular",
-    cta: "Start Free Trial",
+    cta: "Sign up now!",
   },
   {
-    name: "Enterprise",
-    description: "For large firms with custom needs",
-    price: "Custom",
-    period: null,
+    name: "Platinum",
+    price: "240",
+    period: "Per Year (Starting)",
     features: [
-      "Unlimited filings",
-      "Custom document templates",
-      "Dedicated account manager",
-      "Advanced analytics & reporting",
-      "White-label options",
-      "Unlimited document storage",
-      "API access",
-      "Custom integrations",
-      "Training & onboarding",
-      "SLA guarantee",
+      "Annual unlimited plan for single & multiple attorney firms",
+      "Paralegal & staff use",
+      "Electronic service",
+      "Case history",
+      "Document access",
+      "Support",
     ],
     highlighted: false,
-    cta: "Contact Sales",
+    cta: "Sign up now!",
   },
 ];
 
@@ -119,7 +124,7 @@ export default function PricingPlans() {
         </div>
 
         {/* Pricing cards */}
-        <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto items-start">
           {plans.map((plan, index) => {
             const isHovered = hoveredIndex === index;
             const isAnyHovered = hoveredIndex !== null;
@@ -139,117 +144,64 @@ export default function PricingPlans() {
               >
                 {/* Badge for highlighted plan */}
                 {plan.badge && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-                    <div className="px-4 py-2 bg-gradient-to-r from-accent to-accent-dark text-white text-sm font-bold rounded-full shadow-lg">
-                      {plan.badge}
-                    </div>
+                  <div className="bg-accent text-white text-center py-3 px-4 rounded-t-2xl font-bold text-sm tracking-wide">
+                    {plan.name}
+                    <div className="text-xs font-semibold tracking-widest mt-0.5">{plan.badge}</div>
                   </div>
                 )}
 
                 <div
-                  className={`relative h-full rounded-3xl transition-all duration-500 ${
+                  className={`relative h-full transition-all duration-500 ${
                     plan.highlighted
-                      ? "bg-gradient-to-br from-primary to-primary-dark shadow-2xl border-2 border-accent"
+                      ? "bg-white shadow-2xl border-2 border-accent rounded-b-2xl"
                       : isHovered
-                      ? "bg-white shadow-2xl border-2 border-accent"
-                      : "bg-white shadow-lg border border-gray-200"
+                      ? "bg-white shadow-2xl border-2 border-accent rounded-2xl"
+                      : "bg-white shadow-lg border border-gray-200 rounded-2xl"
                   }`}
                 >
                   {/* Glow effect */}
                   {(plan.highlighted || isHovered) && (
-                    <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-accent/20 to-transparent blur-xl -z-10" />
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/20 to-transparent blur-xl -z-10" />
                   )}
 
-                  <div className="p-8 sm:p-10">
-                    {/* Plan name */}
-                    <h3
-                      className={`text-2xl font-bold mb-2 transition-colors ${
-                        plan.highlighted ? "text-white" : "text-gray-900"
-                      }`}
-                    >
-                      {plan.name}
-                    </h3>
-                    <p
-                      className={`text-sm mb-6 transition-colors ${
-                        plan.highlighted ? "text-white/80" : "text-gray-600"
-                      }`}
-                    >
-                      {plan.description}
-                    </p>
+                  <div className="p-8 text-center">
+                    {/* Plan name (if not highlighted, show here) */}
+                    {!plan.badge && (
+                      <h3 className="text-2xl font-bold text-accent mb-6">
+                        {plan.name}
+                      </h3>
+                    )}
 
                     {/* Price */}
-                    <div className="mb-8">
-                      <div className="flex items-baseline gap-2">
-                        {plan.period ? (
-                          <>
-                            <span
-                              className={`text-5xl font-bold transition-colors ${
-                                plan.highlighted ? "text-white" : "text-gray-900"
-                              }`}
-                            >
-                              ${plan.price}
-                            </span>
-                            <span
-                              className={`text-lg transition-colors ${
-                                plan.highlighted ? "text-white/70" : "text-gray-600"
-                              }`}
-                            >
-                              /{plan.period}
-                            </span>
-                          </>
-                        ) : (
-                          <span
-                            className={`text-4xl font-bold transition-colors ${
-                              plan.highlighted ? "text-white" : "text-gray-900"
-                            }`}
-                          >
-                            {plan.price}
-                          </span>
-                        )}
+                    <div className="mb-6">
+                      <div className="flex items-start justify-center">
+                        <span className="text-sm text-gray-500 mt-2 mr-1">$</span>
+                        <span className="text-6xl font-bold text-gray-900">
+                          {plan.price}
+                        </span>
                       </div>
+                      <p className="text-sm text-gray-500 mt-1">{plan.period}</p>
                     </div>
+
+                    {/* Divider */}
+                    <div className="border-t border-gray-200 my-6" />
+
+                    {/* Features list */}
+                    <ul className="space-y-4 mb-8">
+                      {plan.features.map((feature, fIndex) => (
+                        <li key={fIndex} className="text-sm text-gray-700 text-center">
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
 
                     {/* CTA button */}
                     <a
                       href="/get-started"
-                      className={`block w-full py-4 px-6 rounded-xl font-bold text-center transition-all mb-8 ${
-                        plan.highlighted
-                          ? "bg-accent hover:bg-accent-dark text-white shadow-lg hover:shadow-xl hover:scale-105"
-                          : "bg-gray-900 hover:bg-gray-800 text-white shadow-md hover:shadow-lg hover:scale-105"
-                      }`}
+                      className="inline-block w-full py-3 px-6 bg-accent hover:bg-accent-dark text-white font-bold text-sm rounded-md transition-all hover:shadow-lg hover:scale-105"
                     >
                       {plan.cta}
                     </a>
-
-                    {/* Features list */}
-                    <ul className="space-y-4">
-                      {plan.features.map((feature, fIndex) => (
-                        <li key={fIndex} className="flex items-start gap-3">
-                          <div
-                            className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 transition-colors ${
-                              plan.highlighted
-                                ? "bg-accent/20 text-accent-light"
-                                : "bg-gray-100 text-accent"
-                            }`}
-                          >
-                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                              <path
-                                fillRule="evenodd"
-                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </div>
-                          <span
-                            className={`text-sm transition-colors ${
-                              plan.highlighted ? "text-white/90" : "text-gray-700"
-                            }`}
-                          >
-                            {feature}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
                   </div>
                 </div>
               </div>

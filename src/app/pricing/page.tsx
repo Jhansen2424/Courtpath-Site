@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 
 export const metadata = {
   title: "Pricing | Courtpath E-Filing",
-  description: "Transparent pricing for legal professionals. Choose from Basic, Professional, or Enterprise plans. No hidden fees, cancel anytime.",
+  description: "Transparent pricing for legal professionals. Choose from Bronze, Silver, Gold, or Platinum plans. No hidden fees, cancel anytime.",
 };
 
 export default function PricingPage() {
