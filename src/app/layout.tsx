@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Courpath",
-  description: "Courpath Site",
+  title: "Courtpath | Premier Court E-Filing Provider",
+  description: "Your premier court e-filing provider. Simplify your legal document filing process.",
 };
 
 export default function RootLayout({
@@ -12,7 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="antialiased">{children}</body>
     </html>
   );
 }
