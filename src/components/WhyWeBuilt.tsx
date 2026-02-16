@@ -154,7 +154,7 @@ export default function WhyWeBuilt() {
               style={{ transitionDelay: "800ms" }}
             >
               <a
-                href="/get-started"
+                href="/pricing"
                 className="inline-block px-8 py-4 bg-accent hover:bg-accent-dark text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105"
               >
                 SIGN UP

@@ -15,7 +15,8 @@
       "Bash(ren:*)",
       "Bash(powershell -Command:*)",
       "Bash(powershell:*)",
-      "Bash(npx next build)"
+      "Bash(npx next build)",
+      "Bash(dir:*)"
     ]
   }
 }

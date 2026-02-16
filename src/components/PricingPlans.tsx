@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 const plans = [
   {
     name: "Bronze",
+    planId: "bronze",
     price: "4",
     period: "Per Filing",
     features: [
@@ -20,6 +21,7 @@ const plans = [
   },
   {
     name: "Silver",
+    planId: "silver",
     price: "25",
     period: "Per Month",
     features: [
@@ -35,6 +37,7 @@ const plans = [
   },
   {
     name: "Gold",
+    planId: "gold",
     price: "21",
     period: "Per Month (Starting)",
     badge: "MOST POPULAR",
@@ -51,6 +54,7 @@ const plans = [
   },
   {
     name: "Platinum",
+    planId: "platinum",
     price: "240",
     period: "Per Year (Starting)",
     features: [
@@ -70,6 +74,30 @@ export default function PricingPlans() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+
+  const handleCheckout = async (planId: string) => {
+    setLoadingPlan(planId);
+    try {
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: planId }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to start checkout");
+      }
+
+      window.location.href = data.url;
+    } catch (error) {
+      console.error("Checkout error:", error);
+      alert("Something went wrong. Please try again.");
+      setLoadingPlan(null);
+    }
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -196,12 +224,13 @@ export default function PricingPlans() {
                     </ul>
 
                     {/* CTA button */}
-                    <a
-                      href="/get-started"
-                      className="inline-block w-full py-3 px-6 bg-accent hover:bg-accent-dark text-white font-bold text-sm rounded-md transition-all hover:shadow-lg hover:scale-105"
+                    <button
+                      onClick={() => handleCheckout(plan.planId)}
+                      disabled={loadingPlan !== null}
+                      className="inline-block w-full py-3 px-6 bg-accent hover:bg-accent-dark text-white font-bold text-sm rounded-md transition-all hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                     >
-                      {plan.cta}
-                    </a>
+                      {loadingPlan === plan.planId ? "Redirecting..." : plan.cta}
+                    </button>
                   </div>
                 </div>
               </div>

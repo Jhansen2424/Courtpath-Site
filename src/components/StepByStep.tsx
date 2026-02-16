@@ -248,7 +248,7 @@ export default function StepByStep() {
                       Get automatic reminders for every upcoming court date and deadline.
                     </p>
                     <a
-                      href="#"
+                      href="/tutorials"
                       className="inline-flex items-center gap-2 text-primary hover:text-primary-dark font-medium text-sm group"
                     >
                       See how it works

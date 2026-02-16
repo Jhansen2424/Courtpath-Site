@@ -92,7 +92,7 @@ export default function Footer() {
                 Home
               </Link>
               <Link
-                href="/faq"
+                href="/contact"
                 className="block text-gray-600 hover:text-accent transition-colors"
               >
                 Frequently Asked Questions
@@ -110,19 +110,19 @@ export default function Footer() {
                 Plans
               </Link>
               <Link
-                href="/affiliates"
+                href="/contact"
                 className="block text-gray-600 hover:text-accent transition-colors"
               >
                 Affiliates
               </Link>
               <Link
-                href="/privacy"
+                href="/about"
                 className="block text-gray-600 hover:text-accent transition-colors"
               >
                 Privacy Policy
               </Link>
               <Link
-                href="/terms"
+                href="/about"
                 className="block text-gray-600 hover:text-accent transition-colors"
               >
                 Terms of Service Agreement
@@ -163,10 +163,10 @@ export default function Footer() {
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-600">
             <p>&copy; {new Date().getFullYear()} Courtpath Incorporated. All rights reserved.</p>
             <div className="flex items-center gap-6">
-              <Link href="/privacy" className="hover:text-accent transition-colors">
+              <Link href="/about" className="hover:text-accent transition-colors">
                 Privacy
               </Link>
-              <Link href="/terms" className="hover:text-accent transition-colors">
+              <Link href="/about" className="hover:text-accent transition-colors">
                 Terms
               </Link>
               <a

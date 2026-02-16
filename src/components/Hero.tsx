@@ -45,14 +45,14 @@ export default function Hero() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mb-16">
             <Link
-              href="/get-started"
+              href="/pricing"
               className="group relative px-8 py-4 bg-accent text-white font-medium rounded-lg overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(212,164,65,0.3)]"
             >
               <span className="relative z-10">Start Filing Today</span>
               <div className="absolute inset-0 bg-gradient-to-r from-accent-light to-accent opacity-0 group-hover:opacity-100 transition-opacity" />
             </Link>
             <Link
-              href="/demo"
+              href="/tutorials"
               className="group px-8 py-4 text-white font-medium rounded-lg border border-white/20 hover:bg-white/5 transition-all flex items-center gap-2"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

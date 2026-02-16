@@ -143,7 +143,7 @@ export default function CaseAccess() {
               style={{ transitionDelay: "1000ms" }}
             >
               <a
-                href="#"
+                href="/pricing"
                 className="inline-flex items-center gap-2 text-accent hover:text-accent-dark font-medium group"
               >
                 Learn more about case management
