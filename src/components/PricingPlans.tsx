@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 
 const plans = [
   {
@@ -74,30 +75,6 @@ export default function PricingPlans() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
-
-  const handleCheckout = async (planId: string) => {
-    setLoadingPlan(planId);
-    try {
-      const response = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: planId }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to start checkout");
-      }
-
-      window.location.href = data.url;
-    } catch (error) {
-      console.error("Checkout error:", error);
-      alert("Something went wrong. Please try again.");
-      setLoadingPlan(null);
-    }
-  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -224,13 +201,12 @@ export default function PricingPlans() {
                     </ul>
 
                     {/* CTA button */}
-                    <button
-                      onClick={() => handleCheckout(plan.planId)}
-                      disabled={loadingPlan !== null}
-                      className="inline-block w-full py-3 px-6 bg-accent hover:bg-accent-dark text-white font-bold text-sm rounded-md transition-all hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    <Link
+                      href={`/signup/${plan.planId}`}
+                      className="inline-block w-full py-3 px-6 bg-accent hover:bg-accent-dark text-white font-bold text-sm rounded-md transition-all hover:shadow-lg hover:scale-105 text-center"
                     >
-                      {loadingPlan === plan.planId ? "Redirecting..." : plan.cta}
-                    </button>
+                      {plan.cta}
+                    </Link>
                   </div>
                 </div>
               </div>

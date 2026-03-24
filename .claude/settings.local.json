@@ -16,7 +16,8 @@
       "Bash(powershell -Command:*)",
       "Bash(powershell:*)",
       "Bash(npx next build)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(ls -1 /c/Users/wartw/OneDrive/Desktop/Courpath-Site/src/components/*.tsx)"
     ]
   }
 }

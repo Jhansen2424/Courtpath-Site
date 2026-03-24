@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 export default function ContactForm() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -22,6 +24,41 @@ export default function ContactForm() {
 
     return () => observer.disconnect();
   }, []);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setStatus("sending");
+    setErrorMsg("");
+
+    const form = e.currentTarget;
+    const data = {
+      firstName: (form.elements.namedItem("firstName") as HTMLInputElement).value,
+      lastName: (form.elements.namedItem("lastName") as HTMLInputElement).value,
+      phone: (form.elements.namedItem("phone") as HTMLInputElement).value,
+      email: (form.elements.namedItem("email") as HTMLInputElement).value,
+      subject: (form.elements.namedItem("subject") as HTMLSelectElement).value,
+      message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
+    };
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) {
+        const body = await res.json();
+        throw new Error(body.error || "Something went wrong");
+      }
+
+      setStatus("sent");
+      form.reset();
+    } catch (err) {
+      setStatus("error");
+      setErrorMsg(err instanceof Error ? err.message : "Failed to send message.");
+    }
+  }
 
   return (
     <section ref={sectionRef} className="relative py-24 bg-white overflow-hidden">
@@ -130,7 +167,7 @@ export default function ContactForm() {
               <div className="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-br from-accent/20 to-accent/10 rounded-2xl rotate-12 blur-xl" />
 
               <div className="relative bg-white rounded-3xl shadow-2xl border border-gray-100 p-8 sm:p-12">
-                <form className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Name fields */}
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div>
@@ -241,12 +278,25 @@ export default function ContactForm() {
                     </div>
                   </div>
 
+                  {/* Status messages */}
+                  {status === "sent" && (
+                    <div className="p-4 rounded-lg bg-green-50 border border-green-200 text-green-800 text-sm font-medium">
+                      Message sent successfully! We'll get back to you soon.
+                    </div>
+                  )}
+                  {status === "error" && (
+                    <div className="p-4 rounded-lg bg-red-50 border border-red-200 text-red-800 text-sm font-medium">
+                      {errorMsg}
+                    </div>
+                  )}
+
                   {/* Submit button */}
                   <button
                     type="submit"
-                    className="w-full sm:w-auto px-10 py-4 bg-accent hover:bg-accent-dark text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105 flex items-center justify-center gap-2 group"
+                    disabled={status === "sending"}
+                    className="w-full sm:w-auto px-10 py-4 bg-accent hover:bg-accent-dark text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
-                    <span>Submit</span>
+                    <span>{status === "sending" ? "Sending..." : "Submit"}</span>
                     <svg
                       className="w-5 h-5 group-hover:translate-x-1 transition-transform"
                       fill="none"
