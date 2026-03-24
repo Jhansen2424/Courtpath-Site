@@ -4,17 +4,17 @@ import { useEffect, useRef, useState } from "react";
 
 const videos = [
   {
-    id: "xv3gI-uWBws",
+    id: "hdPoZsmXMiU",
     title: "Step 1 – Signing up and creating an account",
     description: "Learn how to create your Courtpath account and get started with e-filing",
   },
   {
-    id: "-ln-iwde1H4",
+    id: "Omj00p2cW7Q",
     title: "Step 2 – Filing a new case",
     description: "Step-by-step guide to filing a new case in the Courtpath system",
   },
   {
-    id: "uTgFBWPVdBY",
+    id: "AYp04iqrWZA",
     title: "Step 3 – Enter an Appearance",
     description: "How to enter an appearance for an existing case",
   },
