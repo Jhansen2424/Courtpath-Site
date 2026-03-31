@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -106,10 +106,11 @@ interface FormState {
 export default function SignupPage({
   params,
 }: {
-  params: { plan: string };
+  params: Promise<{ plan: string }>;
 }) {
+  const { plan: planParam } = use(params);
   const router = useRouter();
-  const planKey = params.plan.toLowerCase();
+  const planKey = planParam.toLowerCase();
   const plan = PLAN_INFO[planKey];
 
   const [form, setForm] = useState<FormState>({

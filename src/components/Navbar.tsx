@@ -48,12 +48,12 @@ export default function Navbar() {
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center gap-3">
-            <Link
-              href="/pricing"
+            <a
+              href="https://courtpath-production.up.railway.app/"
               className="px-4 py-2 text-sm text-gray-700 hover:text-primary transition-colors font-medium"
             >
               Log In
-            </Link>
+            </a>
             <Link
               href="/pricing"
               className="px-6 py-2.5 text-sm text-white bg-accent hover:bg-accent-dark rounded-lg transition-colors font-semibold shadow-md hover:shadow-lg"
@@ -107,13 +107,13 @@ export default function Navbar() {
                 </Link>
               ))}
               <hr className="border-gray-200 my-2" />
-              <Link
-                href="/pricing"
+              <a
+                href="https://courtpath-production.up.railway.app/"
                 className="px-4 py-3 text-gray-700 hover:bg-gray-50 transition-all font-medium"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Log In
-              </Link>
+              </a>
               <Link
                 href="/pricing"
                 className="mx-4 my-2 px-4 py-3 text-center text-white bg-accent hover:bg-accent-dark rounded-lg transition-colors font-semibold"
