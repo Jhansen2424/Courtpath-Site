@@ -99,7 +99,7 @@ export default function ContactHero() {
                   </svg>
                 ),
                 label: "Phone",
-                value: "(855) 262-2748",
+                value: "(801) 797-3119",
               },
               {
                 icon: (

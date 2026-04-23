@@ -7,8 +7,8 @@ const plans = [
   {
     name: "Bronze",
     planId: "bronze",
-    price: "4",
-    period: "Per Filing",
+    price: "Free",
+    period: "Launch Special",
     features: [
       "Pay-per-filing plan",
       "Single user account",
@@ -23,8 +23,8 @@ const plans = [
   {
     name: "Silver",
     planId: "silver",
-    price: "25",
-    period: "Per Month",
+    price: "Free",
+    period: "Launch Special",
     features: [
       "Single attorney plan",
       "Allow paralegals and staff to file under single attorney",
@@ -39,8 +39,8 @@ const plans = [
   {
     name: "Gold",
     planId: "gold",
-    price: "21",
-    period: "Per Month (Starting)",
+    price: "Free",
+    period: "Launch Special",
     badge: "MOST POPULAR",
     features: [
       "Multiple attorneys at reduced prices",
@@ -56,8 +56,8 @@ const plans = [
   {
     name: "Platinum",
     planId: "platinum",
-    price: "240",
-    period: "Per Year (Starting)",
+    price: "Free",
+    period: "Launch Special",
     features: [
       "Annual unlimited plan for single & multiple attorney firms",
       "Paralegal & staff use",
@@ -180,7 +180,6 @@ export default function PricingPlans() {
                     {/* Price */}
                     <div className="mb-6">
                       <div className="flex items-start justify-center">
-                        <span className="text-sm text-gray-500 mt-2 mr-1">$</span>
                         <span className="text-6xl font-bold text-gray-900">
                           {plan.price}
                         </span>

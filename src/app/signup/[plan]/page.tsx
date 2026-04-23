@@ -19,8 +19,8 @@ const PLAN_INFO: Record<
 > = {
   bronze: {
     name: "Bronze",
-    price: "$4",
-    period: "per filing",
+    price: "Free",
+    period: "",
     description: "Pay only when you file. Perfect for occasional filers.",
     features: [
       "Pay-per-filing plan",
@@ -34,8 +34,8 @@ const PLAN_INFO: Record<
   },
   silver: {
     name: "Silver",
-    price: "$25",
-    period: "per month",
+    price: "Free",
+    period: "",
     description: "Unlimited monthly filings for a single attorney.",
     features: [
       "Single attorney plan",
@@ -49,8 +49,8 @@ const PLAN_INFO: Record<
   },
   gold: {
     name: "Gold",
-    price: "From $21",
-    period: "per member / month",
+    price: "Free",
+    period: "",
     description:
       "Monthly unlimited plan for multi-attorney firms at reduced per-seat pricing.",
     features: [
@@ -62,16 +62,11 @@ const PLAN_INFO: Record<
       "Support",
     ],
     requiresTeam: true,
-    tiers: [
-      { label: "2–10 Attorneys", price: "$23 / member / month" },
-      { label: "11–20 Attorneys", price: "$22 / member / month" },
-      { label: "21+ Attorneys", price: "$21 / member / month" },
-    ],
   },
   platinum: {
     name: "Platinum",
-    price: "From $240",
-    period: "per year",
+    price: "Free",
+    period: "",
     description:
       "Annual unlimited plan for single and multi-attorney firms.",
     features: [
@@ -256,7 +251,7 @@ export default function SignupPage({
                   Sign up for {plan.name}
                 </h1>
                 <p className="text-gray-500 text-sm mb-8">
-                  Fill in your details below. You&apos;ll be taken to a secure payment page next.
+                  Fill in your details below to get started. All plans are free during our launch period.
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-5">
@@ -456,11 +451,11 @@ export default function SignupPage({
                     disabled={submitting}
                     className="w-full py-4 bg-accent hover:bg-accent-dark text-white font-bold rounded-lg transition-all hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    {submitting ? "Redirecting to payment..." : "Pay Now"}
+                    {submitting ? "Submitting..." : "Sign Up"}
                   </button>
 
                   <p className="text-xs text-gray-400 text-center">
-                    You&apos;ll be redirected to a secure Stripe checkout page to complete payment.
+                    All plans are free during our launch period. We&apos;ll be in touch to get your account set up.
                   </p>
                 </form>
               </div>

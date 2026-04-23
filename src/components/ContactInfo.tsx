@@ -114,10 +114,10 @@ export default function ContactInfo() {
                       Phone
                     </h3>
                     <a
-                      href="tel:+18552622748"
+                      href="tel:+18017973119"
                       className="text-2xl font-bold text-gray-900 hover:text-accent transition-colors"
                     >
-                      (855) 262-2748
+                      (801) 797-3119
                     </a>
                     <p className="text-sm text-gray-600 mt-1">Monday - Friday, 9am - 5pm MT</p>
                   </div>
