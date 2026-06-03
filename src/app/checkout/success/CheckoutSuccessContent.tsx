@@ -64,21 +64,19 @@ export default function CheckoutSuccessContent() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-          Thanks for signing up!{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
-            Welcome to Courtpath.
-          </span>
+        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
+          Thank you for signing up!
         </h1>
-        <p className="text-xl text-gray-600 mb-4">
-          We&apos;ve received your information and will be in touch shortly to get your account set up.
+        <p className="text-xl text-gray-600 mb-6">
+          Please allow 24 hours for account creation.
         </p>
-        <p className="text-sm text-gray-400 mb-8">
-          Already have an account?{" "}
-          <a href={COURTPATH_LOGIN} className="text-accent underline">
-            Sign in here
+        <p className="text-xl text-gray-600 mb-8">
+          You can login here:{" "}
+          <a href={COURTPATH_LOGIN} className="text-accent underline break-all">
+            {COURTPATH_LOGIN}/
           </a>
         </p>
+        <p className="text-xl font-semibold text-gray-900">Happy filing!</p>
       </div>
     </section>
   );
