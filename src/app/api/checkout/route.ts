@@ -114,9 +114,11 @@ export async function POST(request: NextRequest) {
       `,
     });
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "";
+    // Relative URL keeps the redirect on whatever domain the site is served
+    // from, instead of relying on NEXT_PUBLIC_APP_URL (which can point at a
+    // wrong/dead host on the deploy).
     return NextResponse.json({
-      url: `${appUrl}/checkout/success?plan=${planKey}`,
+      url: `/checkout/success?plan=${planKey}`,
     });
 
     // --- Original Stripe flow (disabled) ---
