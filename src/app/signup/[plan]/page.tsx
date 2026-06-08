@@ -183,7 +183,7 @@ export default function SignupPage({
     <main>
       <Navbar />
 
-      <section className="bg-gradient-to-b from-white to-gray-50 min-h-screen py-16">
+      <section className="bg-gradient-to-b from-white to-gray-50 min-h-screen pt-32 pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back link */}
           <a

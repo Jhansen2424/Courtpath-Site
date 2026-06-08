@@ -17,6 +17,17 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
+      {/* Promo banner */}
+      <div className="bg-gradient-to-r from-primary via-primary-light to-primary text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-center gap-2 text-center">
+          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shrink-0" />
+          <p className="text-xs sm:text-sm font-medium tracking-wide">
+            <span className="text-accent-light font-semibold">User licenses are free</span>{" "}
+            until January 1st, 2027
+          </p>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
