@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import type { Stats } from "@/data/stats";
 
 // Animated count-up that runs once on mount.
@@ -71,16 +70,6 @@ function StatCard({ card, delay }: { card: CardDef; delay: number }) {
 }
 
 export default function DashboardContent({ stats }: { stats: Stats }) {
-  const router = useRouter();
-  const [loggingOut, setLoggingOut] = useState(false);
-
-  const handleLogout = async () => {
-    setLoggingOut(true);
-    await fetch("/api/dashboard-logout", { method: "POST" });
-    router.replace("/dashboard/login");
-    router.refresh();
-  };
-
   const cards: CardDef[] = [
     {
       label: "Total Users",
@@ -132,22 +121,13 @@ export default function DashboardContent({ stats }: { stats: Stats }) {
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Header */}
       <header className="bg-gradient-to-r from-primary-dark via-primary to-primary-light text-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex items-center justify-between">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-medium mb-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-              Live Metrics
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-bold">Signup Dashboard</h1>
-            <p className="text-white/60 text-sm mt-1">Courtpath user growth at a glance</p>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-medium mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+            Live Metrics
           </div>
-          <button
-            onClick={handleLogout}
-            disabled={loggingOut}
-            className="shrink-0 px-4 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/20 border border-white/15 transition-colors disabled:opacity-60"
-          >
-            {loggingOut ? "Signing out…" : "Sign out"}
-          </button>
+          <h1 className="text-3xl sm:text-4xl font-bold">Signup Dashboard</h1>
+          <p className="text-white/60 text-sm mt-1">Courtpath user growth at a glance</p>
         </div>
       </header>
 
