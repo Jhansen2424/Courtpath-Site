@@ -12,10 +12,10 @@ export const stats = {
   /** Active filers this month. */
   activeUsers: 70,
 
-  /** New signups in the last 7 days. */
+  /** New signups this week (from Monday). */
   weeklyUsers: 0,
 
-  /** New signups in the last 30 days. */
+  /** New signups this calendar month. */
   monthlyUsers: 9,
 
   /** Date these numbers were last updated. Format: "Month D, YYYY". */

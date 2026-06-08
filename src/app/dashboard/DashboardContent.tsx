@@ -96,7 +96,7 @@ export default function DashboardContent({ stats }: { stats: Stats }) {
     {
       label: "Weekly Signups",
       value: stats.weeklyUsers,
-      sublabel: "Last 7 days",
+      sublabel: "This week (since Mon)",
       accent: "from-primary-light to-accent",
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,7 +107,7 @@ export default function DashboardContent({ stats }: { stats: Stats }) {
     {
       label: "Monthly Signups",
       value: stats.monthlyUsers,
-      sublabel: "Last 30 days",
+      sublabel: "This month",
       accent: "from-accent-dark to-primary",
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
