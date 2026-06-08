@@ -9,7 +9,7 @@ export const stats = {
   /** Total user accounts ever signed up. */
   totalUsers: 692,
 
-  /** Active filers this month. */
+  /** Active filers in the last 30 days. */
   activeUsers: 70,
 
   /** New signups this week (from Monday). */

@@ -85,7 +85,7 @@ export default function DashboardContent({ stats }: { stats: Stats }) {
     {
       label: "Active Filers",
       value: stats.activeUsers,
-      sublabel: "Filed this month",
+      sublabel: "Last 30 days",
       accent: "from-accent to-accent-light",
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
