@@ -25,7 +25,7 @@ import nodemailer from "nodemailer";
 //   return iv.toString("hex") + ":" + encrypted.toString("hex");
 // }
 
-const VALID_PLANS = new Set(["bronze", "silver", "gold", "platinum"]);
+const VALID_PLANS = new Set(["bronze", "bronze-plus", "silver", "gold", "platinum"]);
 
 export async function POST(request: NextRequest) {
   try {
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
     const planKey = (plan as string).toLowerCase();
     if (!VALID_PLANS.has(planKey)) {
       return NextResponse.json(
-        { error: "Invalid plan. Must be one of: bronze, silver, gold, platinum" },
+        { error: "Invalid plan. Must be one of: bronze, bronze-plus, silver, gold, platinum" },
         { status: 400 }
       );
     }

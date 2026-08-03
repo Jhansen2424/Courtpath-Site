@@ -9,8 +9,27 @@ const plans = [
     planId: "bronze",
     price: "Free",
     period: "Launch Special",
+    futurePrice: "$4 per filing",
     features: [
       "Pay-per-filing plan",
+      "Single user account",
+      "Electronic service",
+      "Case history",
+      "Document access",
+      "Support",
+    ],
+    highlighted: false,
+    cta: "Sign up now!",
+  },
+  {
+    name: "Bronze +",
+    planId: "bronze-plus",
+    price: "Free",
+    period: "Launch Special",
+    futurePrice: "$9.99 per month",
+    features: [
+      "Unlimited filings of: Appearance of Counsel / Notice of Limited Appearance, Request for Discovery, and Entry of Plea",
+      "$3 per filing for all other filings",
       "Single user account",
       "Electronic service",
       "Case history",
@@ -25,6 +44,7 @@ const plans = [
     planId: "silver",
     price: "Free",
     period: "Launch Special",
+    futurePrice: "$25 per month",
     features: [
       "Single attorney plan",
       "Allow paralegals and staff to file under single attorney",
@@ -41,6 +61,7 @@ const plans = [
     planId: "gold",
     price: "Free",
     period: "Launch Special",
+    futurePrice: "$21 per month (starting)",
     badge: "MOST POPULAR",
     features: [
       "Multiple attorneys at reduced prices",
@@ -58,6 +79,7 @@ const plans = [
     planId: "platinum",
     price: "Free",
     period: "Launch Special",
+    futurePrice: "$240 per year (starting)",
     features: [
       "Annual unlimited plan for single & multiple attorney firms",
       "Paralegal & staff use",
@@ -124,12 +146,13 @@ export default function PricingPlans() {
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               All plans include our core features. Choose the one that fits your practice size.
+              Every plan is free during our launch period — regular pricing begins January 1, 2027.
             </p>
           </div>
         </div>
 
         {/* Pricing cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto items-start">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-7xl mx-auto items-start">
           {plans.map((plan, index) => {
             const isHovered = hoveredIndex === index;
             const isAnyHovered = hoveredIndex !== null;
@@ -185,6 +208,16 @@ export default function PricingPlans() {
                         </span>
                       </div>
                       <p className="text-sm text-gray-500 mt-1">{plan.period}</p>
+                      {plan.futurePrice && (
+                        <div className="mt-3 inline-block px-3 py-1.5 bg-gray-100 rounded-full">
+                          <p className="text-xs font-semibold text-gray-700">
+                            {plan.futurePrice}
+                          </p>
+                          <p className="text-[11px] text-gray-500">
+                            starting January 1, 2027
+                          </p>
+                        </div>
+                      )}
                     </div>
 
                     {/* Divider */}

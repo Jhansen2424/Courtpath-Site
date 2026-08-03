@@ -20,7 +20,7 @@ const PLAN_INFO: Record<
   bronze: {
     name: "Bronze",
     price: "Free",
-    period: "",
+    period: "then $4 per filing starting Jan 1, 2027",
     description: "Pay only when you file. Perfect for occasional filers.",
     features: [
       "Pay-per-filing plan",
@@ -32,10 +32,29 @@ const PLAN_INFO: Record<
     ],
     requiresTeam: false,
   },
+  "bronze-plus": {
+    name: "Bronze +",
+    price: "Free",
+    period: "then $9.99 per month starting Jan 1, 2027",
+    description:
+      "Unlimited filings of select filing types for a flat monthly rate, plus $3 per filing for everything else.",
+    features: [
+      "Unlimited: Appearance of Counsel / Notice of Limited Appearance",
+      "Unlimited: Request for Discovery",
+      "Unlimited: Entry of Plea",
+      "$3 per filing for all other filings",
+      "Single user account",
+      "Electronic service",
+      "Case history",
+      "Document access",
+      "Support",
+    ],
+    requiresTeam: false,
+  },
   silver: {
     name: "Silver",
     price: "Free",
-    period: "",
+    period: "then $25 per month starting Jan 1, 2027",
     description: "Unlimited monthly filings for a single attorney.",
     features: [
       "Single attorney plan",
@@ -50,7 +69,7 @@ const PLAN_INFO: Record<
   gold: {
     name: "Gold",
     price: "Free",
-    period: "",
+    period: "then from $21 per month starting Jan 1, 2027",
     description:
       "Monthly unlimited plan for multi-attorney firms at reduced per-seat pricing.",
     features: [
@@ -66,7 +85,7 @@ const PLAN_INFO: Record<
   platinum: {
     name: "Platinum",
     price: "Free",
-    period: "",
+    period: "then from $240 per year starting Jan 1, 2027",
     description:
       "Annual unlimited plan for single and multi-attorney firms.",
     features: [
