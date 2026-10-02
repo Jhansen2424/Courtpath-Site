@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import CheckoutSuccessContent from "./CheckoutSuccessContent";
 
 export const metadata = {
+  robots: { index: false, follow: false },
   title: "Payment Successful | Courtpath E-Filing",
   description: "Your payment was processed successfully.",
 };

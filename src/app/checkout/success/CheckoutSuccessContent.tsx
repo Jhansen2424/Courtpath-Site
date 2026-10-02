@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { APP_LOGIN_URL } from "@/lib/site";
 
-const COURTPATH_LOGIN = "https://courtpath-production.up.railway.app";
 
 export default function CheckoutSuccessContent() {
   // --- Stripe-backed account creation is disabled. All plans are free, so we
@@ -72,8 +72,8 @@ export default function CheckoutSuccessContent() {
         </p>
         <p className="text-xl text-gray-600 mb-8">
           You can login here:{" "}
-          <a href={COURTPATH_LOGIN} className="text-accent underline break-all">
-            {COURTPATH_LOGIN}/
+          <a href={APP_LOGIN_URL} className="text-accent underline break-all">
+            {APP_LOGIN_URL}
           </a>
         </p>
         <p className="text-xl font-semibold text-gray-900">Happy filing!</p>

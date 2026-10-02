@@ -93,17 +93,15 @@ export default function ContactForm() {
 
               <div className="space-y-4 text-lg text-gray-600 mb-8">
                 <p>
-                  Need service or support? You can browse{" "}
+                  Need help using Courtpath? Our{" "}
                   <a
-                    href="https://support.courtpath.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href="/tutorials"
                     className="text-accent hover:text-accent-dark font-semibold underline decoration-accent/30 hover:decoration-accent transition-colors"
                   >
-                    Courtpath Online Support
+                    tutorial videos
                   </a>{" "}
-                  for quick answers, manuals, and in-depth technical articles we have gathered from
-                  the Utah Courts.
+                  walk through creating an account, filing a new case, entering an appearance, and
+                  filing in an existing case.
                 </p>
                 <p>
                   You can also leave us a message here and we will try to find you an answer.

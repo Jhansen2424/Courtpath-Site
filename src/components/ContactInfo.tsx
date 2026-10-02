@@ -185,7 +185,8 @@ export default function ContactInfo() {
               {/* Map container */}
               <div className="relative aspect-[4/3] bg-gray-200">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3023.8837399999997!2d-111.89!3d40.6548!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x87528b5e8e8e8e8e%3A0x8e8e8e8e8e8e8e8e!2s480%20E%20Winchester%20St%2C%20Murray%2C%20UT%2084107!5e0!3m2!1sen!2sus!4v1234567890"
+                  title="Map of the Courtpath office in Murray, Utah"
+                  src="https://maps.google.com/maps?q=480+E+Winchester+St,+Murray,+UT+84107&output=embed"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}

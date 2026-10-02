@@ -115,16 +115,14 @@ export default function TutorialVideos() {
                 Need More Help?
               </h3>
               <p className="text-gray-600">
-                Visit our comprehensive user guide for detailed documentation and support.
+                Our support team can walk you through any filing, Monday through Friday.
               </p>
             </div>
             <a
-              href="https://support.courtpath.com"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/contact"
               className="flex-shrink-0 px-6 py-3 bg-accent hover:bg-accent-dark text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all hover:scale-105"
             >
-              User Guide
+              Contact Support
             </a>
           </div>
         </div>

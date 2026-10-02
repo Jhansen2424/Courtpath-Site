@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { APP_LOGIN_URL } from "@/lib/site";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -60,7 +61,7 @@ export default function Navbar() {
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center gap-3">
             <a
-              href="https://courtpath-production.up.railway.app/"
+              href={APP_LOGIN_URL}
               className="px-4 py-2 text-sm text-gray-700 hover:text-primary transition-colors font-medium"
             >
               Log In
@@ -119,7 +120,7 @@ export default function Navbar() {
               ))}
               <hr className="border-gray-200 my-2" />
               <a
-                href="https://courtpath-production.up.railway.app/"
+                href={APP_LOGIN_URL}
                 className="px-4 py-3 text-gray-700 hover:bg-gray-50 transition-all font-medium"
                 onClick={() => setMobileMenuOpen(false)}
               >

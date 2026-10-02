@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { UTAH_EFSP_LIST_URL } from "@/lib/site";
 
 export default function Hero() {
   return (
@@ -37,9 +38,23 @@ export default function Hero() {
           </h1>
 
           {/* Subheading */}
-          <p className="max-w-2xl text-lg sm:text-xl text-white/60 mb-12 leading-relaxed">
+          <p className="max-w-2xl text-lg sm:text-xl text-white/60 mb-6 leading-relaxed">
             The modern platform for court document filing. Fast, secure, and
             designed for legal professionals who demand excellence.
+          </p>
+
+          {/* Certification — verifiable on the Utah State Courts' provider list */}
+          <p className="max-w-2xl text-sm sm:text-base text-white/70 mb-12">
+            Certified by the{" "}
+            <a
+              href={UTAH_EFSP_LIST_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent-light underline decoration-accent-light/40 hover:decoration-accent-light transition-colors"
+            >
+              Utah State Courts
+            </a>{" "}
+            for e-filing in district and justice courts since 2019.
           </p>
 
           {/* CTA Buttons */}

@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 
 export const metadata = {
+  robots: { index: false, follow: false },
   title: "Checkout Cancelled | Courtpath E-Filing",
   description: "Your checkout was cancelled. No charges were made.",
 };
