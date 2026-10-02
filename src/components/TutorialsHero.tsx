@@ -79,8 +79,8 @@ export default function TutorialsHero() {
             }`}
             style={{ transitionDelay: "400ms" }}
           >
-            Check out how to use our app and your account. To learn more, click on the link below to
-            visit our user guide.
+            Check out how to use our app and your account. If you get stuck, our support team is a
+            call or email away.
           </p>
 
           {/* CTA Button */}
@@ -91,12 +91,10 @@ export default function TutorialsHero() {
             style={{ transitionDelay: "600ms" }}
           >
             <a
-              href="https://support.courtpath.com"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/contact"
               className="inline-block px-8 py-4 bg-accent hover:bg-accent-dark text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105"
             >
-              Courtpath User Guide
+              Contact Support
             </a>
           </div>
         </div>

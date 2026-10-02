@@ -64,7 +64,7 @@ export default function PricingFAQ() {
   };
 
   return (
-    <section ref={sectionRef} className="relative py-24 bg-white overflow-hidden">
+    <section id="faq" ref={sectionRef} className="scroll-mt-32 relative py-24 bg-white overflow-hidden">
       {/* Decorative background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
