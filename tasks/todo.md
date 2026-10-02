@@ -27,3 +27,21 @@ From the Oct 2, 2026 SEO audit of courtpath.com.
 
 ## Review
 - `npm run build` passes; checked titles, canonicals, robots, OG/Twitter images in `.next/server/app/*.html`, and redirect status codes (308) in `.next/routes-manifest.json`.
+
+# Blog (branch: blog-first-posts)
+
+## Done
+- [x] /blog index and /blog/[slug] post template (Article, BreadcrumbList and FAQPage JSON-LD; sources; disclaimer; related posts)
+- [x] Draft workflow: `status: "draft"` posts render at their URL with a banner but are noindexed and left out of the blog index, sitemap and footer link
+- [x] Post: How to E-File a New Civil Case in Utah District Court (calendar: week of Oct 12)
+- [x] Post: E-Service Under URCP 5: When E-Filing Counts as Service in Utah (calendar: week of Oct 19)
+
+## To publish a post
+1. An attorney reviews it against the linked sources. Set `reviewedBy` and update `updatedAt`.
+2. Set `status: "published"` and `publishedAt`.
+3. The post then appears on /blog, in the sitemap, and the footer gains a Blog link.
+
+## Open
+- [ ] Attorney reviewer for both posts (editorial standard in the SEO plan)
+- [ ] Core page /utah-efiling (the plan's hub); posts should link to it once it exists
+- [ ] Post 2 flags a conflict: the courts' "Common Mistakes" training guide still says to file a certificate of service with e-service, while URCP 5(d) says none is required. Reviewer should confirm the framing.

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/site";
+import { getPublishedPosts } from "@/content/blog";
 
 const ROUTES = [
   { path: "/", priority: 1 },
@@ -10,9 +11,23 @@ const ROUTES = [
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return ROUTES.map(({ path, priority }) => ({
+  const pages: MetadataRoute.Sitemap = ROUTES.map(({ path, priority }) => ({
     url: `${SITE_URL}${path === "/" ? "" : path}`,
     changeFrequency: "monthly",
     priority,
   }));
+
+  const posts = getPublishedPosts();
+  if (posts.length === 0) return pages;
+
+  return [
+    ...pages,
+    { url: `${SITE_URL}/blog`, changeFrequency: "weekly", priority: 0.7 },
+    ...posts.map(({ meta }) => ({
+      url: `${SITE_URL}/blog/${meta.slug}`,
+      lastModified: meta.updatedAt,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
+  ];
 }

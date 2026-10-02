@@ -13,3 +13,49 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
 }
+
+/* Long-form article typography (blog posts) */
+@layer components {
+  .post-body {
+    @apply text-gray-700 text-lg leading-relaxed;
+  }
+  .post-body > * + * {
+    @apply mt-5;
+  }
+  .post-body .lead {
+    @apply text-xl text-gray-900 leading-relaxed;
+  }
+  .post-body h2 {
+    @apply mt-12 text-2xl sm:text-3xl font-bold text-gray-900;
+  }
+  .post-body h3 {
+    @apply mt-8 text-xl font-bold text-gray-900;
+  }
+  .post-body a {
+    @apply text-primary font-medium underline decoration-accent/50 underline-offset-2 hover:decoration-accent;
+  }
+  .post-body ul {
+    @apply list-disc pl-6 space-y-2;
+  }
+  .post-body ol {
+    @apply list-decimal pl-6 space-y-2;
+  }
+  .post-body table {
+    @apply w-full text-base border-collapse;
+  }
+  .post-body th {
+    @apply text-left font-semibold text-gray-900 border-b-2 border-gray-200 py-2 pr-4;
+  }
+  .post-body td {
+    @apply align-top border-b border-gray-100 py-2 pr-4;
+  }
+  .post-body dl > div + div {
+    @apply mt-6;
+  }
+  .post-body dt {
+    @apply font-semibold text-gray-900;
+  }
+  .post-body dd {
+    @apply mt-1;
+  }
+}
