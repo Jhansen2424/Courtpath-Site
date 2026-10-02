@@ -28,7 +28,7 @@ From the Oct 2, 2026 SEO audit of courtpath.com.
 ## Review
 - `npm run build` passes; checked titles, canonicals, robots, OG/Twitter images in `.next/server/app/*.html`, and redirect status codes (308) in `.next/routes-manifest.json`.
 
-# Blog (branch: blog-first-posts)
+# Blog (branch: blog-initial-posts)
 
 ## Done
 - [x] /blog index and /blog/[slug] post template (Article, BreadcrumbList and FAQPage JSON-LD; sources; disclaimer; related posts)
@@ -41,7 +41,12 @@ From the Oct 2, 2026 SEO audit of courtpath.com.
 2. Set `status: "published"` and `publishedAt`.
 3. The post then appears on /blog, in the sitemap, and the footer gains a Blog link.
 
+## Second pass (Oct 2, 2026)
+- [x] Every rule cite re-checked against current rule text pulled from legacy.utcourts.gov (URCP 3, 4, 5, 6, 7, 10, 12, 26, 75, 76; UCJA 4-503, 4-202.09) plus the courts' Business Rules, eFiling Standards and training PDFs
+- [x] Independent fact-check pass; fixed one error (4-503 date), one internal contradiction (emailing discovery), and added missing qualifiers
+- [x] Added: state vs. federal court distinction, civil cover sheet (URCP 10(a)(4)), summons contents, redaction rule, acceptance of service, discovery and proposed-order service gaps, defaults, Rule 6(d)
+
 ## Open
 - [ ] Attorney reviewer for both posts (editorial standard in the SEO plan)
 - [ ] Core page /utah-efiling (the plan's hub); posts should link to it once it exists
-- [ ] Post 2 flags a conflict: the courts' "Common Mistakes" training guide still says to file a certificate of service with e-service, while URCP 5(d) says none is required. Reviewer should confirm the framing.
+- [ ] Post 2 flags two judgment calls for the reviewer: (a) the courts' "Common Mistakes" training guide still says to file a certificate of service with e-service, while URCP 5(d) says none is required; (b) Rule 5(b)(3)'s text ties email service to one side lacking an e-filing account, so the post recommends agreeing on a discovery service method in writing (5(b)(3)(C)(v)).
