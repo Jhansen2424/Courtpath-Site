@@ -380,8 +380,8 @@ export default function Body() {
 
       <h2>Step 7: Serve the defendant (e-filing won’t do it)</h2>
       <p>
-        E-filing serves later documents on parties who have e-filing accounts. It can’t accomplish
-        original service of the summons and complaint. Under{" "}
+        Once the case is open, e-filing serves later documents on parties who are represented by a
+        lawyer. It can’t accomplish original service of the summons and complaint. Under{" "}
         <a href={`${RULES}?type=urcp&rule=4`}>URCP 4</a>:
       </p>
       <ul>
@@ -417,7 +417,9 @@ export default function Body() {
         has to tell the defendant that no answer is needed if the complaint isn’t filed in time.
       </p>
       <p>
-        For how later documents are served once the case is open, see our guide to{" "}
+        If the defendant appears without a lawyer, they won’t have access to e-filing. Later
+        documents must be served on them another way, usually email, with a certificate of service.
+        For details, see our guide to{" "}
         <Link href="/blog/utah-rule-5-electronic-service">e-service under URCP 5</Link>.
       </p>
 

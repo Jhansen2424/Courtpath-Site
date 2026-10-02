@@ -47,6 +47,6 @@ From the Oct 2, 2026 SEO audit of courtpath.com.
 - [x] Added: state vs. federal court distinction, civil cover sheet (URCP 10(a)(4)), summons contents, redaction rule, acceptance of service, discovery and proposed-order service gaps, defaults, Rule 6(d)
 
 ## Open
-- [ ] Attorney reviewer for both posts (editorial standard in the SEO plan)
+- [x] Attorney review (Oct 2026): "all correct." Requested change applied: post 2 now leads with represented (e-filing serves counsel, no further service) vs. self-represented (no e-filing access; serve another way and include a certificate of service); post 1 Step 7 says the same
+- [ ] Reviewer's name for the "Reviewed by" byline (`reviewedBy`), then publish per the steps above
 - [ ] Core page /utah-efiling (the plan's hub); posts should link to it once it exists
-- [ ] Post 2 flags two judgment calls for the reviewer: (a) the courts' "Common Mistakes" training guide still says to file a certificate of service with e-service, while URCP 5(d) says none is required; (b) Rule 5(b)(3)'s text ties email service to one side lacking an e-filing account, so the post recommends agreeing on a discovery service method in writing (5(b)(3)(C)(v)).

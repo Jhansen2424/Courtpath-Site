@@ -11,7 +11,7 @@ export const meta: PostMeta = {
   slug: "utah-rule-5-electronic-service",
   title: "E-Service Under URCP 5: When E-Filing Counts as Service in Utah",
   description:
-    "When filing through your e-filing account serves the other side, when you need email or another method, why discovery and proposed orders are different, and when you need a certificate of service under Utah Rule 5.",
+    "If the other side has a lawyer, e-filing serves them. If they’re self-represented, it doesn’t. How Utah Rule 5 service works, when you need a certificate of service, and why discovery and proposed orders are different.",
   category: "Rules and fees",
   status: "draft",
   updatedAt: "2026-10-02",
@@ -35,7 +35,7 @@ export const meta: PostMeta = {
     {
       question: "How do I serve a self-represented party in Utah district court?",
       answer:
-        "Most self-represented parties don’t have e-filing accounts, so e-filing won’t reach them. Email the document to the most recent email address they’ve given the court and file a certificate of service. If they haven’t provided an email, use mail or another Rule 5(b)(3)(C) method.",
+        "A self-represented party doesn’t have access to e-filing, so filing through your e-filing account doesn’t serve them. Email the document to the most recent email address they’ve given the court, and include a certificate of service with your document showing the date, the method and the address you used. If they haven’t provided an email, use mail or another Rule 5(b)(3)(C) method.",
     },
     {
       question: "Does e-filing serve documents in Utah juvenile court?",
@@ -61,17 +61,70 @@ export default function Body() {
   return (
     <>
       <p className="lead">
-        In Utah district court, filing a document through your e-filing account also serves it on
-        every party who has an e-filing account, and service is complete the moment you send it. You
-        don’t need a certificate of service for those parties. Anyone without an account is served
-        by email, or by mail or another method if they have no email, and that requires a
-        certificate.
+        In Utah district court, the question that decides how you serve a document is whether the
+        other side has a lawyer. If they do, filing through your e-filing account serves their
+        attorney, and no additional service is needed. If they’re self-represented, they don’t have
+        access to e-filing. You have to send them the document yourself, usually by email, and
+        include a certificate of service showing how you sent it.
       </p>
 
       <p>
         The rule is <a href={RULE_5}>URCP 5</a>, as amended effective November 1, 2024. Below is how
-        it works day to day. It also covers three situations where e-filing can’t serve even parties
-        who have accounts: discovery, proposed orders sent for approval, and juvenile court.
+        it works day to day. It also covers three situations where e-filing can’t serve even a
+        represented party: discovery, proposed orders sent for approval, and juvenile court.
+      </p>
+
+      <h2>Represented or self-represented: how each is served</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>The other side is…</th>
+            <th>How they’re served</th>
+            <th>Certificate of service?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Represented by a lawyer</td>
+            <td>
+              Filing the document through your e-filing account serves their attorney (Rule
+              5(b)(3)(A)). No additional service is needed.
+            </td>
+            <td>Not required</td>
+          </tr>
+          <tr>
+            <td>Self-represented</td>
+            <td>
+              They don’t have access to e-filing. Email the document to the most recent email
+              address they’ve given the court (Rule 5(b)(3)(B)).
+            </td>
+            <td>Required. Include it with your document.</td>
+          </tr>
+          <tr>
+            <td>Self-represented, with no email on file</td>
+            <td>
+              Mail it to the most recent address they’ve given the court, or their last known
+              address. You can also hand it to them, leave it at their office with the person in
+              charge, or leave it at their home with a resident of suitable age and discretion. The parties can agree in writing to any other method
+              (Rule 5(b)(3)(C)).
+            </td>
+            <td>Required. Include it with your document.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        E-filing reaches opposing counsel because{" "}
+        <a href={`${RULES}?rule=4-503&type=ucja`}>UCJA 4-503</a> requires attorneys to e-file in
+        district court civil (including domestic) and probate cases. Self-represented parties file
+        by email, mail, MyCase or in person, so the e-filing system has no way to deliver to them.
+        Since <a href={`${RULES}?type=urcp&rule=10`}>URCP 10(a)(3)</a> requires every filing to list
+        the filer’s email in the top-left corner, you’ll usually have an address for them. Under
+        Rule 5(b)(4), service by mail or electronic means is complete when it’s sent.
+      </p>
+      <p>
+        One more detail: when you email an attorney who isn’t on e-filing, you can use the address on
+        their latest filing or the one on file with the Utah State Bar (or their home state’s
+        licensing body if they aren’t licensed in Utah).
       </p>
 
       <h2>What Rule 5 covers</h2>
@@ -94,65 +147,6 @@ export default function Body() {
       </ul>
       <p>A party in default for any other reason is served normally.</p>
 
-      <h2>How to serve: the methods in Rule 5(b)(3)</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Method</th>
-            <th>When the rule provides for it</th>
-            <th>Certificate of service?</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>E-filing</td>
-            <td>
-              The person being served has an e-filing account. Filing the document serves it. Not
-              available in juvenile court.
-            </td>
-            <td>Not required</td>
-          </tr>
-          <tr>
-            <td>Email</td>
-            <td>
-              You or the person being served doesn’t have an e-filing account. Use the most recent
-              email they gave the court. For an attorney, you can also use the email on their latest
-              filing, or the one on file with the Utah State Bar (or their home state’s licensing
-              body if they aren’t licensed in Utah).
-            </td>
-            <td>Required for filed documents</td>
-          </tr>
-          <tr>
-            <td>Mail and other methods</td>
-            <td>
-              The person has neither an e-filing account nor an email address. You can:
-              <ul>
-                <li>
-                  mail it to the most recent address they gave the court, or their last known
-                  address;
-                </li>
-                <li>hand it to them;</li>
-                <li>
-                  leave it at their office with the person in charge, or at their home with a
-                  resident of suitable age and discretion.
-                </li>
-              </ul>
-              The parties can also agree in writing to any other method.
-            </td>
-            <td>Required for filed documents</td>
-          </tr>
-        </tbody>
-      </table>
-      <p>
-        In practice, e-filing reaches nearly all opposing counsel, because{" "}
-        <a href={`${RULES}?rule=4-503&type=ucja`}>UCJA 4-503</a> requires attorneys to e-file in
-        district court civil (including domestic) and probate cases. Email is mostly for
-        self-represented parties. Since{" "}
-        <a href={`${RULES}?type=urcp&rule=10`}>URCP 10(a)(3)</a> requires every filing to list the
-        filer’s email in the top-left corner, you’ll usually have one. Under Rule 5(b)(4), service
-        by mail or electronic means is complete when it’s sent.
-      </p>
-
       <h2>Who you serve</h2>
       <p>
         Under Rule 5(b)(1), you serve a represented party’s attorney, unless the court orders service
@@ -171,8 +165,8 @@ export default function Body() {
         </li>
       </ul>
       <p>
-        Both are easy to miss when you rely on e-filing. It reaches the attorney, but the party
-        usually has no account, so the party needs separate service and a certificate.
+        Both are easy to miss when you rely on e-filing. It reaches the attorney, but not the party,
+        so the party needs separate service and a certificate.
       </p>
 
       <h2>Discovery: e-filing can’t serve it</h2>
@@ -231,23 +225,33 @@ export default function Body() {
         </li>
       </ul>
 
-      <h2>Certificates of service: the rule, and a wrinkle</h2>
+      <h2>Certificates of service</h2>
       <p>
-        Rule 5(d) is direct: “No certificate of service is required when a document is served
-        through an electronic filing account.” When a filed document is served by email, mail or
-        another method, you must file a certificate showing the date, the method and the email or
-        mailing address used (unless that address is safeguarded). File it with the document or
-        within a reasonable time after service. A document that isn’t filed needs a certificate only
-        when a rule or court order requires one, as Rule 26(f) does for discovery.
+        The practical rule follows the same line:
+      </p>
+      <ul>
+        <li>
+          <strong>Served through e-filing</strong> (represented parties): no certificate needed.
+          Rule 5(d) says, “No certificate of service is required when a document is served through
+          an electronic filing account.”
+        </li>
+        <li>
+          <strong>Served any other way</strong> (self-represented parties, and anyone else outside
+          e-filing): include a certificate of service with your document. It shows the date, the
+          method and the email or mailing address you used, unless that address is safeguarded.
+          Rule 5(d) also allows filing it within a reasonable time after service, but including it
+          with the document is simplest.
+        </li>
+      </ul>
+      <p>
+        A document that isn’t filed needs a certificate only when a rule or court order requires
+        one, as Rule 26(f) does for discovery.
       </p>
       <p>
-        The wrinkle: the courts’ attorney training guide,{" "}
+        You may see older guidance saying otherwise. The courts’ attorney training guide,{" "}
         <a href={MISTAKES_PDF}>“How Will Common Mistakes Affect You as Counsel?”</a>, still says
-        e-service “does not replace the requirement for filing a certificate of service.” That
-        conflicts with the current text of Rule 5(d). In any case with a self-represented party, or
-        after a limited appearance, you’ll need certificates for the people you served outside
-        e-filing anyway. Whether to add one for e-served parties too is a judgment call; the rule
-        doesn’t require it.
+        e-service “does not replace the requirement for filing a certificate of service.” The current
+        text of Rule 5(d) says no certificate is required for e-served parties.
       </p>
 
       <h2>Proof that e-service went through</h2>
@@ -270,8 +274,8 @@ export default function Body() {
       <Callout title="Common e-service mistakes">
         <ul>
           <li>
-            Assuming a self-represented party was served because the filing was accepted. Most don’t
-            have e-filing accounts.
+            Assuming a self-represented party was served because the filing was accepted. They don’t
+            have access to e-filing, so they need separate service and a certificate.
           </li>
           <li>Relying on e-filing to serve discovery or proposed orders sent for approval.</li>
           <li>
