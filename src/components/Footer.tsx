@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { getPublishedPosts } from "@/content/blog";
 
 const quickLinks = [
   { name: "Home", href: "/" },
@@ -7,6 +8,8 @@ const quickLinks = [
   { name: "Plans & Pricing", href: "/pricing" },
   { name: "Frequently Asked Questions", href: "/pricing#faq" },
   { name: "Tutorial Videos", href: "/tutorials" },
+  // The blog link appears once at least one post is published.
+  ...(getPublishedPosts().length > 0 ? [{ name: "Blog", href: "/blog" }] : []),
   { name: "Contact", href: "/contact" },
 ];
 
