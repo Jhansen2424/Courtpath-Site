@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import PricingPlans from "@/components/PricingPlans";
+import PhoneLink from "@/components/PhoneLink";
 import Footer from "@/components/Footer";
 import { pageMetadata, UTAH_EFSP_LIST_URL, CONTACT } from "@/lib/site";
 
@@ -173,9 +174,9 @@ export default function FreeUntil2027Page() {
           </h2>
           <p className="text-gray-600 mb-6">
             Call us at{" "}
-            <a href={`tel:${CONTACT.phoneE164}`} className="font-semibold text-accent hover:underline">
+            <PhoneLink href={`tel:${CONTACT.phoneE164}`} className="font-semibold text-accent hover:underline">
               {CONTACT.phoneDisplay}
-            </a>{" "}
+            </PhoneLink>{" "}
             or email{" "}
             <a href={`mailto:${CONTACT.email}`} className="font-semibold text-accent hover:underline">
               {CONTACT.email}

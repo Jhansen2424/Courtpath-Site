@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 import { CONTACT, SITE_NAME, SITE_URL } from "@/lib/site";
+import { ADS_ID } from "@/lib/ads";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -45,6 +47,18 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
         {children}
+        {/* Google Ads base tag — site-wide so ad-click gclids are captured on
+            every possible landing page. Conversion events live in lib/ads.ts. */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${ADS_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-ads-base" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${ADS_ID}');`}
+        </Script>
       </body>
     </html>
   );

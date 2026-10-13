@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import PhoneLink from "@/components/PhoneLink";
 import Footer from "@/components/Footer";
 import { pageMetadata, UTAH_EFSP_LIST_URL, CONTACT } from "@/lib/site";
 
@@ -176,12 +177,12 @@ export default function SwitchPage() {
             >
               Start Free — No Card Required
             </Link>
-            <a
+            <PhoneLink
               href={`tel:${CONTACT.phoneE164}`}
               className="px-8 py-4 text-white font-medium rounded-lg border border-white/20 hover:bg-white/5 transition-all"
             >
               Talk to Us: {CONTACT.phoneDisplay}
-            </a>
+            </PhoneLink>
           </div>
         </div>
       </section>

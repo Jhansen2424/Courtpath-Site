@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { APP_LOGIN_URL } from "@/lib/site";
+import { ADS_SIGNUP_SEND_TO, reportConversion } from "@/lib/ads";
 
 
 export default function CheckoutSuccessContent() {
@@ -14,6 +15,14 @@ export default function CheckoutSuccessContent() {
   useEffect(() => {
     const t = setTimeout(() => setStatus("success"), 400);
     return () => clearTimeout(t);
+  }, []);
+
+  // Report the "Signup Complete" conversion once per arrival — but only when
+  // the ?plan= param is present, i.e. the visitor actually came through the
+  // signup flow rather than loading this URL directly.
+  useEffect(() => {
+    const plan = new URLSearchParams(window.location.search).get("plan");
+    if (plan) reportConversion(ADS_SIGNUP_SEND_TO);
   }, []);
 
   if (status === "loading") {
