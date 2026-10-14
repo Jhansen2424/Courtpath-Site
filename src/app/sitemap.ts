@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/site";
 import { getPublishedPosts } from "@/content/blog";
+import { publishedLandingPages } from "@/content/landing/registry";
 
 const ROUTES = [
   { path: "/", priority: 1 },
@@ -16,6 +17,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: "monthly",
     priority,
   }));
+
+  const landing: MetadataRoute.Sitemap = publishedLandingPages().map((p) => ({
+    url: `${SITE_URL}${p.path}`,
+    changeFrequency: "monthly",
+    priority: 0.8,
+  }));
+  pages.push(...landing);
 
   const posts = getPublishedPosts();
   if (posts.length === 0) return pages;
