@@ -50,3 +50,28 @@ From the Oct 2, 2026 SEO audit of courtpath.com.
 - [x] Attorney review (Oct 2026): "all correct." Requested change applied: post 2 now leads with represented (e-filing serves counsel, no further service) vs. self-represented (no e-filing access; serve another way and include a certificate of service); post 1 Step 7 says the same
 - [ ] Reviewer's name for the "Reviewed by" byline (`reviewedBy`), then publish per the steps above
 - [ ] Core page /utah-efiling (the plan's hub); posts should link to it once it exists
+
+# SEO landing pages (branch: landing-pages-wave-1, stacked on analytics-ga4-events)
+
+Plan: https://claude.ai/code/artifact/cfd60e73-999c-44a1-ade6-92ae4c20a3ba
+
+## Done
+- [x] GA4 + funnel events (branch analytics-ga4-events): sign_up, signup_start, generate_lead, phone_click, cta_click. Inert until NEXT_PUBLIC_GA4_ID is set in Vercel
+- [x] Shared landing template (`src/components/landing/`): hero, proof strip, content section, how it works, plan fit, FAQ, sources, closing call
+- [x] Offer switches itself: `src/lib/offer.ts` + hourly revalidation flip all landing copy to 2027 pricing at midnight MT on Jan 1, 2027 (verified by simulating the date)
+- [x] Wave 1 drafts: /utah-efiling, /utah-efiling-providers, /courtpath-vs-eflex, /utah-debt-collection-efiling
+- [x] Registry (`src/content/landing/registry.ts`): drafts noindexed and kept out of sitemap/footer
+
+## To publish a landing page
+1. Attorney review of the page against its Sources list
+2. In the registry, set `status: "published"` and `reviewed`
+3. It then joins the sitemap; the hub also gets a footer link
+
+## Open
+- [ ] GA4 measurement ID → NEXT_PUBLIC_GA4_ID in Vercel
+- [ ] Signup flow fixes (need client OK): stop emailing passwords, trim the form, instant account creation
+- [ ] Attorney review of the four Wave 1 pages
+- [ ] Re-check competitor prices quarterly (providers + vs-eFlex pages, last checked Oct 14, 2026)
+- [ ] Update the debt collection page when the courts publish procedures for the SB 270 division
+- [ ] Testimonials from real users (none used on landing pages yet)
+- [ ] Wave 2 (by Dec 11): paralegals, criminal defense, family law, solo attorneys, court filing fees
