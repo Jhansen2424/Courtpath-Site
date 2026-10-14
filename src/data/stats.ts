@@ -6,20 +6,17 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const stats = {
-  /** Total user accounts ever signed up. */
-  totalUsers: 702,
+  /** New user accounts signed up since May 1. */
+  usersSinceMay: 322,
 
-  /** Active filers in the last 30 days. */
-  activeUsers: 78,
+  /** Active filers so far this calendar month. */
+  activeThisMonth: 22,
 
-  /** New signups this week (from Monday). */
-  weeklyUsers: 4,
-
-  /** New signups this calendar month. */
-  monthlyUsers: 19,
+  /** Active filers last calendar month. */
+  activeLastMonth: 80,
 
   /** Date these numbers were last updated. Format: "Month D, YYYY". */
-  lastUpdated: "June 22, 2026",
+  lastUpdated: "October 14, 2026",
 };
 
 export type Stats = typeof stats;

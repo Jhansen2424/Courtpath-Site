@@ -72,9 +72,9 @@ function StatCard({ card, delay }: { card: CardDef; delay: number }) {
 export default function DashboardContent({ stats }: { stats: Stats }) {
   const cards: CardDef[] = [
     {
-      label: "Total Users",
-      value: stats.totalUsers,
-      sublabel: "All-time signups",
+      label: "Users Since May",
+      value: stats.usersSinceMay,
+      sublabel: "New signups since May 1",
       accent: "from-primary to-primary-light",
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -84,8 +84,8 @@ export default function DashboardContent({ stats }: { stats: Stats }) {
     },
     {
       label: "Active Filers",
-      value: stats.activeUsers,
-      sublabel: "Last 30 days",
+      value: stats.activeThisMonth,
+      sublabel: "This month so far",
       accent: "from-accent to-accent-light",
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -94,24 +94,13 @@ export default function DashboardContent({ stats }: { stats: Stats }) {
       ),
     },
     {
-      label: "Weekly Signups",
-      value: stats.weeklyUsers,
-      sublabel: "This week (since Mon)",
-      accent: "from-primary-light to-accent",
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-      ),
-    },
-    {
-      label: "Monthly Signups",
-      value: stats.monthlyUsers,
-      sublabel: "This month",
+      label: "Active Filers",
+      value: stats.activeLastMonth,
+      sublabel: "Last month",
       accent: "from-accent-dark to-primary",
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 13l4-4 4 4 7-7m0 0v5m0-5h-5" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
       ),
     },
@@ -133,9 +122,9 @@ export default function DashboardContent({ stats }: { stats: Stats }) {
 
       {/* Stats */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {cards.map((card, i) => (
-            <StatCard key={card.label} card={card} delay={i * 120} />
+            <StatCard key={card.sublabel} card={card} delay={i * 120} />
           ))}
         </div>
 
