@@ -12,8 +12,13 @@ export default function CheckoutSuccessContent() {
   // just confirm the submission and let the user know we'll be in touch. ---
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [errorMsg] = useState<string | null>(null);
+  // ready = the app account was created on signup; exists = that email already has one;
+  // pending = it will be set up by hand (the old "allow 24 hours" message).
+  const [account, setAccount] = useState<"ready" | "exists" | "pending">("pending");
 
   useEffect(() => {
+    const a = new URL(window.location.href).searchParams.get("account");
+    if (a === "ready" || a === "exists") setAccount(a);
     const t = setTimeout(() => setStatus("success"), 400);
     return () => clearTimeout(t);
   }, []);
@@ -85,7 +90,11 @@ export default function CheckoutSuccessContent() {
           Thank you for signing up!
         </h1>
         <p className="text-xl text-gray-600 mb-6">
-          Please allow 24 hours for account creation.
+          {account === "ready"
+            ? "Your account is ready. Log in with the email and password you just chose."
+            : account === "exists"
+            ? "You already have a Courtpath account with this email. Log in with your existing password, or contact us if you need help getting in."
+            : "Please allow 24 hours for account creation."}
         </p>
         <p className="text-xl text-gray-600 mb-8">
           You can login here:{" "}
