@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { APP_LOGIN_URL } from "@/lib/site";
 import { ADS_SIGNUP_SEND_TO, reportConversion } from "@/lib/ads";
+import { track } from "@/lib/analytics";
 
 
 export default function CheckoutSuccessContent() {
@@ -17,12 +18,19 @@ export default function CheckoutSuccessContent() {
     return () => clearTimeout(t);
   }, []);
 
-  // Report the "Signup Complete" conversion once per arrival — but only when
-  // the ?plan= param is present, i.e. the visitor actually came through the
-  // signup flow rather than loading this URL directly.
+  // Report the "Signup Complete" conversion once per signup — only when the
+  // ?plan= param is present, i.e. the visitor came through the signup flow
+  // rather than loading this URL directly. The param is then dropped from the
+  // URL, so a reload, back/forward or Strict Mode's second effect run can't
+  // count the same signup twice.
   useEffect(() => {
-    const plan = new URLSearchParams(window.location.search).get("plan");
-    if (plan) reportConversion(ADS_SIGNUP_SEND_TO);
+    const url = new URL(window.location.href);
+    const plan = url.searchParams.get("plan");
+    if (!plan) return;
+    reportConversion(ADS_SIGNUP_SEND_TO);
+    track("sign_up", { plan });
+    url.searchParams.delete("plan");
+    window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
   }, []);
 
   if (status === "loading") {

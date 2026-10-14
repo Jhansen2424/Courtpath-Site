@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import PhoneLink from "@/components/PhoneLink";
 
 export default function ContactInfo() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -113,12 +114,14 @@ export default function ContactInfo() {
                     <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">
                       Phone
                     </h3>
-                    <a
+                    <PhoneLink
                       href="tel:+18017973119"
                       className="text-2xl font-bold text-gray-900 hover:text-accent transition-colors"
+                      location="contact-page"
+                      adsConversion={false}
                     >
                       (801) 797-3119
-                    </a>
+                    </PhoneLink>
                     <p className="text-sm text-gray-600 mt-1">Monday - Friday, 9am - 5pm MT</p>
                   </div>
                 </div>

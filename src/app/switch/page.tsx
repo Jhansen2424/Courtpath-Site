@@ -178,6 +178,7 @@ export default function SwitchPage() {
               Start Free — No Card Required
             </Link>
             <PhoneLink
+              location="lp-switch"
               href={`tel:${CONTACT.phoneE164}`}
               className="px-8 py-4 text-white font-medium rounded-lg border border-white/20 hover:bg-white/5 transition-all"
             >
