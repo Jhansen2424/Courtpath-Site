@@ -47,7 +47,7 @@ body {
     @apply text-left font-semibold text-gray-900 border-b-2 border-gray-200 py-2 pr-4;
   }
   .post-body tbody th {
-    @apply align-top font-semibold border-b border-gray-100 border-b-1;
+    @apply align-top font-semibold border-b border-gray-100;
   }
   .post-body td {
     @apply align-top border-b border-gray-100 py-2 pr-4;

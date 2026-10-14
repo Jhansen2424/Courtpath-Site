@@ -2,12 +2,12 @@ import Link from "next/link";
 import Image from "next/image";
 import PhoneLink from "@/components/PhoneLink";
 import { getPublishedPosts } from "@/content/blog";
-import { landingEntry } from "@/content/landing/registry";
+import { LANDING_PAGES } from "@/content/landing/registry";
 
 const quickLinks = [
   { name: "Home", href: "/" },
   // The e-filing guide appears once it's published.
-  ...(landingEntry("/utah-efiling").status === "published"
+  ...(LANDING_PAGES.some((p) => p.path === "/utah-efiling" && p.status === "published")
     ? [{ name: "Utah E-Filing Guide", href: "/utah-efiling" }]
     : []),
   { name: "About", href: "/about" },

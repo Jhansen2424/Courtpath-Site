@@ -6,15 +6,16 @@ import {
   ClosingCta,
   ContentSection,
   DraftBanner,
-  HowItWorks,
   LandingFaq,
   LandingHero,
+  LandingJsonLd,
   PlanFit,
   ProofStrip,
   SourcesNote,
 } from "@/components/landing/Sections";
 import { landingMetadata } from "@/lib/landing";
 import { landingEntry } from "@/content/landing/registry";
+import { planCtaLabel } from "@/lib/offer";
 
 const PATH = "/utah-debt-collection-efiling";
 const PAGE = "utah-debt-collection-efiling";
@@ -23,44 +24,49 @@ const SB270 = "https://le.utah.gov/Session/2026/bills/enrolled/SB0270.pdf";
 const COURT_NEWS = "https://legacy.utcourts.gov/utc/news/2026/10/";
 const MISTAKES_PDF =
   "https://www.utcourts.gov/content/dam/howto/filing/efiling/district/docs/Attorney_eFiling_Training_Common_Mistakes.pdf";
+const TITLE = "Utah Debt Collection & Eviction E-Filing";
+const DESCRIPTION =
+  "How SB 270's new debt collection and eviction division works, plus current Utah filing fees, default packets, writs and serving unrepresented defendants.";
+// SB 270 (2026) takes effect at midnight Mountain time on January 1, 2027.
+const SB270_EFFECTIVE = "2027-01-01T07:00:00Z";
 
 export const revalidate = 3600;
 
-export const metadata = landingMetadata({
-  title: "Utah Debt Collection & Eviction E-Filing | Courtpath",
-  description:
-    "What SB 270's Debt Collection and Housing Action Division means for collections and eviction filers from January 1, 2027, plus fees, default packets, writs and serving unrepresented defendants.",
-  path: PATH,
-});
+export const metadata = landingMetadata({ title: `${TITLE} | Courtpath`, description: DESCRIPTION, path: PATH });
 
 export default function DebtCollectionPage() {
   const { status } = landingEntry(PATH);
+  // Evaluated per render so the tense flips with the law's effective date.
+  const inEffect = Date.now() >= Date.parse(SB270_EFFECTIVE);
   return (
     <main>
+      <LandingJsonLd path={PATH} title={TITLE} description={DESCRIPTION} checked="2026-10-14" />
       <Navbar />
       <LandingHero
         page={PAGE}
-        eyebrow="Debt collection and eviction e-filing"
-        title="High-volume filing in Utah, and the new court division coming January 1"
+        eyebrow={inEffect ? "SB 270 took effect January 1, 2027" : "New law takes effect January 1, 2027"}
+        title="Utah debt collection and eviction e-filing"
         intro={
           <p>
-            Debt collection and eviction cases are moving to a new statewide division of the district
-            court in 2027. Courtpath helps collections and landlord firms file at volume, with staff
-            access and unlimited plans.
+            SB 270 lets Utah’s courts move debt collection and eviction cases into one centralized
+            division. Courtpath helps collections and landlord firms file at volume, with unlimited
+            plans and paralegal and staff use.
           </p>
         }
-        ctaHref="/contact"
-        ctaLabel="Talk to us about volume filing"
+        ctaHref="/signup/platinum"
+        ctaLabel={planCtaLabel("Platinum")}
       />
       <DraftBanner status={status} />
       <ProofStrip />
 
       <ContentSection>
-        <h2>What changes on January 1, 2027</h2>
+        <h2>SB 270 and the new division</h2>
         <p>
           <a href={SB270}>SB 270</a>, passed in the 2026 session, lets the Judicial Council establish
-          a statewide division of the district court for debt collection and housing actions, and it
-          takes effect January 1, 2027. Under the bill:
+          a division of the district court to manage debt collection and housing actions. The law{" "}
+          {inEffect ? "took" : "takes"} effect January 1, 2027, and the courts{" "}
+          {inEffect ? "have been preparing" : "are preparing"} to implement it. Under the bill, once
+          the division is established:
         </p>
         <ul>
           <li>
@@ -68,31 +74,31 @@ export default function DebtCollectionPage() {
             eligible to be filed as debt collection cases on or after January 1, 2027.
           </li>
           <li>
-            <strong>Where the cases go:</strong> notwithstanding the venue statutes, district courts
-            must transfer these cases to the division for centralized pretrial and post-judgment
-            processing.
+            <strong>Where the cases go:</strong> district courts must transfer these cases to the
+            division for centralized pretrial and post-judgment processing, whichever county they
+            were filed in.
           </li>
           <li>
-            <strong>When they go back:</strong> the division can transfer a case to a proper venue if
+            <strong>When they go back:</strong> the division can send a case to the proper venue if
             it’s set for trial, or if it needs an evidentiary hearing other than an eviction hearing.
           </li>
           <li>
             <strong>Who staffs it:</strong> commissioners and judicial assistants. The courts posted
-            four commissioner nominees for public comment on{" "}
+            four nominees for two commissioner positions for public comment on{" "}
             <a href={COURT_NEWS}>October 6, 2026</a>.
           </li>
         </ul>
         <p>
-          The courts haven’t yet published filing procedures for the division. We’ll update this page
-          as they do. Last checked: October 14, 2026.
+          As of October 14, 2026, the courts hadn’t published filing procedures for the division.
+          We’ll update this page when they do.
         </p>
 
-        <h2>Filing fees for collections and evictions</h2>
+        <h2>Complaint and writ fees</h2>
         <table>
           <thead>
             <tr>
-              <th>Filing</th>
-              <th>Fee (from May 6, 2026)</th>
+              <th scope="col">Filing</th>
+              <th scope="col">Fee since May 6, 2026</th>
             </tr>
           </thead>
           <tbody>
@@ -101,11 +107,11 @@ export default function DebtCollectionPage() {
               <td>$105</td>
             </tr>
             <tr>
-              <td>Complaint, over $2,000 and under $10,000</td>
+              <td>Complaint, claim over $2,000 and under $10,000</td>
               <td>$215</td>
             </tr>
             <tr>
-              <td>Complaint, $10,000 or more</td>
+              <td>Complaint, claim of $10,000 or more</td>
               <td>$375</td>
             </tr>
             <tr>
@@ -115,8 +121,9 @@ export default function DebtCollectionPage() {
           </tbody>
         </table>
         <p className="text-sm">
-          Claim amounts exclude court costs, interest and attorney fees. One e-filing can collect at
-          most six fees; file the rest separately.
+          For the two lower tiers, the claim amount excludes court costs, interest and attorney fees.
+          One e-filing collects at most six filing fees; past that, file separately, pay online or
+          contact the court.
         </p>
 
         <h2>Default packets and judgments</h2>
@@ -154,12 +161,11 @@ export default function DebtCollectionPage() {
           similar forms go with the writ when it’s served. Garnishments follow the same practice.
         </p>
 
-        <Callout title="Most defendants won’t be on e-filing">
+        <Callout title="Self-represented defendants aren’t served by e-filing">
           <p>
-            Defendants in collections and eviction cases are often self-represented. A party without
-            a lawyer doesn’t have access to e-filing, so filing through Courtpath doesn’t serve them.
-            Serve later documents by email (or mail if they’ve given no email) and include a
-            certificate of service. See our guide to{" "}
+            Only attorneys and Licensed Paralegal Practitioners can use a provider like Courtpath, so
+            filing doesn’t serve a defendant who has no lawyer. Serve later documents by email, or by
+            mail if they’ve given no email, and include a certificate of service. See our guide to{" "}
             <Link href="/blog/utah-rule-5-electronic-service">e-service under URCP 5</Link>.
           </p>
         </Callout>
@@ -167,34 +173,44 @@ export default function DebtCollectionPage() {
         <h2>Built for volume</h2>
         <ul>
           <li>
-            <strong>Unlimited filing</strong> on Platinum, billed annually, for single- and
-            multi-attorney firms.
+            <strong>Unlimited filing</strong> on Platinum, billed annually, for firms with two or
+            more attorneys.
           </li>
           <li>
-            <strong>Paralegal and staff access</strong>, so the people who prepare default packets
-            and writs can file them.
+            <strong>Paralegal and staff use</strong> included, for the people who prepare default
+            packets and writs.
           </li>
           <li>
-            <strong>Case and hearing tracking</strong> across every case, with deadline reminders.
+            <strong>Case and document access</strong> across every case in one dashboard.
           </li>
         </ul>
+        <p>
+          New to Utah e-filing? Start with <Link href="/utah-efiling">how to e-file in Utah courts</Link>
+          , or see our step-by-step guide to{" "}
+          <Link href="/blog/how-to-efile-new-civil-case-utah-district-court">
+            e-filing a new civil case
+          </Link>
+          .
+        </p>
       </ContentSection>
 
-      <HowItWorks />
       <PlanFit
         page={PAGE}
-        plan="platinum"
-        reason="High-volume collections and eviction firms get the most from annual unlimited filing."
+        options={[
+          { plan: "platinum", who: "Collections or eviction firm" },
+          { plan: "silver", who: "Solo attorney" },
+        ]}
+        footnote="Filing only occasionally? Bronze has no subscription: $4 per filing from 2027."
       />
       <LandingFaq
         faqs={[
           {
             q: "What is Utah’s Debt Collection and Housing Action Division?",
-            a: "A statewide division of the district court authorized by SB 270 (2026), effective January 1, 2027. District courts transfer debt collection and eviction cases to it for centralized pretrial and post-judgment processing.",
+            a: "A district court division that SB 270 (2026) lets the Judicial Council establish, effective January 1, 2027. Once it’s established, district courts must transfer debt collection and eviction cases to it for centralized pretrial and post-judgment processing.",
           },
           {
-            q: "Do I file debt collection cases differently starting in 2027?",
-            a: "The courts haven’t published filing procedures for the division yet. Attorneys will still e-file through a certified provider. We’ll update this page when the courts announce the details.",
+            q: "Do I file debt collection cases differently under SB 270?",
+            a: "As of October 14, 2026, the courts hadn’t published filing procedures for the division. Attorneys will still e-file through a certified provider. We’ll update this page when the courts announce the details.",
           },
           {
             q: "What does a writ of garnishment cost in Utah?",
@@ -202,9 +218,15 @@ export default function DebtCollectionPage() {
           },
           {
             q: "Do I need to serve a self-represented defendant separately?",
-            a: "Yes. Self-represented parties don’t have access to e-filing, so you serve them by email or mail and include a certificate of service with your document.",
+            a: "Yes. Only attorneys and Licensed Paralegal Practitioners can use a provider like Courtpath, so filing doesn’t serve a defendant without a lawyer. Serve them by email or mail and include a certificate of service with your document.",
           },
         ]}
+      />
+      <ClosingCta
+        page={PAGE}
+        heading="Set up your firm for high-volume filing"
+        ctaHref="/signup/platinum"
+        ctaLabel={planCtaLabel("Platinum")}
       />
       <SourcesNote
         checked="October 14, 2026"
@@ -222,12 +244,6 @@ export default function DebtCollectionPage() {
           { title: "Electronic Filing: How Will Common Mistakes Affect You as Counsel?", url: MISTAKES_PDF },
           { title: "URCP Rule 5: Service and filing", url: `${RULES}?type=urcp&rule=5` },
         ]}
-      />
-      <ClosingCta
-        page={PAGE}
-        heading="Get set up before the new division opens"
-        ctaHref="/signup/platinum"
-        ctaLabel="Start Platinum"
       />
       <Footer />
     </main>

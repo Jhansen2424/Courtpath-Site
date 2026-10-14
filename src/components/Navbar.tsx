@@ -1,12 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { APP_LOGIN_URL } from "@/lib/site";
+import { isFreePeriod } from "@/lib/offer";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // The free-period banner renders on the server (so hydration always
+  // matches) and hides itself in the browser once the offer has ended —
+  // statically built pages would otherwise keep showing it until a redeploy.
+  const [showPromo, setShowPromo] = useState(true);
+  useEffect(() => {
+    if (!isFreePeriod()) setShowPromo(false);
+  }, []);
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -19,6 +27,7 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
       {/* Promo banner */}
+      {showPromo && (
       <div className="bg-gradient-to-r from-primary via-primary-light to-primary text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-center gap-2 text-center">
           <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shrink-0" />
@@ -28,6 +37,7 @@ export default function Navbar() {
           </p>
         </div>
       </div>
+      )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">

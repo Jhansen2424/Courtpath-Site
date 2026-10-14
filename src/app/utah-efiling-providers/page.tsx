@@ -5,8 +5,10 @@ import {
   ClosingCta,
   ContentSection,
   DraftBanner,
+  InlineCta,
   LandingFaq,
   LandingHero,
+  LandingJsonLd,
   PlanFit,
   ProofStrip,
   SourcesNote,
@@ -14,128 +16,150 @@ import {
 import { landingMetadata } from "@/lib/landing";
 import { landingEntry } from "@/content/landing/registry";
 import { UTAH_EFSP_LIST_URL } from "@/lib/site";
-import { isFreePeriod } from "@/lib/offer";
+import { isFreePeriod, pricingCtaLabel } from "@/lib/offer";
 
 const PATH = "/utah-efiling-providers";
 const PAGE = "utah-efiling-providers";
 const CHECKED = "October 14, 2026";
+const TITLE = "Utah E-Filing Providers Compared: Prices";
+const DESCRIPTION =
+  "eFlex, GreenFiling, Judicialink, InfoTrack and Courtpath compared: per-filing and monthly prices, trials, staff access, support and signup.";
+const TYBERA_UTAH = "https://www.tybera.com/support/utah-support/";
 
 export const revalidate = 3600;
 
-export const metadata = landingMetadata({
-  title: "Utah E-Filing Providers Compared (2026) | Courtpath",
-  description:
-    "Prices, sign-up, staff accounts and trials for every Utah e-filing provider, side by side, with sources. Checked October 2026.",
-  path: PATH,
-});
+export const metadata = landingMetadata({ title: `${TITLE} | Courtpath`, description: DESCRIPTION, path: PATH });
 
-// Each cell comes from the provider's own website on the CHECKED date (see
-// Sources). Re-check quarterly; prices change.
-// Built per render so the Courtpath cells follow the offer on January 1.
-function buildRows(FREE: boolean) {
-  const ROWS: { label: string; courtpath: string; eflex: string; greenfiling: string; judicialink: string; infotrack: string }[] = [
-  {
-    label: "On the courts’ certified provider list",
-    courtpath: "Yes, since December 2019",
-    eflex: "Yes (Utah State Bar), since May 2009",
-    greenfiling: "Yes, since September 2010",
-    judicialink: "Yes, since November 2012",
-    infotrack: "Not listed; sells Utah e-filing",
-  },
-  {
-    label: "Pay per filing",
-    courtpath: FREE ? "Free until Jan 1, 2027, then $4" : "$4",
-    eflex: "Price not published",
-    greenfiling: "$6",
-    judicialink: "$3.50",
-    infotrack: "$9",
-  },
-  {
-    label: "Unlimited subscription",
-    courtpath: "$25/month (one attorney); from $21 per attorney/month (firms); from $240/year",
-    eflex: "Price not published",
-    greenfiling: "$32 per attorney/month; $22–$30 for groups",
-    judicialink: "$19.95 per filer/month, less for 6+ filers and with annual prepay",
-    infotrack: "None; per filing only",
-  },
-  {
-    label: "Trial or launch offer",
-    courtpath: FREE ? "All plans free until Jan 1, 2027; no card" : "No subscription needed on Bronze",
-    eflex: "30-day trial",
-    greenfiling: "First month free",
-    judicialink: "30-day trial; guest demo login",
-    infotrack: "Free account",
-  },
-  {
-    label: "Staff and paralegal accounts",
-    courtpath: "Included on Silver, Gold and Platinum",
-    eflex: "Not published",
-    greenfiling: "Free on the Plus plan",
-    judicialink: "Unlimited, free",
-    infotrack: "Not published",
-  },
-  {
-    label: "Getting started",
-    courtpath: "Online signup; account ready within 24 hours",
-    eflex: "Request an account; wait for administrator approval; buy a subscription",
-    greenfiling: "Online signup",
-    judicialink: "Online signup",
-    infotrack: "Online signup or demo request",
-  },
-];
-  return ROWS;
+type Row = { label: string; courtpath: string; eflex: string; greenfiling: string; judicialink: string; infotrack: string };
+
+// Each cell comes from the provider's own website (or, for eFlex, its vendor
+// Tybera's Utah support page) on the CHECKED date. Built per render so the
+// Courtpath cells follow the offer on January 1. Re-check quarterly.
+function buildRows(free: boolean): Row[] {
+  return [
+    {
+      label: "On the courts’ certified list",
+      courtpath: "Yes, since December 2019",
+      eflex: "Yes, since May 2009",
+      greenfiling: "Yes, since September 2010",
+      judicialink: "Yes, since November 2012",
+      infotrack: "Not on the list; sells Utah e-filing",
+    },
+    {
+      label: "Pay per filing",
+      courtpath: free ? "Free until Jan 1, 2027, then $4" : "$4",
+      eflex: "$5 without a subscription",
+      greenfiling: "$6",
+      judicialink: "$3.50",
+      infotrack: "$9",
+    },
+    {
+      label: "Unlimited filing",
+      courtpath: `${free ? "Free until Jan 1, 2027, then " : ""}$25/month for one attorney; $21–$23 per attorney/month for firms; or from $240/year`,
+      eflex: "$26/month, $71/quarter or $270/year",
+      greenfiling: "$32 per attorney/month; $22–$30 for groups",
+      judicialink: "$19.95 per filer/month; less for 6+ filers or with annual prepay",
+      infotrack: "None; per filing only",
+    },
+    {
+      label: "Trial or offer",
+      courtpath: free ? "Every plan free until Jan 1, 2027; no card to sign up" : "No subscription needed on Bronze",
+      eflex: "30-day trial",
+      greenfiling: "First month free",
+      judicialink: "30-day trial; guest demo login",
+      infotrack: "Free account",
+    },
+    {
+      label: "Paralegal and staff access",
+      courtpath: "Paralegal and staff use on Silver, Gold and Platinum",
+      eflex: "Not stated",
+      greenfiling: "Free support-staff accounts on Plus",
+      judicialink: "Unlimited free staff accounts",
+      infotrack: "Not stated",
+    },
+    {
+      label: "Support",
+      courtpath: "Phone, weekdays 9–5 Mountain",
+      eflex: "Phone through Tybera, weekdays 8–5 Mountain",
+      greenfiling: "Phone, live chat and email",
+      judicialink: "Missed calls returned within 2 hours; email within 24 hours",
+      infotrack: "Not stated on its Utah page",
+    },
+    {
+      label: "Getting started",
+      courtpath: "Sign up online; account ready within 24 hours",
+      eflex: "Request an account and wait for administrator approval",
+      greenfiling: "Sign up online",
+      judicialink: "Sign up online",
+      infotrack: "Sign up online or request a demo",
+    },
+  ];
 }
+
+const COLUMNS: { key: keyof Omit<Row, "label">; name: string }[] = [
+  { key: "courtpath", name: "Courtpath" },
+  { key: "eflex", name: "eFlex (Utah State Bar)" },
+  { key: "greenfiling", name: "GreenFiling" },
+  { key: "judicialink", name: "Judicialink" },
+  { key: "infotrack", name: "InfoTrack" },
+];
 
 export default function ProvidersPage() {
   const { status } = landingEntry(PATH);
-  const FREE = isFreePeriod();
-  const ROWS = buildRows(FREE);
+  const free = isFreePeriod();
+  const rows = buildRows(free);
+  const sticky = "sticky left-0 z-10 bg-white";
   return (
     <main>
+      <LandingJsonLd path={PATH} title={TITLE} description={DESCRIPTION} checked="2026-10-14" />
       <Navbar />
       <LandingHero
         page={PAGE}
-        eyebrow="Utah e-filing providers compared"
-        title="Every Utah e-filing provider, side by side"
+        eyebrow="Compare Utah e-filing providers"
+        title="Utah e-filing providers compared"
         intro={
           <p>
-            All certified providers file into the same court system. What differs is price, how you
-            sign up, staff access and support. Here’s how they compare, with sources.
+            Every certified provider files into the same court system. What differs is price, signup,
+            staff access and support. Here’s how eFlex, GreenFiling, Judicialink, InfoTrack and
+            Courtpath compare, with sources.
           </p>
         }
         ctaHref="/pricing"
+        ctaLabel={pricingCtaLabel()}
       />
       <DraftBanner status={status} />
       <ProofStrip />
 
-      <ContentSection>
+      <ContentSection wide>
         <h2>The comparison</h2>
         <p>
-          Prices and terms below come from each provider’s own website, checked on {CHECKED}. Confirm
-          current pricing with the provider before you decide.
+          From each provider’s own website, checked on {CHECKED}. eFlex prices come from its vendor
+          Tybera’s Utah support page. Confirm current pricing with the provider before you decide.
         </p>
         <p className="text-sm sm:hidden">Swipe the table sideways to see every provider.</p>
         <div className="overflow-x-auto">
-          <table className="min-w-[720px]">
+          <table className="min-w-[860px]">
             <thead>
               <tr>
-                <th></th>
-                <th>Courtpath</th>
-                <th>eFlex (Utah State Bar)</th>
-                <th>GreenFiling</th>
-                <th>Judicialink</th>
-                <th>InfoTrack</th>
+                <td className={sticky}></td>
+                {COLUMNS.map((c) => (
+                  <th key={c.key} scope="col" className={c.key === "courtpath" ? "bg-accent/10 px-3" : "px-3"}>
+                    {c.name}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
-              {ROWS.map((r) => (
+              {rows.map((r) => (
                 <tr key={r.label}>
-                  <th scope="row">{r.label}</th>
-                  <td>{r.courtpath}</td>
-                  <td>{r.eflex}</td>
-                  <td>{r.greenfiling}</td>
-                  <td>{r.judicialink}</td>
-                  <td>{r.infotrack}</td>
+                  <th scope="row" className={`${sticky} pr-4`}>
+                    {r.label}
+                  </th>
+                  {COLUMNS.map((c) => (
+                    <td key={c.key} className={c.key === "courtpath" ? "bg-accent/10 px-3" : "px-3"}>
+                      {r[c.key]}
+                    </td>
+                  ))}
                 </tr>
               ))}
             </tbody>
@@ -146,35 +170,47 @@ export default function ProvidersPage() {
           fees are separate and the same with every provider.
         </p>
 
+        <InlineCta
+          page={PAGE}
+          position="after-table"
+          href="/pricing"
+          label={pricingCtaLabel()}
+          note="Try Courtpath on your next filing. You can keep your current provider while you compare."
+        />
+
         <h2>Which provider fits which filer</h2>
         <ul>
           <li>
-            <strong>Lowest per-filing price after 2026:</strong> Judicialink, at $3.50. Courtpath is
-            $4, GreenFiling $6 and InfoTrack $9.
+            <strong>Lowest price per filing:</strong> Judicialink, at $3.50. Then Courtpath at $4,
+            eFlex $5, GreenFiling $6 and InfoTrack $9.
           </li>
-          {FREE && (
+          <li>
+            <strong>Lowest monthly unlimited price for one attorney:</strong> Judicialink, at $19.95.
+            Then Courtpath at $25, eFlex $26 and GreenFiling $32.
+          </li>
+          {free && (
             <li>
               <strong>Free right now:</strong> Courtpath, on every plan until January 1, 2027, with
-              no card required.
+              no card needed to sign up.
             </li>
           )}
+          <li>
+            <strong>A guided workflow and phone support:</strong> Courtpath checks a filing as you
+            build it, saves drafts automatically, and has a person on the phone in Murray, weekdays
+            9 to 5 Mountain.
+          </li>
           <li>
             <strong>Practice-management integrations:</strong> InfoTrack advertises filing from
             Clio, MyCase, Smokeball and others, at a higher per-filing price.
           </li>
           <li>
-            <strong>The Bar-run option:</strong> eFlex is offered through the Utah State Bar and is
-            widely used. New accounts need administrator approval, and prices aren’t published on
-            the portal.
-          </li>
-          <li>
-            <strong>Firms with paralegals and staff:</strong> Courtpath, GreenFiling and Judicialink
-            all offer staff accounts on at least some plans.
+            <strong>The Bar-run option:</strong> eFlex is offered through the Utah State Bar and has
+            been certified the longest, since 2009. New accounts need administrator approval.
           </li>
         </ul>
         <p>
-          Comparing Courtpath with the most common choice? See{" "}
-          <Link href="/courtpath-vs-eflex">Courtpath vs. eFlex</Link>.
+          Using eFlex today? See <Link href="/courtpath-vs-eflex">Courtpath vs. eFlex</Link>. New to
+          e-filing? Start with <Link href="/utah-efiling">how to e-file in Utah courts</Link>.
         </p>
 
         <h2>What switching involves</h2>
@@ -187,14 +223,17 @@ export default function ProvidersPage() {
 
       <PlanFit
         page={PAGE}
-        plan="gold"
-        reason="Most firms start on Gold. Solo attorneys usually choose Silver, and occasional filers choose Bronze."
+        options={[
+          { plan: "silver", who: "Solo attorney" },
+          { plan: "gold", who: "Firm with 2 or more attorneys" },
+        ]}
+        footnote="Only file now and then? Bronze has no subscription: $4 per filing from 2027."
       />
       <LandingFaq
         faqs={[
           {
-            q: "Are all Utah e-filing providers certified by the courts?",
-            a: "The Utah State Courts certify providers for district and justice courts. As of October 2026, four are listed: the Utah State Bar (eFlex), GreenFiling, Judicialink and Courtpath. Some other services, such as InfoTrack, also sell Utah e-filing.",
+            q: "Which e-filing providers are certified in Utah?",
+            a: "As of October 2026, the Utah State Courts’ list of certified e-filing service providers names four: the Utah State Bar (eFlex), GreenFiling, Judicialink and Courtpath. Some other services, such as InfoTrack, also sell Utah e-filing.",
           },
           {
             q: "Do e-filing providers charge court filing fees?",
@@ -206,6 +245,12 @@ export default function ProvidersPage() {
           },
         ]}
       />
+      <ClosingCta
+        page={PAGE}
+        heading="Try Courtpath alongside your current provider"
+        ctaHref="/pricing"
+        ctaLabel={pricingCtaLabel()}
+      />
       <SourcesNote
         checked={CHECKED}
         sources={[
@@ -213,12 +258,12 @@ export default function ProvidersPage() {
           { title: "Courtpath pricing", url: "https://www.courtpath.com/pricing" },
           { title: "Utah State Bar eFiling Portal (eFlex)", url: "https://efiling.utahbar.org/" },
           { title: "eFlex: Getting started", url: "https://efiling.utahbar.org/manual/fiGetStarted.htm" },
+          { title: "Tybera: Utah support (eFlex subscription rates and support hours)", url: TYBERA_UTAH },
           { title: "GreenFiling: Utah plans and pricing", url: "https://www.greenfiling.com/utah/" },
           { title: "Judicialink: features and pricing", url: "https://judicialink.com/features" },
           { title: "InfoTrack: Utah court filing", url: "https://www.infotrack.com/utah" },
         ]}
       />
-      <ClosingCta page={PAGE} heading="Try Courtpath alongside your current provider" ctaHref="/pricing" />
       <Footer />
     </main>
   );

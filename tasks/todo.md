@@ -74,4 +74,24 @@ Plan: https://claude.ai/code/artifact/cfd60e73-999c-44a1-ade6-92ae4c20a3ba
 - [ ] Re-check competitor prices quarterly (providers + vs-eFlex pages, last checked Oct 14, 2026)
 - [ ] Update the debt collection page when the courts publish procedures for the SB 270 division
 - [ ] Testimonials from real users (none used on landing pages yet)
+
+## Second pass (Oct 14, 2026): fact-check + conversion/SEO review + code review
+- [x] eFlex prices are published (Tybera Utah support: $5/filing, $26/mo, $71/qtr, $270/yr; support M–F 8–5 MT); comparison pages corrected
+- [x] SB 270 described as authorizing a division ("may establish"), tense flips on Jan 1, 2027
+- [x] No unsupported claims: dropped "most firms/usually", "widely used", "700+ accounts filing", hearing reminders (About page says calendar is upcoming)
+- [x] Plan fit by audience (Silver solo / Gold firm / Platinum collections), Bronze footnote; CTA labels match destination
+- [x] H1s/titles matched to searches; hub de-duplicated from providers page; internal links across all four + blog posts
+- [x] WebPage + BreadcrumbList JSON-LD; table a11y (scope, no empty th); focus rings; sticky first column on mobile
+- [x] Navbar promo hides itself after the free period; signup conversion counted once (no re-fire on reload)
+
+## Client facts needed before publishing the landing pages
+- [ ] How staff access works: separate logins per paralegal? (court rule bars sharing an account) — pages say only "paralegal and staff use"
+- [ ] Platinum: signup requires 2+ attorneys, but /pricing says "single & multiple attorney firms" — which is right?
+- [ ] Support hours: homepage says "24/7 Support", contact page says Mon–Fri 9–5 MT (landing pages use 9–5)
+- [ ] Calendar / hearing reminders: homepage presents them as live, About says "upcoming roll-out"
+- [ ] Real setup time ("allow 24 hours" today vs "minutes" on /switch)
+- [ ] Founder names, security statement (encryption, hosting, who can see filings), volume features (batch filing, templates) for the debt page
+- [ ] Navbar banner says "User licenses are free" — confirm it means every plan, including per-filing Bronze
+- [ ] /switch and homepage stats ("500+ law firms", "50K+ filings") — stats.ts shows 702 accounts, 78 active (June 2026)
+- [ ] Publish order: blog posts before (or with) the landing pages, since the landing pages link to them
 - [ ] Wave 2 (by Dec 11): paralegals, criminal defense, family law, solo attorneys, court filing fees
