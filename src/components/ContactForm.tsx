@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { track } from "@/lib/analytics";
 
 export default function ContactForm() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -53,6 +54,7 @@ export default function ContactForm() {
       }
 
       setStatus("sent");
+      track("generate_lead", { subject: data.subject || "none" });
       form.reset();
     } catch (err) {
       setStatus("error");

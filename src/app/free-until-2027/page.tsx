@@ -174,7 +174,7 @@ export default function FreeUntil2027Page() {
           </h2>
           <p className="text-gray-600 mb-6">
             Call us at{" "}
-            <PhoneLink href={`tel:${CONTACT.phoneE164}`} className="font-semibold text-accent hover:underline">
+            <PhoneLink href={`tel:${CONTACT.phoneE164}`} location="lp-free-until-2027" className="font-semibold text-accent hover:underline">
               {CONTACT.phoneDisplay}
             </PhoneLink>{" "}
             or email{" "}

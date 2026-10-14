@@ -3,6 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 import { CONTACT, SITE_NAME, SITE_URL } from "@/lib/site";
 import { ADS_ID } from "@/lib/ads";
+import { GA4_ID } from "@/lib/analytics";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -47,8 +48,9 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
         {children}
-        {/* Google Ads base tag — site-wide so ad-click gclids are captured on
-            every possible landing page. Conversion events live in lib/ads.ts. */}
+        {/* Google tag — site-wide so ad-click gclids are captured on every
+            possible landing page. Ads conversions live in lib/ads.ts; GA4
+            (when NEXT_PUBLIC_GA4_ID is set) shares the same gtag.js. */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${ADS_ID}`}
           strategy="afterInteractive"
@@ -57,7 +59,8 @@ export default function RootLayout({
           {`window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', '${ADS_ID}');`}
+gtag('config', '${ADS_ID}');${GA4_ID ? `
+gtag('config', '${GA4_ID}');` : ""}`}
         </Script>
       </body>
     </html>

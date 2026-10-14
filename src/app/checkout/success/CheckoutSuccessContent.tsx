@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { APP_LOGIN_URL } from "@/lib/site";
 import { ADS_SIGNUP_SEND_TO, reportConversion } from "@/lib/ads";
+import { track } from "@/lib/analytics";
 
 
 export default function CheckoutSuccessContent() {
@@ -22,7 +23,10 @@ export default function CheckoutSuccessContent() {
   // signup flow rather than loading this URL directly.
   useEffect(() => {
     const plan = new URLSearchParams(window.location.search).get("plan");
-    if (plan) reportConversion(ADS_SIGNUP_SEND_TO);
+    if (plan) {
+      reportConversion(ADS_SIGNUP_SEND_TO);
+      track("sign_up", { plan });
+    }
   }, []);
 
   if (status === "loading") {

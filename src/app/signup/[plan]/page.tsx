@@ -1,9 +1,10 @@
 "use client";
 
-import { use, useState } from "react";
+import { use, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { track } from "@/lib/analytics";
 
 const PLAN_INFO: Record<
   string,
@@ -144,6 +145,8 @@ export default function SignupPage({
     attorneyCount: "2",
   });
   const [submitting, setSubmitting] = useState(false);
+  // Fire signup_start once, on the first field the visitor touches.
+  const started = useRef(false);
   const [error, setError] = useState<string | null>(null);
 
   if (!plan) {
@@ -273,7 +276,15 @@ export default function SignupPage({
                   Fill in your details below to get started. All plans are free during our launch period.
                 </p>
 
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form
+                  onSubmit={handleSubmit}
+                  onFocus={() => {
+                    if (started.current) return;
+                    started.current = true;
+                    track("signup_start", { plan: planKey });
+                  }}
+                  className="space-y-5"
+                >
                   {/* Name row */}
                   <div className="grid sm:grid-cols-3 gap-4">
                     <div>

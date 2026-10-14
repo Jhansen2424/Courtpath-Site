@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import PhoneLink from "@/components/PhoneLink";
 import { getPublishedPosts } from "@/content/blog";
 
 const quickLinks = [
@@ -35,12 +36,14 @@ export default function Footer() {
             <div className="space-y-4 text-gray-600">
               <div>
                 <span className="font-semibold text-gray-900">Phone:</span>{" "}
-                <a
+                <PhoneLink
                   href="tel:+18017973119"
                   className="hover:text-accent transition-colors"
+                  location="footer"
+                  adsConversion={false}
                 >
                   (801) 797-3119
-                </a>
+                </PhoneLink>
               </div>
               <div>
                 <span className="font-semibold text-gray-900">Email:</span>{" "}
