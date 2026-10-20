@@ -1,242 +1,110 @@
 import { NextRequest, NextResponse } from "next/server";
-import nodemailer from "nodemailer";
-import { APP_LOGIN_URL } from "@/lib/site";
-// import { createCipheriv, randomBytes } from "crypto";
-// import { getStripe } from "@/lib/stripe";
-
-// --- Stripe integration temporarily disabled. All plans are free for now. ---
-// const PLAN_CONFIG: Record<
-//   string,
-//   { priceEnvVar: string; mode: "payment" | "subscription" }
-// > = {
-//   bronze: { priceEnvVar: "STRIPE_PRICE_BRONZE", mode: "payment" },
-//   silver: { priceEnvVar: "STRIPE_PRICE_SILVER", mode: "subscription" },
-//   gold:   { priceEnvVar: "STRIPE_PRICE_GOLD",   mode: "subscription" },
-//   platinum: { priceEnvVar: "STRIPE_PRICE_PLATINUM", mode: "subscription" },
-// };
-//
-// function encryptPassword(password: string): string {
-//   const key = Buffer.from(process.env.SIGNUP_ENCRYPTION_KEY ?? "", "hex");
-//   const iv = randomBytes(16);
-//   const cipher = createCipheriv("aes-256-cbc", key, iv);
-//   const encrypted = Buffer.concat([
-//     cipher.update(password, "utf8"),
-//     cipher.final(),
-//   ]);
-//   return iv.toString("hex") + ":" + encrypted.toString("hex");
-// }
-
-// Account creation in the app hashes the password (a few seconds), so allow more than the default.
-export const maxDuration = 60;
-
-const VALID_PLANS = new Set(["bronze", "bronze-plus", "silver", "gold", "platinum"]);
-
-const escapeHtml = (v: unknown) =>
-  String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string));
-
-type AccountResult = { status: "created" | "exists" | "failed"; detail?: string; firm?: string };
+import { getStripe } from "@/lib/stripe";
+import { PLAN_BILLING, isPlan, priceFor, quantityFor, sealPassword, trialEnd, accountExists, billingStart } from "@/lib/billing";
 
 /**
- * Create the account in the Courtpath app right away (POST /pub/signup, server to server).
- * Needs COURTPATH_SIGNUP_KEY (same value as SIGNUP_API_KEY on the app; COURTPATH_API_URL is optional).
- * Without the key, or if the app is down,
- * the signup still goes through and the email says to create the account by hand.
+ * Signup: check the form, then send the attorney to Stripe Checkout to put a card on file.
+ * The Courtpath account is created only after Checkout completes (/api/create-account from the
+ * success page, or the Stripe webhook), so every account has a card and the right plan behind it.
  */
-async function createAppAccount(payload: Record<string, unknown>): Promise<AccountResult> {
-  const apiUrl = process.env.COURTPATH_API_URL || APP_LOGIN_URL;
-  const key = process.env.COURTPATH_SIGNUP_KEY;
-  if (!key) return { status: "failed", detail: "COURTPATH_SIGNUP_KEY is not set on the website" };
-  try {
-    const res = await fetch(`${apiUrl.replace(/\/$/, "")}/pub/signup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-courtpath-signup-key": key },
-      body: JSON.stringify(payload),
-      signal: AbortSignal.timeout(25000),
-    });
-    const data = await res.json().catch(() => ({}));
-    if (res.ok && data.user === "created") return { status: "created", firm: data.firm };
-    if (res.status === 409) return { status: "exists" };
-    return { status: "failed", detail: `${res.status} ${data.error ?? ""}`.trim() };
-  } catch (err) {
-    return { status: "failed", detail: err instanceof Error ? err.message : String(err) };
-  }
-}
+export const maxDuration = 30;
+
+const text = (v: unknown, max = 200) => (typeof v === "string" ? v.trim().slice(0, max) : "");
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const {
-      plan,
-      firstName,
-      lastName,
-      middleName,
-      email,
-      password,
-      bar,
-      phone,
-      address1,
-      address2,
-      city,
-      state,
-      zip,
-      teamName,
-      attorneyCount,
-    } = body;
+    const b = await request.json();
+    const plan = text(b.plan, 30).toLowerCase();
+    if (!isPlan(plan)) {
+      return NextResponse.json({ error: "Invalid plan. Must be one of: bronze, bronze-plus, silver, gold, platinum" }, { status: 400 });
+    }
+    const f = {
+      firstName: text(b.firstName, 100), middleName: text(b.middleName, 100), lastName: text(b.lastName, 100),
+      email: text(b.email, 200).toLowerCase(), bar: text(b.bar, 12), phone: text(b.phone, 30),
+      address1: text(b.address1), address2: text(b.address2), city: text(b.city, 100), state: text(b.state, 30), zip: text(b.zip, 15),
+      teamName: text(b.teamName, 120),
+    };
+    const password = typeof b.password === "string" ? b.password : "";
+    // The same rules the app applies when it creates the account, checked before any card is taken.
+    const problems: string[] = [];
+    if (!f.firstName) problems.push("first name");
+    if (!f.lastName) problems.push("last name");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) problems.push("email");
+    if (password.length < 8 || password.length > 200) problems.push("password (8 or more characters)");
+    if (!/^\d{1,10}$/.test(f.bar)) problems.push("bar number (digits only)");
+    if (PLAN_BILLING[plan].perAttorney && !f.teamName) problems.push("firm name");
+    if (problems.length) return NextResponse.json({ error: `Check these fields: ${problems.join(", ")}` }, { status: 400 });
 
-    if (!firstName || !lastName || !email || !password || !bar || !plan) {
-      return NextResponse.json(
-        { error: "Missing required fields." },
-        { status: 400 }
-      );
+    const config = PLAN_BILLING[plan];
+    const price = priceFor(plan);
+    if (config.mode === "subscription" && !price) {
+      console.error(`Signup: ${config.priceEnv} is not set`);
+      return NextResponse.json({ error: "This plan is not available online yet. Please call or contact us to sign up." }, { status: 503 });
     }
 
-    const planKey = (plan as string).toLowerCase();
-    if (!VALID_PLANS.has(planKey)) {
-      return NextResponse.json(
-        { error: "Invalid plan. Must be one of: bronze, bronze-plus, silver, gold, platinum" },
-        { status: 400 }
-      );
+    if ((await accountExists(f.email)) === true) {
+      return NextResponse.json({
+        error: "There is already a Courtpath account with this email. Log in to the app, or add a card to your account at courtpath.com/billing.",
+        code: "exists",
+      }, { status: 409 });
     }
 
-    const account = await createAppAccount({
-      plan: planKey, firstName, middleName, lastName, email, password, bar, phone,
-      address1, address2, city, state, zip, teamName, attorneyCount,
-    });
-    if (account.status !== "created") console.error("Courtpath account not created automatically:", account);
-
-    const accountLine =
-      account.status === "created"
-        ? `Account created automatically${account.firm ? ` (firm: ${account.firm})` : ""}. Nothing to do.`
-        : account.status === "exists"
-        ? "An account with this email already exists in the app. No new account was made."
-        : `Automatic account creation FAILED (${account.detail ?? "unknown error"}). Create this account by hand.`;
-
-    // Email the signup submission to joshua@webaholics.co
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.MAILER_AUTH_USER,
-        pass: process.env.MAILER_AUTH_PASS,
-      },
+    const attorneyCount = config.perAttorney ? String(quantityFor(plan, b.attorneyCount)) : "";
+    const stripe = getStripe();
+    // Signup details ride on the customer until the account exists; the password only sealed.
+    const metadata: Record<string, string> = {
+      courtpath: "signup", plan, pw: sealPassword(password), attorneyCount,
+      ...Object.fromEntries(Object.entries(f).filter(([k, v]) => v && k !== "email")),
+    };
+    const customer = await stripe.customers.create({
+      email: f.email,
+      name: `${f.firstName} ${f.lastName}`,
+      phone: f.phone || undefined,
+      address: f.address1 ? { line1: f.address1, line2: f.address2 || undefined, city: f.city || undefined, state: f.state || undefined, postal_code: f.zip || undefined, country: "US" } : undefined,
+      metadata,
     });
 
-    const rows: Array<[string, string]> = [
-      ["Account", accountLine],
-      ["Plan", planKey],
-      ["First Name", firstName],
-      ["Middle Name", middleName ?? ""],
-      ["Last Name", lastName],
-      ["Email", email],
-      ["Bar Number", bar],
-      ["Phone", phone ?? ""],
-      ["Address 1", address1 ?? ""],
-      ["Address 2", address2 ?? ""],
-      ["City", city ?? ""],
-      ["State", state ?? ""],
-      ["ZIP", zip ?? ""],
-      ["Team Name", teamName ?? ""],
-      ["Attorney Count", attorneyCount ? String(attorneyCount) : ""],
-    ];
+    const end = trialEnd();
+    // Shown above the button on Stripe's page, so the attorney knows exactly when the card is used.
+    const firstCharge = billingStart().toLocaleDateString("en-US", { timeZone: "America/Denver", month: "long", day: "numeric", year: "numeric" });
+    const note = end
+      ? config.mode === "setup"
+        ? `Nothing is charged today. Your card is kept on file for the $4 per-filing charge starting ${firstCharge}.`
+        : `Nothing is charged today. Your ${config.name} plan bills automatically to this card starting ${firstCharge}.`
+      : config.mode === "setup" ? "Your card is kept on file for the $4 per-filing charge." : "";
+    const origin = new URL(request.url).origin;
+    const common = {
+      customer: customer.id,
+      client_reference_id: customer.id,
+      metadata: { courtpath: "signup", plan },
+      ...(note ? { custom_text: { submit: { message: note } } } : {}),
+      success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&plan=${plan}`,
+      cancel_url: `${origin}/signup/${plan}?canceled=1`,
+    };
+    const session =
+      config.mode === "setup"
+        ? await stripe.checkout.sessions.create({
+            ...common,
+            mode: "setup",
+            currency: "usd",
+            payment_method_types: ["card"],
+            setup_intent_data: { metadata: { plan }, description: "Courtpath Bronze: card on file for per-filing charges" },
+          })
+        : await stripe.checkout.sessions.create({
+            ...common,
+            mode: "subscription",
+            payment_method_types: ["card"],
+            payment_method_collection: "always",
+            line_items: [{ price: price as string, quantity: quantityFor(plan, b.attorneyCount) }],
+            subscription_data: {
+              metadata: { plan },
+              ...(end ? { trial_end: end, trial_settings: { end_behavior: { missing_payment_method: "cancel" } } } : {}),
+            },
+          });
 
-    const mail = transporter.sendMail({
-      from: `"Courtpath Website" <${process.env.MAILER_AUTH_USER}>`,
-      to: "joshua@webaholics.co",
-      replyTo: email,
-      subject: `[Courtpath Signup] ${planKey.toUpperCase()} — ${firstName} ${lastName}${account.status === "failed" ? " — CREATE BY HAND" : ""}`,
-      text: rows
-        .filter(([, v]) => v)
-        .map(([k, v]) => `${k}: ${v}`)
-        // The password is only sent when the account still has to be made by hand.
-        .concat(account.status === "failed" ? ["", `Password: ${password}`] : [])
-        .join("\n"),
-      html: `
-        <h2>New Courtpath Signup (${escapeHtml(planKey.toUpperCase())})</h2>
-        <table style="border-collapse:collapse;width:100%;max-width:600px;">
-          ${rows
-            .filter(([, v]) => v)
-            .map(
-              ([k, v]) =>
-                `<tr><td style="padding:8px;font-weight:bold;">${k}</td><td style="padding:8px;">${escapeHtml(v)}</td></tr>`
-            )
-            .join("")}
-          ${account.status === "failed" ? `<tr><td style="padding:8px;font-weight:bold;">Password</td><td style="padding:8px;">${escapeHtml(password)}</td></tr>` : ""}
-        </table>
-      `,
-    });
-
-    try {
-      await mail;
-    } catch (mailErr) {
-      // With the account already made, a mail hiccup should not tell the attorney the signup failed.
-      if (account.status !== "created") throw mailErr;
-      console.error("Signup notification email failed:", mailErr);
-    }
-
-    // Relative URL keeps the redirect on whatever domain the site is served
-    // from, instead of relying on NEXT_PUBLIC_APP_URL (which can point at a
-    // wrong/dead host on the deploy).
-    return NextResponse.json({
-      url: `/checkout/success?plan=${planKey}&account=${account.status === "created" ? "ready" : account.status === "exists" ? "exists" : "pending"}`,
-    });
-
-    // --- Original Stripe flow (disabled) ---
-    // const config = PLAN_CONFIG[planKey];
-    // const priceId = process.env[config.priceEnvVar];
-    //
-    // if (!priceId || priceId === "price_REPLACE_ME") {
-    //   return NextResponse.json(
-    //     { error: "This plan is not configured yet. Please contact support." },
-    //     { status: 500 }
-    //   );
-    // }
-    //
-    // if (!process.env.SIGNUP_ENCRYPTION_KEY) {
-    //   return NextResponse.json(
-    //     { error: "Server configuration error. Please contact support." },
-    //     { status: 500 }
-    //   );
-    // }
-    //
-    // const encryptedPassword = encryptPassword(password);
-    //
-    // const metadata: Record<string, string> = {
-    //   firstName,
-    //   lastName,
-    //   email,
-    //   bar,
-    //   plan: planKey,
-    //   encryptedPassword,
-    //   ...(middleName   && { middleName }),
-    //   ...(phone        && { phone }),
-    //   ...(address1     && { address1 }),
-    //   ...(address2     && { address2 }),
-    //   ...(city         && { city }),
-    //   ...(state        && { state }),
-    //   ...(zip          && { zip }),
-    //   ...(teamName     && { teamName }),
-    //   ...(attorneyCount && { attorneyCount: String(attorneyCount) }),
-    // };
-    //
-    // const quantity =
-    //   (planKey === "gold" || planKey === "platinum") && attorneyCount
-    //     ? Math.max(1, Number(attorneyCount))
-    //     : 1;
-    //
-    // const session = await getStripe().checkout.sessions.create({
-    //   mode: config.mode,
-    //   line_items: [{ price: priceId, quantity }],
-    //   customer_email: email,
-    //   metadata,
-    //   success_url: `${appUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-    //   cancel_url: `${appUrl}/signup/${planKey}`,
-    // });
-    //
-    // return NextResponse.json({ url: session.url });
+    return NextResponse.json({ url: session.url });
   } catch (error) {
-    console.error("Signup submission error:", error);
-    return NextResponse.json(
-      { error: "Failed to submit signup. Please try again later." },
-      { status: 500 }
-    );
+    console.error("Signup checkout error:", error);
+    return NextResponse.json({ error: "Could not start checkout. Please try again later." }, { status: 500 });
   }
 }

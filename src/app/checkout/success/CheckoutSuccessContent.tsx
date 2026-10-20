@@ -1,41 +1,56 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { APP_LOGIN_URL } from "@/lib/site";
 import { ADS_SIGNUP_SEND_TO, reportConversion } from "@/lib/ads";
 import { track } from "@/lib/analytics";
 
+type Account = "ready" | "exists" | "linked" | "pending";
 
 export default function CheckoutSuccessContent() {
-  // --- Stripe-backed account creation is disabled. All plans are free, so we
-  // just confirm the submission and let the user know we'll be in touch. ---
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
-  const [errorMsg] = useState<string | null>(null);
-  // ready = the app account was created on signup; exists = that email already has one;
-  // pending = it will be set up by hand (the old "allow 24 hours" message).
-  const [account, setAccount] = useState<"ready" | "exists" | "pending">("pending");
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [account, setAccount] = useState<Account>("pending");
+  const [kind, setKind] = useState<"signup" | "card">("signup");
+  const ran = useRef(false);
 
   useEffect(() => {
-    const a = new URL(window.location.href).searchParams.get("account");
-    if (a === "ready" || a === "exists") setAccount(a);
-    const t = setTimeout(() => setStatus("success"), 400);
-    return () => clearTimeout(t);
-  }, []);
-
-  // Report the "Signup Complete" conversion once per signup — only when the
-  // ?plan= param is present, i.e. the visitor came through the signup flow
-  // rather than loading this URL directly. The param is then dropped from the
-  // URL, so a reload, back/forward or Strict Mode's second effect run can't
-  // count the same signup twice.
-  useEffect(() => {
+    // Strict Mode runs effects twice in development; one confirmation is enough.
+    if (ran.current) return;
+    ran.current = true;
     const url = new URL(window.location.href);
+    const sessionId = url.searchParams.get("session_id");
     const plan = url.searchParams.get("plan");
-    if (!plan) return;
-    reportConversion(ADS_SIGNUP_SEND_TO);
-    track("sign_up", { plan });
-    url.searchParams.delete("plan");
-    window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
+    if (!sessionId) {
+      setErrorMsg("This page needs the link Stripe sends you back with.");
+      setStatus("error");
+      return;
+    }
+    (async () => {
+      try {
+        const res = await fetch("/api/create-account", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sessionId }),
+        });
+        const data = await res.json();
+        if (!res.ok) { setErrorMsg(data.error || null); setStatus("error"); return; }
+        setAccount(data.account);
+        setKind(data.kind === "card" ? "card" : "signup");
+        // Report the "Signup Complete" conversion once per signup, then drop ?plan= so a reload can't count it again.
+        if (plan && data.kind !== "card") {
+          reportConversion(ADS_SIGNUP_SEND_TO);
+          track("sign_up", { plan });
+          url.searchParams.delete("plan");
+          window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
+        }
+        setStatus("success");
+      } catch {
+        setErrorMsg("Network error while confirming your signup.");
+        setStatus("error");
+      }
+    })();
   }, []);
 
   if (status === "loading") {
@@ -43,7 +58,7 @@ export default function CheckoutSuccessContent() {
       <section className="relative min-h-[60vh] flex items-center justify-center bg-gradient-to-b from-white to-gray-50">
         <div className="text-center">
           <div className="mx-auto w-16 h-16 rounded-full border-4 border-accent border-t-transparent animate-spin mb-6" />
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Submitting your signup&hellip;</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Setting up your account&hellip;</h1>
           <p className="text-gray-500">Please don&apos;t close this page.</p>
         </div>
       </section>
@@ -61,15 +76,10 @@ export default function CheckoutSuccessContent() {
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Something Went Wrong</h1>
           <p className="text-gray-600 mb-2">
-            We couldn&apos;t finish submitting your signup. Please try again or contact us.
+            We couldn&apos;t confirm your signup. If you entered a card, it is safe: contact us and we&apos;ll finish setting you up.
           </p>
-          {errorMsg && (
-            <p className="text-sm text-red-600 bg-red-50 rounded-lg px-4 py-2 mb-6">{errorMsg}</p>
-          )}
-          <Link
-            href="/contact"
-            className="inline-block px-8 py-4 bg-accent hover:bg-accent-dark text-white font-semibold rounded-lg transition-all"
-          >
+          {errorMsg && <p className="text-sm text-red-600 bg-red-50 rounded-lg px-4 py-2 mb-6">{errorMsg}</p>}
+          <Link href="/contact" className="inline-block px-8 py-4 bg-accent hover:bg-accent-dark text-white font-semibold rounded-lg transition-all">
             Contact Support
           </Link>
         </div>
@@ -77,7 +87,12 @@ export default function CheckoutSuccessContent() {
     );
   }
 
-  // success
+  const message =
+    account === "ready" ? "Your account is ready. Log in with the email and password you just chose."
+    : account === "exists" ? "You already had a Courtpath account with this email, so we added your card to it. Log in with your existing password."
+    : account === "linked" ? "Your card is on file for your Courtpath plan."
+    : "Your card is on file. Please allow 24 hours for us to finish setting up your account.";
+
   return (
     <section className="relative min-h-[60vh] flex items-center justify-center bg-gradient-to-b from-white to-gray-50">
       <div className="max-w-2xl mx-auto px-4 py-32 text-center">
@@ -87,20 +102,13 @@ export default function CheckoutSuccessContent() {
           </svg>
         </div>
         <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
-          Thank you for signing up!
+          {kind === "card" ? "Thank you!" : "Thank you for signing up!"}
         </h1>
-        <p className="text-xl text-gray-600 mb-6">
-          {account === "ready"
-            ? "Your account is ready. Log in with the email and password you just chose."
-            : account === "exists"
-            ? "You already have a Courtpath account with this email. Log in with your existing password, or contact us if you need help getting in."
-            : "Please allow 24 hours for account creation."}
-        </p>
+        <p className="text-xl text-gray-600 mb-4">{message}</p>
+        <p className="text-gray-500 mb-8">You won&apos;t be charged before January 1, 2027.</p>
         <p className="text-xl text-gray-600 mb-8">
           You can login here:{" "}
-          <a href={APP_LOGIN_URL} className="text-accent underline break-all">
-            {APP_LOGIN_URL}
-          </a>
+          <a href={APP_LOGIN_URL} className="text-accent underline break-all">{APP_LOGIN_URL}</a>
         </p>
         <p className="text-xl font-semibold text-gray-900">Happy filing!</p>
       </div>

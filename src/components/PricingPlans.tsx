@@ -146,7 +146,7 @@ export default function PricingPlans() {
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               All plans include our core features. Choose the one that fits your practice size.
-              Every plan is free during our launch period — regular pricing begins January 1, 2027.
+              Every plan is free during our launch period — regular pricing begins January 1, 2027. A card is required at signup and nothing is charged before then.
             </p>
           </div>
         </div>

@@ -17,7 +17,7 @@ const faqs = [
   },
   {
     question: "Do you offer a free trial?",
-    answer: "Yes! We offer a 14-day free trial for our Professional plan. No credit card required to start. You'll have access to all Professional features during your trial period.",
+    answer: "Every plan is free until January 1, 2027. A card is required when you sign up, and nothing is charged before then. From January 1, 2027 your plan bills automatically to that card.",
   },
   {
     question: "What happens to my data if I cancel?",

@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -148,6 +148,10 @@ export default function SignupPage({
   // Fire signup_start once, on the first field the visitor touches.
   const started = useRef(false);
   const [error, setError] = useState<string | null>(null);
+  // Back from Stripe without finishing: say so (nothing was charged and no account was made).
+  useEffect(() => {
+    if (new URL(window.location.href).searchParams.get("canceled")) setError("Checkout was cancelled, so no account was created. Add a card to finish signing up.");
+  }, []);
 
   if (!plan) {
     return (
@@ -481,11 +485,14 @@ export default function SignupPage({
                     disabled={submitting}
                     className="w-full py-4 bg-accent hover:bg-accent-dark text-white font-bold rounded-lg transition-all hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    {submitting ? "Submitting..." : "Sign Up"}
+                    {submitting ? "Opening secure checkout..." : "Continue to add card"}
                   </button>
 
-                  <p className="text-xs text-gray-400 text-center">
-                    All plans are free during our launch period. We&apos;ll be in touch to get your account set up.
+                  <p className="text-xs text-gray-500 text-center">
+                    A card is required to sign up. {planKey === "bronze"
+                      ? "It is kept on file for the $4 per-filing charge, starting January 1, 2027."
+                      : "Nothing is charged before January 1, 2027; your plan bills automatically from then on."}{" "}
+                    Cards are handled by Stripe.
                   </p>
                 </form>
               </div>
