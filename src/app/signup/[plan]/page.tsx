@@ -6,14 +6,14 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { track } from "@/lib/analytics";
 import {
-  LEGACY_PLANS, PLANS, billingKeyFor, firmRate, formatDate, freeUntil, isPublicPlan, type PublicPlan,
+  BASIC_FILINGS, LEGACY_PLANS, PLANS, billingKeyFor, firmRate, formatDate, freeUntil, isPublicPlan, type PublicPlan,
 } from "@/lib/plans";
 
 // What each plan's summary card lists under the price.
 const PLAN_POINTS: Record<PublicPlan, { description: string; points: string[] }> = {
   basic: {
-    description: "Pay as you go. No monthly fee; you pay only when you file.",
-    points: ["E-filing in every Utah district and justice court", "Electronic service", "Case history and documents", "One user"],
+    description: `For occasional filers. ${BASIC_FILINGS} filings a month are included; extra filings are $4 each.`,
+    points: [`${BASIC_FILINGS} filings a month`, "$4 for each extra filing", "E-filing in every Utah district and justice court", "Electronic service", "One user"],
   },
   "criminal-defense": {
     description: "For criminal defense attorneys. Your most common filings are included; everything else is $4 a filing.",

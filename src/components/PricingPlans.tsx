@@ -2,19 +2,20 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { FREE_DAYS, launchSpecialOn } from "@/lib/plans";
+import { BASIC_FILINGS, FREE_DAYS, launchSpecialOn } from "@/lib/plans";
 
 const plans = [
   {
     name: "Basic",
     planId: "basic",
-    tag: "Pay as you go",
+    tag: "For occasional filers",
     blurb: "Good for attorneys who file now and then. Where everyone starts if they're not sure.",
-    price: "$4",
-    unit: "per filing",
-    note: "No monthly fee. You pay only when you file.",
+    price: "$10",
+    unit: "per month",
+    note: `Includes ${BASIC_FILINGS} filings a month. Extra filings are $4 each, or switch to Unlimited.`,
     includesLabel: "Includes",
     features: [
+      `${BASIC_FILINGS} filings a month`,
       "E-filing in every Utah district and justice court",
       "Electronic service",
       "Case history and documents",

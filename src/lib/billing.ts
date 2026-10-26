@@ -10,11 +10,13 @@ import { freeUntil } from "@/lib/plans";
  * runs). The Courtpath account is only created once Checkout completes, with the Stripe customer
  * id on it, so every account has a card behind it.
  *
- * These keys are the app's plan names; the website sells them as Basic, Criminal Defense,
- * Unlimited and Firm (lib/plans.ts maps one to the other).
+ * The website sells Basic, Criminal Defense, Unlimited and Firm (lib/plans.ts). Apart from basic,
+ * these keys are also the app's plan names; APP_PLAN says which app plan each one creates.
  *
- *   bronze       pay per filing  -> Checkout "setup" mode: the card is saved on the customer;
- *                                   the app charges $4 per filing against that customer.
+ *   basic        $10 / month     -> subscription, quantity 1; 3 filings a month included, and the
+ *                                   app charges $4 a filing after that against the same card.
+ *   bronze       pay per filing  -> Checkout "setup" mode: the card is saved on the customer and the
+ *                                   app charges $4 per filing. Existing Bronze accounts only (/billing).
  *   bronze-plus  $9.99 / month   -> subscription, quantity 1
  *   silver       $25 / month     -> subscription, quantity 1
  *   gold         per attorney    -> subscription, quantity = attorneys (tiered price in Stripe)
@@ -24,14 +26,20 @@ import { freeUntil } from "@/lib/plans";
  * on that date.
  */
 
-export type PlanKey = "bronze" | "bronze-plus" | "silver" | "gold" | "platinum";
+export type PlanKey = "basic" | "bronze" | "bronze-plus" | "silver" | "gold" | "platinum";
 
-export const PLAN_BILLING: Record<PlanKey, { name: string; mode: "setup" | "subscription"; priceEnv?: string; perAttorney?: boolean }> = {
-  bronze: { name: "Basic", mode: "setup" },
+export const PLAN_BILLING: Record<PlanKey, { name: string; mode: "setup" | "subscription"; priceEnv?: string; perAttorney?: boolean; detail?: string }> = {
+  basic: { name: "Basic", mode: "subscription", priceEnv: "STRIPE_PRICE_BASIC", detail: "$10 a month with 3 filings included, then $4 a filing" },
+  bronze: { name: "Bronze", mode: "setup" },
   "bronze-plus": { name: "Criminal Defense", mode: "subscription", priceEnv: "STRIPE_PRICE_BRONZE_PLUS" },
   silver: { name: "Unlimited", mode: "subscription", priceEnv: "STRIPE_PRICE_SILVER" },
   gold: { name: "Firm", mode: "subscription", priceEnv: "STRIPE_PRICE_GOLD", perAttorney: true },
   platinum: { name: "Unlimited (yearly)", mode: "subscription", priceEnv: "STRIPE_PRICE_PLATINUM", perAttorney: true },
+};
+
+/** The app plan an account gets. The app has no "basic" yet, so Basic accounts are Bronze there. */
+export const APP_PLAN: Record<PlanKey, string> = {
+  basic: "bronze", bronze: "bronze", "bronze-plus": "bronze-plus", silver: "silver", gold: "gold", platinum: "platinum",
 };
 
 export const isPlan = (v: unknown): v is PlanKey => typeof v === "string" && v in PLAN_BILLING;
@@ -138,6 +146,8 @@ export async function finishCheckout(sessionId: string, notify: (r: FinishResult
   const customer = session.customer as Stripe.Customer | null;
   const kind = session.metadata?.courtpath === "card" ? "card" : "signup";
   const plan = isPlan(session.metadata?.plan) ? (session.metadata!.plan as PlanKey) : null;
+  // What the app is told: Basic accounts are created as the app's Bronze plan.
+  const appPlan = plan ? APP_PLAN[plan] : null;
   const base = { kind, plan } as const;
   if (!customer || typeof customer === "string" || customer.deleted || !session.metadata?.courtpath) {
     return { ...base, ok: false, account: "pending", error: "This is not a Courtpath checkout." };
@@ -167,7 +177,7 @@ export async function finishCheckout(sessionId: string, notify: (r: FinishResult
   let result: FinishResult;
   let detail: string | undefined;
   if (kind === "card") {
-    const r = await callApp("/stripe", { email: customer.email, stripeId: customer.id, plan });
+    const r = await callApp("/stripe", { email: customer.email, stripeId: customer.id, plan: appPlan });
     if (r.status === 200) result = { ...base, ok: true, account: "linked" };
     else { result = { ...base, ok: true, account: "pending" }; detail = `${r.status} ${r.data?.error ?? ""}`.trim(); }
   } else {
@@ -175,7 +185,7 @@ export async function finishCheckout(sessionId: string, notify: (r: FinishResult
     try { password = m.pw ? openPassword(m.pw) : ""; } catch { password = ""; }
     let r = password
       ? await callApp("", {
-          plan, email: customer.email, password, stripeId: customer.id,
+          plan: appPlan, email: customer.email, password, stripeId: customer.id,
           firstName: m.firstName, middleName: m.middleName, lastName: m.lastName, bar: m.bar, phone: m.phone,
           address1: m.address1, address2: m.address2, city: m.city, state: m.state, zip: m.zip,
           teamName: m.teamName, attorneyCount: m.attorneyCount,
@@ -186,7 +196,7 @@ export async function finishCheckout(sessionId: string, notify: (r: FinishResult
     if (password && (r.status === 0 || r.status >= 500)) {
       for (let i = 0; i < 4; i++) {
         await new Promise((ok) => setTimeout(ok, 3000));
-        const check = await callApp("/stripe", { email: customer.email, stripeId: customer.id, plan });
+        const check = await callApp("/stripe", { email: customer.email, stripeId: customer.id, plan: appPlan });
         if (check.status === 200 && check.data?.same) { r = { status: 200, data: { user: "created" } }; break; }
         if (check.status === 200 || check.status === 409) { r = { status: 409, data: {} }; break; }
       }
@@ -197,7 +207,7 @@ export async function finishCheckout(sessionId: string, notify: (r: FinishResult
       const again = (await stripe.customers.retrieve(customer.id)) as Stripe.Customer;
       if (again.metadata?.[STATUS_KEY] === "ready") return { ...base, ok: true, account: "ready" };
       // The email already had an account: put this card on it.
-      const link = await callApp("/stripe", { email: customer.email, stripeId: customer.id, plan });
+      const link = await callApp("/stripe", { email: customer.email, stripeId: customer.id, plan: appPlan });
       if (link.status === 200 && link.data?.same) {
         // Already carrying this very customer: we created it. Another run still finishing it records it;
         // an earlier run that timed out and said "by hand" is corrected here (and the email says so).

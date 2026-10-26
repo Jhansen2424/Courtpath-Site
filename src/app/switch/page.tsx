@@ -38,7 +38,7 @@ const SWITCH_FACTS = [
 ];
 
 const COMPARISON = [
-  { them: "Per-filing or monthly fees, every month", us: "Free until January 1, 2027 — then from $4 a filing" },
+  { them: "Per-filing or monthly fees, every month", us: "Free until January 1, 2027 — then from $10 a month" },
   { them: "Interfaces designed years ago", us: "A guided wizard with real-time validation and auto-saved drafts" },
   { them: "One more login your staff tolerates", us: "Attorney + paralegal access designed around how firms actually file" },
   { them: "Support tickets", us: `A real person at ${"(801) 797-3119"}` },

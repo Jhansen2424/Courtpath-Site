@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
     const firstCharge = formatDate(new Date(end * 1000));
     const note = config.mode === "setup"
       ? `Nothing is charged today. Your card is kept on file for the $4 per-filing charge, which starts ${firstCharge}.`
-      : `Nothing is charged today. Your ${config.name} plan starts on this card ${firstCharge}. Cancel before then and you won't be charged.`;
+      : `Nothing is charged today. Your ${config.name} plan${config.detail ? ` (${config.detail})` : ""} starts on this card ${firstCharge}. Cancel before then and you won't be charged.`;
     const origin = new URL(request.url).origin;
     const common = {
       customer: customer.id,

@@ -2,7 +2,8 @@
  * The plans the website sells. Each one maps onto a billing plan in lib/billing.ts, which keeps
  * the original names because the Courtpath app and Stripe use them:
  *
- *   basic             -> bronze        $4 per filing, card kept on file
+ *   basic             -> basic         $10 / month, 3 filings included, then $4 a filing
+ *                                      (the app still calls this plan bronze)
  *   criminal-defense  -> bronze-plus   $9.99 / month
  *   unlimited         -> silver        $25 / month, or platinum (one attorney) at $240 / year
  *   firm              -> gold          $23 / $22 / $21 per attorney a month, by firm size
@@ -12,9 +13,11 @@
  */
 
 export type PublicPlan = "basic" | "criminal-defense" | "unlimited" | "firm";
-export type BillingKey = "bronze" | "bronze-plus" | "silver" | "gold" | "platinum";
+export type BillingKey = "basic" | "bronze" | "bronze-plus" | "silver" | "gold" | "platinum";
 
 export const FREE_DAYS = 30;
+/** Filings a month included in Basic before the $4 per-filing charge applies. */
+export const BASIC_FILINGS = 3;
 /** Midnight Utah time on January 1, 2027. lib/billing.ts uses the same default. */
 export const LAUNCH_SPECIAL_ENDS = Date.parse("2027-01-01T07:00:00Z");
 
@@ -29,7 +32,7 @@ export const formatDate = (d: Date, month: "long" | "short" = "long") =>
   d.toLocaleDateString("en-US", { timeZone: "America/Denver", month, day: "numeric", year: "numeric" });
 
 export const PLANS: Record<PublicPlan, { name: string; price: string; unit: string; after: string }> = {
-  basic: { name: "Basic", price: "$4", unit: "per filing", after: "$4 per filing, only when you file" },
+  basic: { name: "Basic", price: "$10", unit: "per month", after: `$10 a month with ${BASIC_FILINGS} filings, $4 each after that` },
   "criminal-defense": { name: "Criminal Defense", price: "$9.99", unit: "per month", after: "$9.99 a month" },
   unlimited: { name: "Unlimited", price: "$25", unit: "per month", after: "$25 a month" },
   firm: { name: "Firm", price: "$21", unit: "per attorney / month", after: "per attorney, each month" },
@@ -47,7 +50,7 @@ export const LEGACY_PLANS: Record<string, { plan: PublicPlan; yearly?: boolean }
 };
 
 export function billingKeyFor(plan: PublicPlan, yearly = false): BillingKey {
-  if (plan === "basic") return "bronze";
+  if (plan === "basic") return "basic";
   if (plan === "criminal-defense") return "bronze-plus";
   if (plan === "firm") return "gold";
   return yearly ? "platinum" : "silver";
@@ -55,7 +58,7 @@ export function billingKeyFor(plan: PublicPlan, yearly = false): BillingKey {
 
 /** The display name for a billing key, e.g. on the success page and in staff emails. */
 export const nameForBillingKey = (key: string | null | undefined) =>
-  key === "bronze" ? "Basic" : key === "bronze-plus" ? "Criminal Defense" : key === "silver" ? "Unlimited"
+  key === "basic" ? "Basic" : key === "bronze" ? "Bronze" : key === "bronze-plus" ? "Criminal Defense" : key === "silver" ? "Unlimited"
     : key === "platinum" ? "Unlimited (yearly)" : key === "gold" ? "Firm" : "Courtpath";
 
 /** Firm price per attorney a month: $23 for 2 to 10, $22 for 11 to 20, $21 for 21 or more. */

@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import type Stripe from "stripe";
-import { openPassword, PLAN_BILLING, type FinishResult } from "@/lib/billing";
+import { APP_PLAN, openPassword, PLAN_BILLING, type FinishResult } from "@/lib/billing";
 
 const escapeHtml = (v: unknown) =>
   String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string));
@@ -19,8 +19,8 @@ ${m.text}`); return {}; } };
 /** Tell joshua@webaholics.co what happened to a signup or card, in the same shape as before payments. */
 export async function sendSignupEmail(r: FinishResult, customer: Stripe.Customer, detail?: string) {
   const m = customer.metadata || {};
-  // The website name plus the app's plan key, which is what staff set up by hand.
-  const planName = r.plan ? `${PLAN_BILLING[r.plan].name} (${r.plan})` : "unknown plan";
+  // The website name plus the app plan, which is what staff set up by hand.
+  const planName = r.plan ? `${PLAN_BILLING[r.plan].name} (app plan: ${APP_PLAN[r.plan]})` : "unknown plan";
   const accountLine =
     r.account === "ready" ? "Account created automatically. Nothing to do."
     : r.account === "exists" ? "An account with this email already existed; the card was put on it. No new account was made."
