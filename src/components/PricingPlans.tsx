@@ -46,10 +46,9 @@ const plans = [
     planId: "firm",
     tag: "2 or more attorneys",
     blurb: "One account for the whole office, priced per attorney.",
-    pricePrefix: "from",
     price: "$21",
     unit: "per attorney / month",
-    note: "$23 each for 2 to 10 attorneys, $22 for 11 to 20, $21 for 21 or more.",
+    note: "The same price for every attorney, whatever the size of the firm. Staff file at no extra cost.",
     includesLabel: "Everything in Unlimited, plus",
     features: [
       "Unlimited filings for every attorney",
@@ -127,7 +126,6 @@ export default function PricingPlans() {
                 <p className="text-sm text-gray-600 mb-6">{plan.blurb}</p>
 
                 <div className="flex items-baseline gap-2">
-                  {plan.pricePrefix && <span className="text-sm text-gray-500">{plan.pricePrefix}</span>}
                   <span className="text-5xl font-bold text-gray-900">{plan.price}</span>
                   <span className="text-sm text-gray-500">{plan.unit}</span>
                 </div>

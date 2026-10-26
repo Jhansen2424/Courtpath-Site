@@ -6,7 +6,7 @@
  *                                      (the app still calls this plan bronze)
  *   criminal-defense  -> bronze-plus   $9.99 / month
  *   unlimited         -> silver        $25 / month, or platinum (one attorney) at $240 / year
- *   firm              -> gold          $23 / $22 / $21 per attorney a month, by firm size
+ *   firm              -> gold          $21 per attorney a month
  *
  * Every new account is free for its first FREE_DAYS. Until the launch special ends, signups are
  * free until January 1, 2027 instead, as the site has promised.
@@ -35,7 +35,7 @@ export const PLANS: Record<PublicPlan, { name: string; price: string; unit: stri
   basic: { name: "Basic", price: "$10", unit: "per month", after: `$10 a month with ${BASIC_FILINGS} filings, $4 each after that` },
   "criminal-defense": { name: "Criminal Defense", price: "$9.99", unit: "per month", after: "$9.99 a month" },
   unlimited: { name: "Unlimited", price: "$25", unit: "per month", after: "$25 a month" },
-  firm: { name: "Firm", price: "$21", unit: "per attorney / month", after: "per attorney, each month" },
+  firm: { name: "Firm", price: "$21", unit: "per attorney / month", after: "$21 per attorney a month" },
 };
 
 export const isPublicPlan = (v: unknown): v is PublicPlan => typeof v === "string" && v in PLANS;
@@ -61,5 +61,5 @@ export const nameForBillingKey = (key: string | null | undefined) =>
   key === "basic" ? "Basic" : key === "bronze" ? "Bronze" : key === "bronze-plus" ? "Criminal Defense" : key === "silver" ? "Unlimited"
     : key === "platinum" ? "Unlimited (yearly)" : key === "gold" ? "Firm" : "Courtpath";
 
-/** Firm price per attorney a month: $23 for 2 to 10, $22 for 11 to 20, $21 for 21 or more. */
-export const firmRate = (attorneys: number) => (attorneys >= 21 ? 21 : attorneys >= 11 ? 22 : 23);
+/** Firm price per attorney a month, the same at every firm size (Stripe's Gold price). */
+export const FIRM_RATE = 21;

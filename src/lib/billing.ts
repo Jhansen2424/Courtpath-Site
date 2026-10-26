@@ -19,7 +19,7 @@ import { freeUntil } from "@/lib/plans";
  *                                   app charges $4 per filing. Existing Bronze accounts only (/billing).
  *   bronze-plus  $9.99 / month   -> subscription, quantity 1
  *   silver       $25 / month     -> subscription, quantity 1
- *   gold         per attorney    -> subscription, quantity = attorneys (tiered price in Stripe)
+ *   gold         $21 / attorney  -> subscription, quantity = attorneys
  *   platinum     per attorney/yr -> subscription, quantity = attorneys (Unlimited yearly: 1)
  *
  * Subscriptions start with a trial that ends when the free period does, so the first invoice is

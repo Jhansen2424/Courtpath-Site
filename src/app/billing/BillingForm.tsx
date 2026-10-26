@@ -6,7 +6,7 @@ const PLANS = [
   { id: "bronze", label: "Bronze: $4 per filing" },
   { id: "bronze-plus", label: "Bronze +: $9.99 per month" },
   { id: "silver", label: "Silver: $25 per month" },
-  { id: "gold", label: "Gold: from $21 per attorney per month" },
+  { id: "gold", label: "Gold: $21 per attorney per month" },
   { id: "platinum", label: "Platinum: from $240 per year" },
 ];
 const PER_ATTORNEY = new Set(["gold", "platinum"]);

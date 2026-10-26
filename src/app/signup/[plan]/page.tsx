@@ -6,7 +6,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { track } from "@/lib/analytics";
 import {
-  BASIC_FILINGS, LEGACY_PLANS, PLANS, billingKeyFor, firmRate, formatDate, freeUntil, isPublicPlan, type PublicPlan,
+  BASIC_FILINGS, FIRM_RATE, LEGACY_PLANS, PLANS, billingKeyFor, formatDate, freeUntil, isPublicPlan, type PublicPlan,
 } from "@/lib/plans";
 
 // What each plan's summary card lists under the price.
@@ -104,7 +104,7 @@ export default function SignupPage({ params }: { params: Promise<{ plan: string 
   const billingKey = billingKeyFor(plan, yearly);
   const attorneys = Math.max(2, Math.floor(Number(form.attorneyCount) || 2));
   const priceAfter =
-    plan === "firm" ? `$${firmRate(attorneys)} per attorney a month ($${firmRate(attorneys) * attorneys} a month for ${attorneys})`
+    plan === "firm" ? `$${FIRM_RATE} per attorney a month ($${FIRM_RATE * attorneys} a month for ${attorneys})`
     : plan === "unlimited" && yearly ? "$240 a year"
     : info.after;
   const untilLong = formatDate(until);
@@ -293,7 +293,7 @@ export default function SignupPage({ params }: { params: Promise<{ plan: string 
                       <div>
                         <label className={labelClass} htmlFor="attorneyCount">Number of attorneys</label>
                         <input id="attorneyCount" type="number" required min={2} max={500} value={form.attorneyCount} onChange={set("attorneyCount")} className={inputClass} />
-                        <p className="text-xs text-gray-500 mt-1">${firmRate(attorneys)} each a month for {attorneys} attorneys. $23 for 2 to 10, $22 for 11 to 20, $21 for 21 or more.</p>
+                        <p className="text-xs text-gray-500 mt-1">${FIRM_RATE} each a month: ${FIRM_RATE * attorneys} a month for {attorneys} attorneys.</p>
                       </div>
                     )}
                     <div className="flex gap-3">
