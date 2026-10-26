@@ -21,7 +21,7 @@ export const metadata = {
 const VALUE_PROPS = [
   {
     title: "Actually free. Every plan.",
-    body: "No per-filing fees, no monthly license, no credit card games. Every plan is $0 until January 1, 2027 — then pricing starts at just $4 a filing.",
+    body: "No per-filing fees and no monthly license until January 1, 2027. A card is required at signup, nothing is charged before then, and pricing starts at just $4 a filing after that.",
   },
   {
     title: "Certified by the Utah State Courts",
@@ -38,8 +38,8 @@ const VALUE_PROPS = [
 ];
 
 const STEPS = [
-  { n: "1", title: "Pick a plan", body: "All of them are free right now. Most firms choose Gold." },
-  { n: "2", title: "Create your account", body: "A few minutes with your firm and bar details." },
+  { n: "1", title: "Pick a plan", body: "All of them are free until January 1, 2027. Most firms choose Gold." },
+  { n: "2", title: "Create your account", body: "A few minutes with your firm and bar details, plus a card for when billing starts January 1, 2027." },
   { n: "3", title: "File today", body: "District and justice courts, with electronic service included." },
 ];
 
@@ -73,8 +73,9 @@ export default function FreeUntil2027Page() {
 
             <p className="max-w-2xl text-lg sm:text-xl text-white/60 mb-6 leading-relaxed">
               Stop paying to file. Every Courtpath plan — solo to multi-attorney
-              firm — is free until January 1, 2027. After that, pricing starts
-              at just $4 a filing.
+              firm — is free until January 1, 2027. A card is required at signup;
+              nothing is charged before then. After that, pricing starts at just
+              $4 a filing.
             </p>
 
             <p className="max-w-2xl text-sm sm:text-base text-white/70 mb-10">

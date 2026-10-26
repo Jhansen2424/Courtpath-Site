@@ -29,7 +29,7 @@ const SWITCH_FACTS = [
   },
   {
     title: "Free while you compare",
-    body: "Every Courtpath plan is free until January 1, 2027. Run us side-by-side with your current provider for as long as you like — switching costs you nothing.",
+    body: "Every Courtpath plan is free until January 1, 2027. A card is required at signup, but nothing is charged before then — run us side-by-side with your current provider for as long as you like.",
   },
   {
     title: "Same courts, same certification",
@@ -75,7 +75,8 @@ export default function SwitchPage() {
             <p className="max-w-2xl text-lg sm:text-xl text-white/60 mb-6 leading-relaxed">
               Switching e-filing providers takes minutes, not weeks. Your cases
               are already connected, there&apos;s nothing to migrate, and every
-              Courtpath plan is free until January 1, 2027.
+              Courtpath plan is free until January 1, 2027. A card is required
+              at signup; nothing is charged before then.
             </p>
 
             <p className="max-w-2xl text-sm sm:text-base text-white/70 mb-10">
@@ -155,7 +156,8 @@ export default function SwitchPage() {
             ))}
           </div>
           <p className="text-xs text-gray-400 text-center mt-4">
-            Launch pricing: all plans free through January 1, 2027. Standard pricing published on our pricing page.
+            Launch pricing: all plans free through January 1, 2027. A card is required at signup and your plan bills
+            automatically starting January 1, 2027. Standard pricing is published on our pricing page.
           </p>
         </div>
       </section>
