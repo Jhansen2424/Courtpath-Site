@@ -7,7 +7,7 @@ import { pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata({
   title: "Utah E-Filing Pricing: Plans from $4 a Filing | Courtpath",
-  description: "Pay per filing or file unlimited from $240 a year. Compare Bronze, Silver, Gold, and Platinum plans for solo attorneys and firms. Free through January 1, 2027.",
+  description: "Every Courtpath plan starts with a free month. Basic is $4 a filing, Unlimited is $25 a month, and firms pay from $21 per attorney. Criminal Defense is $9.99 a month.",
   path: "/pricing",
 });
 

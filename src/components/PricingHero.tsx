@@ -64,7 +64,7 @@ export default function PricingHero() {
               <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clipRule="evenodd" />
             </svg>
-            <span className="text-sm font-medium text-white">Transparent Pricing</span>
+            <span className="text-sm font-medium text-white">Every plan starts with a free month</span>
           </div>
 
           {/* Main heading */}
@@ -74,21 +74,34 @@ export default function PricingHero() {
             }`}
             style={{ transitionDelay: "200ms" }}
           >
-            Plans &{" "}
+            Try Courtpath{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent via-accent-light to-accent">
-              Pricing
+              free for a month
             </span>
           </h1>
 
           {/* Description */}
           <p
-            className={`text-xl sm:text-2xl text-white/80 mb-12 max-w-2xl mx-auto leading-relaxed transition-all duration-1000 ${
+            className={`text-xl sm:text-2xl text-white/80 mb-10 max-w-2xl mx-auto leading-relaxed transition-all duration-1000 ${
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
             style={{ transitionDelay: "400ms" }}
           >
-            Pick the plan that best fits your needs
+            Every plan starts with 30 days free. Nothing is charged until the month ends, and you can switch plans anytime.
           </p>
+
+          <div
+            className={`mb-12 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+            style={{ transitionDelay: "500ms" }}
+          >
+            <a
+              href="/signup/basic"
+              className="inline-block px-8 py-4 bg-accent hover:bg-accent-dark text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all"
+            >
+              Start your free month
+            </a>
+            <p className="text-sm text-white/70 mt-3">Not sure which plan? Start on Basic and switch anytime.</p>
+          </div>
 
           {/* Trust badges */}
           <div
@@ -98,9 +111,9 @@ export default function PricingHero() {
             style={{ transitionDelay: "600ms" }}
           >
             {[
-              { icon: "✓", text: "No Hidden Fees" },
-              { icon: "✓", text: "Cancel Anytime" },
-              { icon: "✓", text: "24/7 Support" },
+              { icon: "✓", text: "$0 today" },
+              { icon: "✓", text: "Cancel anytime" },
+              { icon: "✓", text: "Switch plans anytime" },
             ].map((item, index) => (
               <div key={index} className="flex items-center gap-2 text-white/90">
                 <div className="w-6 h-6 rounded-full bg-accent flex items-center justify-center text-white text-sm font-bold">

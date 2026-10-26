@@ -19,7 +19,8 @@ ${m.text}`); return {}; } };
 /** Tell joshua@webaholics.co what happened to a signup or card, in the same shape as before payments. */
 export async function sendSignupEmail(r: FinishResult, customer: Stripe.Customer, detail?: string) {
   const m = customer.metadata || {};
-  const planName = r.plan ? PLAN_BILLING[r.plan].name : "unknown plan";
+  // The website name plus the app's plan key, which is what staff set up by hand.
+  const planName = r.plan ? `${PLAN_BILLING[r.plan].name} (${r.plan})` : "unknown plan";
   const accountLine =
     r.account === "ready" ? "Account created automatically. Nothing to do."
     : r.account === "exists" ? "An account with this email already existed; the card was put on it. No new account was made."

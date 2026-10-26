@@ -5,6 +5,7 @@ import Link from "next/link";
 import { APP_LOGIN_URL } from "@/lib/site";
 import { ADS_SIGNUP_SEND_TO, reportConversion } from "@/lib/ads";
 import { track } from "@/lib/analytics";
+import { formatDate, freeUntil, nameForBillingKey } from "@/lib/plans";
 
 type Account = "ready" | "exists" | "linked" | "pending";
 
@@ -13,6 +14,7 @@ export default function CheckoutSuccessContent() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [account, setAccount] = useState<Account>("pending");
   const [kind, setKind] = useState<"signup" | "card">("signup");
+  const [planKey, setPlanKey] = useState<string | null>(null);
   const ran = useRef(false);
 
   useEffect(() => {
@@ -22,6 +24,7 @@ export default function CheckoutSuccessContent() {
     const url = new URL(window.location.href);
     const sessionId = url.searchParams.get("session_id");
     const plan = url.searchParams.get("plan");
+    setPlanKey(plan);
     if (!sessionId) {
       setErrorMsg("This page needs the link Stripe sends you back with.");
       setStatus("error");
@@ -105,7 +108,11 @@ export default function CheckoutSuccessContent() {
           {kind === "card" ? "Thank you!" : "Thank you for signing up!"}
         </h1>
         <p className="text-xl text-gray-600 mb-4">{message}</p>
-        <p className="text-gray-500 mb-8">You won&apos;t be charged before January 1, 2027.</p>
+        <p className="text-gray-500 mb-8">
+          {kind === "card"
+            ? "You won't be charged before January 1, 2027."
+            : `Your free period on ${nameForBillingKey(planKey)} runs through ${formatDate(freeUntil())}, and your card won't be charged before then.`}
+        </p>
         <p className="text-xl text-gray-600 mb-8">
           You can login here:{" "}
           <a href={APP_LOGIN_URL} className="text-accent underline break-all">{APP_LOGIN_URL}</a>

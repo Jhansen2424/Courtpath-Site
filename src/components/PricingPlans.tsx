@@ -2,265 +2,211 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { FREE_DAYS, launchSpecialOn } from "@/lib/plans";
 
 const plans = [
   {
-    name: "Bronze",
-    planId: "bronze",
-    price: "Free",
-    period: "Launch Special",
-    futurePrice: "$4 per filing",
+    name: "Basic",
+    planId: "basic",
+    tag: "Pay as you go",
+    blurb: "Good for attorneys who file now and then. Where everyone starts if they're not sure.",
+    price: "$4",
+    unit: "per filing",
+    note: "No monthly fee. You pay only when you file.",
+    includesLabel: "Includes",
     features: [
-      "Pay-per-filing plan",
-      "Single user account",
+      "E-filing in every Utah district and justice court",
       "Electronic service",
-      "Case history",
-      "Document access",
-      "Support",
+      "Case history and documents",
+      "Help from our Utah support team",
+      "One user",
     ],
     highlighted: false,
-    cta: "Sign up now!",
   },
   {
-    name: "Bronze +",
-    planId: "bronze-plus",
-    price: "Free",
-    period: "Launch Special",
-    futurePrice: "$9.99 per month",
+    name: "Unlimited",
+    planId: "unlimited",
+    tag: "For regular filers",
+    blurb: "Unlimited filings for one attorney, and your staff can file for you.",
+    price: "$25",
+    unit: "per month",
+    note: "Or $240 a year (save $60). Cheaper than Basic from 7 filings a month.",
+    includesLabel: "Everything in Basic, plus",
     features: [
-      "Unlimited filings of: Appearance of Counsel / Notice of Limited Appearance, Request for Discovery, and Entry of Plea",
-      "$3 per filing for all other filings",
-      "Single user account",
-      "Electronic service",
-      "Case history",
-      "Document access",
-      "Support",
-    ],
-    highlighted: false,
-    cta: "Sign up now!",
-  },
-  {
-    name: "Silver",
-    planId: "silver",
-    price: "Free",
-    period: "Launch Special",
-    futurePrice: "$25 per month",
-    features: [
-      "Single attorney plan",
-      "Allow paralegals and staff to file under single attorney",
-      "Electronic service",
-      "Case history",
-      "Document access",
-      "Support",
-    ],
-    highlighted: false,
-    cta: "Sign up now!",
-  },
-  {
-    name: "Gold",
-    planId: "gold",
-    price: "Free",
-    period: "Launch Special",
-    futurePrice: "$21 per month (starting)",
-    badge: "MOST POPULAR",
-    features: [
-      "Multiple attorneys at reduced prices",
-      "Paralegal & staff use",
-      "Electronic service",
-      "Case history",
-      "Document access",
-      "Support",
+      "Unlimited filings, no per-filing fee",
+      "Paralegals and staff file under your account",
+      "Yearly billing: $240, about $20 a month",
     ],
     highlighted: true,
-    cta: "Sign up now!",
+    yearlyHref: "/signup/unlimited?billing=yearly",
   },
   {
-    name: "Platinum",
-    planId: "platinum",
-    price: "Free",
-    period: "Launch Special",
-    futurePrice: "$240 per year (starting)",
+    name: "Firm",
+    planId: "firm",
+    tag: "2 or more attorneys",
+    blurb: "One account for the whole office, priced per attorney.",
+    pricePrefix: "from",
+    price: "$21",
+    unit: "per attorney / month",
+    note: "$23 each for 2 to 10 attorneys, $22 for 11 to 20, $21 for 21 or more.",
+    includesLabel: "Everything in Unlimited, plus",
     features: [
-      "Annual unlimited plan for single & multiple attorney firms",
-      "Paralegal & staff use",
-      "Electronic service",
-      "Case history",
-      "Document access",
-      "Support",
+      "Unlimited filings for every attorney",
+      "Admin controls to add and remove users",
+      "The firm's filings and court notices in one place",
     ],
     highlighted: false,
-    cta: "Sign up now!",
   },
 ];
+
+const steps = [
+  { title: "Pick a plan and sign up", body: "Your name, email, Utah bar number and a card. You pay $0 today." },
+  { title: `File free for ${FREE_DAYS} days`, body: "No Courtpath fee on any filing during your first month. Court filing fees still apply." },
+  { title: "Then your plan starts", body: "Your card is charged for the plan you chose. Cancel before the month ends and you pay nothing. Switch plans anytime." },
+];
+
+const Check = () => (
+  <svg className="w-4 h-4 text-accent mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+  </svg>
+);
 
 export default function PricingPlans() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  // Worked out in the browser so a page built earlier still shows the right offer today.
+  const [launchSpecial, setLaunchSpecial] = useState(false);
 
   useEffect(() => {
+    setLaunchSpecial(launchSpecialOn());
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
+        if (entry.isIntersecting) setIsVisible(true);
       },
       { threshold: 0.1 }
     );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
+    if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
 
-  return (
-    <section ref={sectionRef} className="relative py-24 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
-      {/* Decorative background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-      </div>
+  const fade = (delay = 0, classes = "") => ({
+    className: `${classes} transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`,
+    style: { transitionDelay: `${delay}ms` },
+  });
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+  return (
+    <section ref={sectionRef} id="plans" className="relative py-24 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section header */}
-        <div className="text-center mb-16">
-          <div
-            className={`transition-all duration-1000 ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-            }`}
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent rounded-full text-sm font-medium mb-6">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              Choose Your Plan
-            </div>
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
-              Simple,{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
-                Transparent
-              </span>{" "}
-              Pricing
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              All plans include our core features. Choose the one that fits your practice size.
-              Every plan is free during our launch period — regular pricing begins January 1, 2027. A card is required at signup and nothing is charged before then.
+        <div {...fade(0, "text-center mb-12")}>
+          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Three plans. Each starts with a free month.</h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Nothing is charged until the month ends. Court filing fees are separate on every plan.
+          </p>
+          {launchSpecial && (
+            <p className="mt-6 inline-block px-4 py-2 bg-accent/10 text-accent-dark rounded-full text-sm font-semibold">
+              Launch special: sign up now and Courtpath is free until January 1, 2027.
             </p>
-          </div>
+          )}
         </div>
 
-        {/* Pricing cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-7xl mx-auto items-start">
-          {plans.map((plan, index) => {
-            const isHovered = hoveredIndex === index;
-            const isAnyHovered = hoveredIndex !== null;
-            const shouldDim = isAnyHovered && !isHovered;
-
-            return (
+        {/* Plan cards */}
+        <div className="grid md:grid-cols-3 gap-6 items-stretch">
+          {plans.map((plan, index) => (
+            <div key={plan.planId} {...fade(index * 120)}>
               <div
-                key={index}
-                className={`relative transition-all duration-700 ${
-                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
-                } ${shouldDim ? "opacity-50 scale-95" : "opacity-100 scale-100"} ${
-                  plan.highlighted ? "lg:-mt-4 lg:mb-4" : ""
+                className={`relative h-full flex flex-col bg-white rounded-2xl p-8 ${
+                  plan.highlighted ? "border-2 border-accent shadow-2xl" : "border border-gray-200 shadow-lg"
                 }`}
-                style={{ transitionDelay: `${index * 150}ms` }}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
               >
-                {/* Badge for highlighted plan */}
-                {plan.badge && (
-                  <div className="bg-accent text-white text-center py-3 px-4 rounded-t-2xl font-bold text-sm tracking-wide">
-                    {plan.name}
-                    <div className="text-xs font-semibold tracking-widest mt-0.5">{plan.badge}</div>
-                  </div>
-                )}
+                <div className="flex items-center justify-between gap-3 mb-3">
+                  <h3 className="text-2xl font-bold text-gray-900">{plan.name}</h3>
+                  <span className="px-3 py-1 bg-accent/10 text-accent-dark rounded-full text-xs font-semibold whitespace-nowrap">{plan.tag}</span>
+                </div>
+                <p className="text-sm text-gray-600 mb-6">{plan.blurb}</p>
 
-                <div
-                  className={`relative h-full transition-all duration-500 ${
-                    plan.highlighted
-                      ? "bg-white shadow-2xl border-2 border-accent rounded-b-2xl"
-                      : isHovered
-                      ? "bg-white shadow-2xl border-2 border-accent rounded-2xl"
-                      : "bg-white shadow-lg border border-gray-200 rounded-2xl"
+                <div className="flex items-baseline gap-2">
+                  {plan.pricePrefix && <span className="text-sm text-gray-500">{plan.pricePrefix}</span>}
+                  <span className="text-5xl font-bold text-gray-900">{plan.price}</span>
+                  <span className="text-sm text-gray-500">{plan.unit}</span>
+                </div>
+                <p className="text-sm text-gray-500 mt-2 mb-6">{plan.note}</p>
+
+                <Link
+                  href={`/signup/${plan.planId}`}
+                  className={`block w-full py-3 px-6 font-bold text-sm rounded-lg text-center transition-all hover:shadow-lg ${
+                    plan.highlighted ? "bg-accent hover:bg-accent-dark text-white" : "bg-primary hover:bg-primary-dark text-white"
                   }`}
                 >
-                  {/* Glow effect */}
-                  {(plan.highlighted || isHovered) && (
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/20 to-transparent blur-xl -z-10" />
-                  )}
+                  Start free month
+                </Link>
+                {plan.yearlyHref && (
+                  <Link href={plan.yearlyHref} className="block text-center text-sm text-gray-500 hover:text-accent underline mt-3">
+                    Or start yearly at $240
+                  </Link>
+                )}
 
-                  <div className="p-8 text-center">
-                    {/* Plan name (if not highlighted, show here) */}
-                    {!plan.badge && (
-                      <h3 className="text-2xl font-bold text-accent mb-6">
-                        {plan.name}
-                      </h3>
-                    )}
-
-                    {/* Price */}
-                    <div className="mb-6">
-                      <div className="flex items-start justify-center">
-                        <span className="text-6xl font-bold text-gray-900">
-                          {plan.price}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-500 mt-1">{plan.period}</p>
-                      {plan.futurePrice && (
-                        <div className="mt-3 inline-block px-3 py-1.5 bg-gray-100 rounded-full">
-                          <p className="text-xs font-semibold text-gray-700">
-                            {plan.futurePrice}
-                          </p>
-                          <p className="text-[11px] text-gray-500">
-                            starting January 1, 2027
-                          </p>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Divider */}
-                    <div className="border-t border-gray-200 my-6" />
-
-                    {/* Features list */}
-                    <ul className="space-y-4 mb-8">
-                      {plan.features.map((feature, fIndex) => (
-                        <li key={fIndex} className="text-sm text-gray-700 text-center">
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* CTA button */}
-                    <Link
-                      href={`/signup/${plan.planId}`}
-                      className="inline-block w-full py-3 px-6 bg-accent hover:bg-accent-dark text-white font-bold text-sm rounded-md transition-all hover:shadow-lg hover:scale-105 text-center"
-                    >
-                      {plan.cta}
-                    </Link>
-                  </div>
-                </div>
+                <div className="border-t border-gray-200 my-6" />
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{plan.includesLabel}</p>
+                <ul className="space-y-3">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-3 text-sm text-gray-700">
+                      <Check />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
               </div>
-            );
-          })}
+            </div>
+          ))}
+        </div>
+
+        {/* Criminal Defense */}
+        <div {...fade(360, "mt-6 bg-white rounded-2xl border border-gray-200 shadow-lg p-6 sm:p-8 flex flex-col md:flex-row md:items-center gap-6")}>
+          <div className="flex-1">
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-2">
+              <h3 className="text-xl font-bold text-gray-900">Criminal Defense</h3>
+              <span className="text-sm text-gray-500">
+                <span className="text-2xl font-bold text-gray-900">$9.99</span> per month
+              </span>
+            </div>
+            <p className="text-sm text-gray-600">
+              For criminal defense attorneys: unlimited Appearances of Counsel and Notices of Limited Appearance, Requests for
+              Discovery and Entries of Plea. Everything else is $4 a filing.
+            </p>
+          </div>
+          <Link
+            href="/signup/criminal-defense"
+            className="shrink-0 py-3 px-6 bg-primary hover:bg-primary-dark text-white font-bold text-sm rounded-lg text-center transition-all hover:shadow-lg"
+          >
+            Start free month
+          </Link>
+        </div>
+
+        <p className="text-center text-sm text-gray-500 mt-8">
+          Not sure which plan? Start on Basic and switch anytime, even during your free month.
+        </p>
+
+        {/* How the free month works */}
+        <div {...fade(480, "mt-20")}>
+          <h2 className="text-3xl font-bold text-gray-900 text-center mb-10">How the free month works</h2>
+          <ol className="grid md:grid-cols-3 gap-6">
+            {steps.map((s, i) => (
+              <li key={s.title} className="bg-white rounded-2xl border border-gray-200 p-6">
+                <span className="w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center text-sm font-bold mb-4">{i + 1}</span>
+                <h3 className="font-bold text-gray-900 mb-2">{s.title}</h3>
+                <p className="text-sm text-gray-600">{s.body}</p>
+              </li>
+            ))}
+          </ol>
         </div>
 
         {/* Bottom CTA */}
-        <div
-          className={`mt-16 text-center transition-all duration-1000 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
-          style={{ transitionDelay: "600ms" }}
-        >
+        <div {...fade(600, "mt-16 text-center")}>
           <div className="inline-flex flex-col items-center gap-6 p-8 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 rounded-2xl border border-primary/10">
             <div className="text-center">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                Need a custom solution?
-              </h3>
-              <p className="text-gray-600">
-                Contact our sales team for enterprise pricing and custom features.
-              </p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Need a custom solution?</h3>
+              <p className="text-gray-600">Contact our sales team for enterprise pricing and custom features.</p>
             </div>
             <a
               href="/contact"

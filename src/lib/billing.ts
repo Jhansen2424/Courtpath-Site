@@ -2,31 +2,36 @@ import { createCipheriv, createDecipheriv, randomBytes } from "crypto";
 import type Stripe from "stripe";
 import { getStripe } from "@/lib/stripe";
 import { APP_LOGIN_URL } from "@/lib/site";
+import { freeUntil } from "@/lib/plans";
 
 /**
  * Website billing: every plan collects a card through Stripe Checkout, and nothing is charged
- * before BILLING_START (Jan 1, 2027). The Courtpath account is only created once Checkout
- * completes, with the Stripe customer id on it, so every account has a card behind it.
+ * during the free period (lib/plans.ts: 30 days, or until BILLING_START while the launch special
+ * runs). The Courtpath account is only created once Checkout completes, with the Stripe customer
+ * id on it, so every account has a card behind it.
+ *
+ * These keys are the app's plan names; the website sells them as Basic, Criminal Defense,
+ * Unlimited and Firm (lib/plans.ts maps one to the other).
  *
  *   bronze       pay per filing  -> Checkout "setup" mode: the card is saved on the customer;
  *                                   the app charges $4 per filing against that customer.
  *   bronze-plus  $9.99 / month   -> subscription, quantity 1
  *   silver       $25 / month     -> subscription, quantity 1
  *   gold         per attorney    -> subscription, quantity = attorneys (tiered price in Stripe)
- *   platinum     per attorney/yr -> subscription, quantity = attorneys
+ *   platinum     per attorney/yr -> subscription, quantity = attorneys (Unlimited yearly: 1)
  *
- * Subscriptions start with a trial that ends at BILLING_START, so the first invoice is on that
- * date. A signup after that date is billed right away.
+ * Subscriptions start with a trial that ends when the free period does, so the first invoice is
+ * on that date.
  */
 
 export type PlanKey = "bronze" | "bronze-plus" | "silver" | "gold" | "platinum";
 
 export const PLAN_BILLING: Record<PlanKey, { name: string; mode: "setup" | "subscription"; priceEnv?: string; perAttorney?: boolean }> = {
-  bronze: { name: "Bronze", mode: "setup" },
-  "bronze-plus": { name: "Bronze +", mode: "subscription", priceEnv: "STRIPE_PRICE_BRONZE_PLUS" },
-  silver: { name: "Silver", mode: "subscription", priceEnv: "STRIPE_PRICE_SILVER" },
-  gold: { name: "Gold", mode: "subscription", priceEnv: "STRIPE_PRICE_GOLD", perAttorney: true },
-  platinum: { name: "Platinum", mode: "subscription", priceEnv: "STRIPE_PRICE_PLATINUM", perAttorney: true },
+  bronze: { name: "Basic", mode: "setup" },
+  "bronze-plus": { name: "Criminal Defense", mode: "subscription", priceEnv: "STRIPE_PRICE_BRONZE_PLUS" },
+  silver: { name: "Unlimited", mode: "subscription", priceEnv: "STRIPE_PRICE_SILVER" },
+  gold: { name: "Firm", mode: "subscription", priceEnv: "STRIPE_PRICE_GOLD", perAttorney: true },
+  platinum: { name: "Unlimited (yearly)", mode: "subscription", priceEnv: "STRIPE_PRICE_PLATINUM", perAttorney: true },
 };
 
 export const isPlan = (v: unknown): v is PlanKey => typeof v === "string" && v in PLAN_BILLING;
@@ -37,8 +42,16 @@ export function billingStart(): Date {
   return isNaN(d.getTime()) ? new Date("2027-01-01T07:00:00Z") : d;
 }
 
-/** Trial end for a new subscription, or undefined once billing has started (Stripe needs it 48h+ out). */
-export function trialEnd(now = Date.now()): number | undefined {
+/** When a signup made now starts paying, as a Unix time: the free month, or BILLING_START if later. */
+export function trialEnd(now = Date.now()): number {
+  return Math.floor(freeUntil(now, billingStart().getTime()).getTime() / 1000);
+}
+
+/**
+ * Existing accounts putting a card on file (/billing) were promised free until BILLING_START, not
+ * a new free month: trial to then, or undefined once it is under 48h away (Stripe's minimum).
+ */
+export function launchTrialEnd(now = Date.now()): number | undefined {
   const start = billingStart().getTime();
   return start - now > 48 * 3600 * 1000 ? Math.floor(start / 1000) : undefined;
 }

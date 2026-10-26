@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
-import { PLAN_BILLING, isPlan, priceFor, quantityFor, trialEnd, accountExists, billingStart } from "@/lib/billing";
+import { PLAN_BILLING, isPlan, priceFor, quantityFor, launchTrialEnd, accountExists, billingStart } from "@/lib/billing";
 import { sendCardLinkEmail } from "@/lib/signupEmail";
 
 /**
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       ? await stripe.customers.update(earlier.id, { metadata: { plan, attorneyCount: config.perAttorney ? String(quantityFor(plan, b.attorneyCount)) : "" } })
       : await stripe.customers.create({ email, metadata: { courtpath: "card", plan, attorneyCount: config.perAttorney ? String(quantityFor(plan, b.attorneyCount)) : "" } });
 
-    const end = trialEnd();
+    const end = launchTrialEnd();
     // Shown above the button on Stripe's page, so the attorney knows exactly when the card is used.
     const firstCharge = billingStart().toLocaleDateString("en-US", { timeZone: "America/Denver", month: "long", day: "numeric", year: "numeric" });
     const note = end

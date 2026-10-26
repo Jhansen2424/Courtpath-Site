@@ -9,7 +9,7 @@ const faqs = [
   },
   {
     question: "Can I change my plan later?",
-    answer: "Yes! You can upgrade or downgrade your plan at any time. When upgrading, you'll get immediate access to new features. When downgrading, changes will take effect at the start of your next billing cycle.",
+    answer: "Yes, anytime. Contact us and we'll switch you. If you switch during your free month, the new plan starts when the month ends.",
   },
   {
     question: "Is there a contract or can I cancel anytime?",
@@ -17,7 +17,7 @@ const faqs = [
   },
   {
     question: "Do you offer a free trial?",
-    answer: "Every plan is free until January 1, 2027. A card is required when you sign up, and nothing is charged before then. From January 1, 2027 your plan bills automatically to that card.",
+    answer: "Yes. Every new account gets its first 30 days free, and while our launch special runs, new accounts are free until January 1, 2027. You add a card when you sign up, but nothing is charged until your free period ends. Cancel before then and you pay nothing.",
   },
   {
     question: "What happens to my data if I cancel?",
@@ -29,7 +29,7 @@ const faqs = [
   },
   {
     question: "Do you offer discounts for annual billing?",
-    answer: "Yes! Save 15% by choosing annual billing instead of monthly. Contact our sales team for annual pricing options and additional volume discounts for large firms.",
+    answer: "Yes. Unlimited is $240 a year instead of $25 a month, which saves $60. Firms can contact us about yearly billing.",
   },
   {
     question: "What kind of support is included?",

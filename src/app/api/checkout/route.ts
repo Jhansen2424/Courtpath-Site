@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
-import { PLAN_BILLING, isPlan, priceFor, quantityFor, sealPassword, trialEnd, accountExists, billingStart } from "@/lib/billing";
+import { PLAN_BILLING, isPlan, priceFor, quantityFor, sealPassword, trialEnd, accountExists } from "@/lib/billing";
+import { formatDate } from "@/lib/plans";
 
 /**
  * Signup: check the form, then send the attorney to Stripe Checkout to put a card on file.
@@ -16,7 +17,7 @@ export async function POST(request: NextRequest) {
     const b = await request.json();
     const plan = text(b.plan, 30).toLowerCase();
     if (!isPlan(plan)) {
-      return NextResponse.json({ error: "Invalid plan. Must be one of: bronze, bronze-plus, silver, gold, platinum" }, { status: 400 });
+      return NextResponse.json({ error: "Pick a plan on the pricing page first." }, { status: 400 });
     }
     const f = {
       firstName: text(b.firstName, 100), middleName: text(b.middleName, 100), lastName: text(b.lastName, 100),
@@ -32,7 +33,8 @@ export async function POST(request: NextRequest) {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) problems.push("email");
     if (password.length < 8 || password.length > 200) problems.push("password (8 or more characters)");
     if (!/^\d{1,10}$/.test(f.bar)) problems.push("bar number (digits only)");
-    if (PLAN_BILLING[plan].perAttorney && !f.teamName) problems.push("firm name");
+    // Firm is the only plan that needs a firm name; Unlimited yearly is per attorney but one attorney.
+    if (plan === "gold" && !f.teamName) problems.push("firm name");
     if (problems.length) return NextResponse.json({ error: `Check these fields: ${problems.join(", ")}` }, { status: 400 });
 
     const config = PLAN_BILLING[plan];
@@ -50,10 +52,12 @@ export async function POST(request: NextRequest) {
     }
 
     const attorneyCount = config.perAttorney ? String(quantityFor(plan, b.attorneyCount)) : "";
+    const end = trialEnd();
     const stripe = getStripe();
     // Signup details ride on the customer until the account exists; the password only sealed.
+    // freeUntil records when this account's free period ends, for the app's per-filing charges.
     const metadata: Record<string, string> = {
-      courtpath: "signup", plan, pw: sealPassword(password), attorneyCount,
+      courtpath: "signup", plan, pw: sealPassword(password), attorneyCount, freeUntil: new Date(end * 1000).toISOString(),
       ...Object.fromEntries(Object.entries(f).filter(([k, v]) => v && k !== "email")),
     };
     const customer = await stripe.customers.create({
@@ -64,20 +68,17 @@ export async function POST(request: NextRequest) {
       metadata,
     });
 
-    const end = trialEnd();
     // Shown above the button on Stripe's page, so the attorney knows exactly when the card is used.
-    const firstCharge = billingStart().toLocaleDateString("en-US", { timeZone: "America/Denver", month: "long", day: "numeric", year: "numeric" });
-    const note = end
-      ? config.mode === "setup"
-        ? `Nothing is charged today. Your card is kept on file for the $4 per-filing charge starting ${firstCharge}.`
-        : `Nothing is charged today. Your ${config.name} plan bills automatically to this card starting ${firstCharge}.`
-      : config.mode === "setup" ? "Your card is kept on file for the $4 per-filing charge." : "";
+    const firstCharge = formatDate(new Date(end * 1000));
+    const note = config.mode === "setup"
+      ? `Nothing is charged today. Your card is kept on file for the $4 per-filing charge, which starts ${firstCharge}.`
+      : `Nothing is charged today. Your ${config.name} plan starts on this card ${firstCharge}. Cancel before then and you won't be charged.`;
     const origin = new URL(request.url).origin;
     const common = {
       customer: customer.id,
       client_reference_id: customer.id,
       metadata: { courtpath: "signup", plan },
-      ...(note ? { custom_text: { submit: { message: note } } } : {}),
+      custom_text: { submit: { message: note } },
       success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&plan=${plan}`,
       cancel_url: `${origin}/signup/${plan}?canceled=1`,
     };
@@ -98,7 +99,8 @@ export async function POST(request: NextRequest) {
             line_items: [{ price: price as string, quantity: quantityFor(plan, b.attorneyCount) }],
             subscription_data: {
               metadata: { plan },
-              ...(end ? { trial_end: end, trial_settings: { end_behavior: { missing_payment_method: "cancel" } } } : {}),
+              trial_end: end,
+              trial_settings: { end_behavior: { missing_payment_method: "cancel" } },
             },
           });
 
