@@ -93,7 +93,7 @@ export default function FreeUntil2027Page() {
 
             <div className="flex flex-col sm:flex-row gap-4 mb-14">
               <a
-                href="#plans"
+                href="/signup/basic"
                 className="px-8 py-4 bg-accent text-white font-medium rounded-lg transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(212,164,65,0.3)]"
               >
                 Claim Your Free Plan

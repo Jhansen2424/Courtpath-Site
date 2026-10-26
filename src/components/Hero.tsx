@@ -60,7 +60,7 @@ export default function Hero() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mb-16">
             <Link
-              href="/pricing"
+              href="/signup/basic"
               className="group relative px-8 py-4 bg-accent text-white font-medium rounded-lg overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(212,164,65,0.3)]"
             >
               <span className="relative z-10">Start Filing Today</span>

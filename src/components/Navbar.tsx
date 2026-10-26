@@ -67,7 +67,7 @@ export default function Navbar() {
               Log In
             </a>
             <Link
-              href="/pricing"
+              href="/signup/basic"
               className="px-6 py-2.5 text-sm text-white bg-accent hover:bg-accent-dark rounded-lg transition-colors font-semibold shadow-md hover:shadow-lg"
             >
               Get Started
@@ -127,7 +127,7 @@ export default function Navbar() {
                 Log In
               </a>
               <Link
-                href="/pricing"
+                href="/signup/basic"
                 className="mx-4 my-2 px-4 py-3 text-center text-white bg-accent hover:bg-accent-dark rounded-lg transition-colors font-semibold"
                 onClick={() => setMobileMenuOpen(false)}
               >

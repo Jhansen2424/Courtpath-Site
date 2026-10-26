@@ -2,8 +2,10 @@
 
 import { use, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import Image from "next/image";
+import Link from "next/link";
+import PhoneLink from "@/components/PhoneLink";
+import { APP_LOGIN_URL, CONTACT } from "@/lib/site";
 import { track } from "@/lib/analytics";
 import {
   BASIC_FILINGS, FIRM_RATE, LEGACY_PLANS, PLANS, billingKeyFor, formatDate, freeUntil, isPublicPlan, type PublicPlan,
@@ -44,6 +46,27 @@ interface FormState {
   bar: string;
   teamName: string;
   attorneyCount: string;
+}
+
+// Sign-up is a focused page: logo, help and log in only, no site menu, so nothing pulls people away.
+function SignupHeader() {
+  return (
+    <header className="bg-white border-b border-gray-200">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        <Link href="/" className="relative w-36 h-10 shrink-0" aria-label="Courtpath home">
+          <Image src="/images/courtlogo.png" alt="Courtpath" fill className="object-contain object-left" sizes="144px" priority />
+        </Link>
+        <div className="flex items-center gap-5 text-sm">
+          <PhoneLink href={`tel:${CONTACT.phoneE164}`} location="signup" className="hidden sm:inline text-gray-500 hover:text-accent">
+            Questions? {CONTACT.phoneDisplay}
+          </PhoneLink>
+          <a href={APP_LOGIN_URL} className="text-gray-600 whitespace-nowrap">
+            Have an account? <span className="font-semibold text-accent hover:underline">Log in</span>
+          </a>
+        </div>
+      </div>
+    </header>
+  );
 }
 
 export default function SignupPage({ params }: { params: Promise<{ plan: string }> }) {
@@ -88,14 +111,13 @@ export default function SignupPage({ params }: { params: Promise<{ plan: string 
   if (!plan) {
     return (
       <main>
-        <Navbar />
+        <SignupHeader />
         <section className="min-h-[60vh] flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">Plan not found</h1>
             <a href="/pricing" className="text-accent underline">See the plans</a>
           </div>
         </section>
-        <Footer />
       </main>
     );
   }
@@ -151,21 +173,21 @@ export default function SignupPage({ params }: { params: Promise<{ plan: string 
 
   return (
     <main>
-      <Navbar />
+      <SignupHeader />
 
-      <section className="bg-gradient-to-b from-white to-gray-50 min-h-screen pt-32 pb-16">
+      <section className="bg-gradient-to-b from-white to-gray-50 min-h-screen pt-8 pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <a href="/pricing" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-accent mb-8 transition-colors">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Back to plans
+            Compare plans
           </a>
 
           <div className="grid lg:grid-cols-5 gap-10 items-start">
-            {/* Plan summary */}
-            <div className="lg:col-span-2">
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 lg:sticky lg:top-28">
+            {/* Plan summary (after the form on phones, so the form is on the first screen) */}
+            <div className="lg:col-span-2 order-2 lg:order-none">
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 lg:sticky lg:top-8">
                 <div className="flex items-center justify-between gap-4 mb-4">
                   <div className="inline-block px-3 py-1 bg-accent/10 text-accent text-xs font-semibold rounded-full uppercase tracking-wide">
                     {info.name} plan
@@ -211,7 +233,7 @@ export default function SignupPage({ params }: { params: Promise<{ plan: string 
             </div>
 
             {/* Sign-up steps */}
-            <div className="lg:col-span-3">
+            <div className="lg:col-span-3 order-1 lg:order-none">
               <div ref={cardRef} className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
                 <ol className="flex items-center gap-2 mb-8" aria-label="Sign-up steps">
                   {STEPS.map((label, i) => (
@@ -340,7 +362,6 @@ export default function SignupPage({ params }: { params: Promise<{ plan: string 
         </div>
       </section>
 
-      <Footer />
     </main>
   );
 }

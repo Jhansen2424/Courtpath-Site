@@ -174,7 +174,7 @@ export default function SwitchPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/pricing"
+              href="/signup/basic"
               className="px-8 py-4 bg-accent text-white font-medium rounded-lg transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(212,164,65,0.3)]"
             >
               Start Free — No Charge Until 2027

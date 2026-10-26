@@ -1,61 +1,57 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { BASIC_FILINGS, FREE_DAYS, launchSpecialOn } from "@/lib/plans";
+
+// Rows every card lists, so the plans compare at a glance; each plan marks which it includes.
+const rows = [
+  "E-filing in every Utah district and justice court",
+  "Electronic service and case history",
+  "Help from our Utah support team",
+  "Paralegals and staff file for you",
+  "No per-filing fees",
+  "Several attorneys, with admin controls",
+  "The firm's filings and court notices in one place",
+];
 
 const plans = [
   {
     name: "Basic",
     planId: "basic",
     tag: "For occasional filers",
-    blurb: "Good for attorneys who file now and then. Where everyone starts if they're not sure.",
+    icon: "file",
     price: "$10",
-    unit: "per month",
-    note: `Includes ${BASIC_FILINGS} filings a month. Extra filings are $4 each, or switch to Unlimited.`,
-    includesLabel: "Includes",
-    features: [
-      `${BASIC_FILINGS} filings a month`,
-      "E-filing in every Utah district and justice court",
-      "Electronic service",
-      "Case history and documents",
-      "Help from our Utah support team",
-      "One user",
-    ],
-    highlighted: false,
+    unit: "/ month",
+    note: "Extra filings are $4 each, or switch to Unlimited.",
+    limit: { value: `${BASIC_FILINGS} filings`, label: "a month" },
+    includes: 3,
+    popular: false,
   },
   {
     name: "Unlimited",
     planId: "unlimited",
     tag: "For regular filers",
-    blurb: "Unlimited filings for one attorney, and your staff can file for you.",
+    icon: "bolt",
     price: "$25",
-    unit: "per month",
+    unit: "/ month",
     note: "Or $240 a year (save $60). Cheaper than Basic from 7 filings a month.",
-    includesLabel: "Everything in Basic, plus",
-    features: [
-      "Unlimited filings, no per-filing fee",
-      "Paralegals and staff file under your account",
-      "Yearly billing: $240, about $20 a month",
-    ],
-    highlighted: true,
+    limit: { value: "Unlimited", label: "filings" },
+    includes: 5,
+    popular: true,
     yearlyHref: "/signup/unlimited?billing=yearly",
   },
   {
     name: "Firm",
     planId: "firm",
     tag: "2 or more attorneys",
-    blurb: "One account for the whole office, priced per attorney.",
+    icon: "building",
     price: "$21",
-    unit: "per attorney / month",
-    note: "The same price for every attorney, whatever the size of the firm. Staff file at no extra cost.",
-    includesLabel: "Everything in Unlimited, plus",
-    features: [
-      "Unlimited filings for every attorney",
-      "Admin controls to add and remove users",
-      "The firm's filings and court notices in one place",
-    ],
-    highlighted: false,
+    unit: "/ attorney / month",
+    note: "The same price for every attorney, whatever the size of the firm.",
+    limit: { value: "Unlimited", label: "filings for every attorney" },
+    includes: rows.length,
+    popular: false,
   },
 ];
 
@@ -65,46 +61,54 @@ const steps = [
   { title: "Then your plan starts", body: "Your card is charged for the plan you chose. Cancel before the month ends and you pay nothing. Switch plans anytime." },
 ];
 
-const Check = () => (
-  <svg className="w-4 h-4 text-accent mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+const icons: Record<string, string> = {
+  file: "M7 3h7l5 5v13a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1zm7 0v5h5",
+  bolt: "M13 2L4 14h7l-1 8 9-12h-7l1-8z",
+  building: "M4 21V5a1 1 0 011-1h9a1 1 0 011 1v16M15 10h4a1 1 0 011 1v10M8 8h3M8 12h3M8 16h3M3 21h18",
+};
+
+const Icon = ({ name, className }: { name: string; className: string }) => (
+  <svg className={className} fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+    <path d={icons[name]} />
   </svg>
 );
 
-export default function PricingPlans() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+const Mark = ({ included }: { included: boolean }) =>
+  included ? (
+    <svg className="w-4 h-4 text-accent mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-label="Included">
+      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+    </svg>
+  ) : (
+    <svg className="w-4 h-4 text-gray-300 mt-0.5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" aria-label="Not included">
+      <path strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  );
+
+/**
+ * The plans. On /pricing it is the whole top of the page (pageTitle): a short title and the cards
+ * right under the fixed navbar, so the prices show without scrolling. Landing pages reuse it.
+ */
+export default function PricingPlans({ pageTitle = false }: { pageTitle?: boolean }) {
   // Worked out in the browser so a page built earlier still shows the right offer today.
   const [launchSpecial, setLaunchSpecial] = useState(false);
-
-  useEffect(() => {
-    setLaunchSpecial(launchSpecialOn());
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setIsVisible(true);
-      },
-      { threshold: 0.1 }
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  const fade = (delay = 0, classes = "") => ({
-    className: `${classes} transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`,
-    style: { transitionDelay: `${delay}ms` },
-  });
+  useEffect(() => setLaunchSpecial(launchSpecialOn()), []);
+  const Title = pageTitle ? "h1" : "h2";
 
   return (
-    <section ref={sectionRef} id="plans" className="relative py-24 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section header */}
-        <div {...fade(0, "text-center mb-12")}>
-          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Three plans. Each starts with a free month.</h2>
+    <section id="plans" className={`relative bg-gradient-to-b from-white to-gray-50 ${pageTitle ? "pt-36 sm:pt-40 pb-20" : "py-20"}`}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-10">
+          <p className="inline-block px-3 py-1 bg-accent/10 text-accent-dark rounded-full text-sm font-semibold mb-4">
+            Every plan starts with a free month
+          </p>
+          <Title className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
+            {pageTitle ? "Simple pricing. Try any plan free." : "Three plans. Each starts with a free month."}
+          </Title>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Nothing is charged until the month ends. Court filing fees are separate on every plan.
+            Nothing is charged until your free month ends. Court filing fees are separate on every plan.
           </p>
           {launchSpecial && (
-            <p className="mt-6 inline-block px-4 py-2 bg-accent/10 text-accent-dark rounded-full text-sm font-semibold">
+            <p className="mt-4 inline-block px-4 py-1.5 bg-primary text-white rounded-full text-sm font-medium">
               Launch special: sign up now and Courtpath is free until January 1, 2027.
             </p>
           )}
@@ -112,61 +116,79 @@ export default function PricingPlans() {
 
         {/* Plan cards */}
         <div className="grid md:grid-cols-3 gap-6 items-stretch">
-          {plans.map((plan, index) => (
-            <div key={plan.planId} {...fade(index * 120)}>
-              <div
-                className={`relative h-full flex flex-col bg-white rounded-2xl p-8 ${
-                  plan.highlighted ? "border-2 border-accent shadow-2xl" : "border border-gray-200 shadow-lg"
-                }`}
-              >
-                <div className="flex items-center justify-between gap-3 mb-3">
-                  <h3 className="text-2xl font-bold text-gray-900">{plan.name}</h3>
-                  <span className="px-3 py-1 bg-accent/10 text-accent-dark rounded-full text-xs font-semibold whitespace-nowrap">{plan.tag}</span>
-                </div>
-                <p className="text-sm text-gray-600 mb-6">{plan.blurb}</p>
-
-                <div className="flex items-baseline gap-2">
-                  <span className="text-5xl font-bold text-gray-900">{plan.price}</span>
-                  <span className="text-sm text-gray-500">{plan.unit}</span>
-                </div>
-                <p className="text-sm text-gray-500 mt-2 mb-6">{plan.note}</p>
-
-                <Link
-                  href={`/signup/${plan.planId}`}
-                  className={`block w-full py-3 px-6 font-bold text-sm rounded-lg text-center transition-all hover:shadow-lg ${
-                    plan.highlighted ? "bg-accent hover:bg-accent-dark text-white" : "bg-primary hover:bg-primary-dark text-white"
+          {plans.map((plan) => (
+            <div
+              key={plan.planId}
+              className={`relative flex flex-col bg-white rounded-2xl p-6 transition-shadow hover:shadow-xl ${
+                plan.popular ? "border-2 border-accent shadow-xl md:scale-[1.03] z-10" : "border border-gray-200 shadow-md"
+              }`}
+            >
+              {plan.popular && (
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-accent text-white rounded-full text-xs font-bold uppercase tracking-wide shadow">
+                  Most popular
+                </span>
+              )}
+              <div className="flex items-center gap-3 mb-4">
+                <span
+                  className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                    plan.planId === "firm" ? "bg-accent text-white" : plan.popular ? "bg-accent/15 text-accent-dark" : "bg-gray-100 text-gray-500"
                   }`}
                 >
-                  Start free month
-                </Link>
+                  <Icon name={plan.icon} className="w-5 h-5" />
+                </span>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 leading-tight">{plan.name}</h3>
+                  <p className="text-xs font-semibold text-accent-dark">{plan.tag}</p>
+                </div>
+              </div>
+
+              <div className="flex items-baseline gap-1">
+                <span className="text-5xl font-black text-gray-900">{plan.price}</span>
+                <span className="text-sm text-gray-500">{plan.unit}</span>
+              </div>
+              <p className="text-sm text-gray-500 mt-1 mb-4 min-h-[2.5rem]">{plan.note}</p>
+
+              <div className="flex items-baseline gap-2 bg-gradient-to-r from-accent/10 to-transparent rounded-lg px-3 py-2.5 mb-5 border-l-2 border-accent">
+                <span className="text-lg font-bold text-gray-900">{plan.limit.value}</span>
+                <span className="text-sm text-gray-600">{plan.limit.label}</span>
+              </div>
+
+              <Link
+                href={`/signup/${plan.planId}`}
+                className={`block w-full py-3 px-6 font-bold text-sm rounded-lg text-center text-white transition-all hover:shadow-lg ${
+                  plan.popular ? "bg-accent hover:bg-accent-dark" : "bg-primary hover:bg-primary-dark"
+                }`}
+              >
+                Start free month
+              </Link>
+              <div className="h-7 mt-1.5 mb-3 text-center text-sm">
                 {plan.yearlyHref && (
-                  <Link href={plan.yearlyHref} className="block text-center text-sm text-gray-500 hover:text-accent underline mt-3">
+                  <Link href={plan.yearlyHref} className="text-gray-500 hover:text-accent underline">
                     Or start yearly at $240
                   </Link>
                 )}
-
-                <div className="border-t border-gray-200 my-6" />
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{plan.includesLabel}</p>
-                <ul className="space-y-3">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3 text-sm text-gray-700">
-                      <Check />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
               </div>
+
+              <ul className="space-y-2.5 text-sm">
+                {rows.map((row, i) => (
+                  <li key={row} className="flex items-start gap-2">
+                    <Mark included={i < plan.includes} />
+                    <span className={i < plan.includes ? "text-gray-700" : "text-gray-400 line-through"}>{row}</span>
+                  </li>
+                ))}
+              </ul>
+
             </div>
           ))}
         </div>
 
         {/* Criminal Defense */}
-        <div {...fade(360, "mt-6 bg-white rounded-2xl border border-gray-200 shadow-lg p-6 sm:p-8 flex flex-col md:flex-row md:items-center gap-6")}>
+        <div className="mt-6 bg-white rounded-2xl border border-gray-200 shadow-md p-6 flex flex-col md:flex-row md:items-center gap-6">
           <div className="flex-1">
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-2">
               <h3 className="text-xl font-bold text-gray-900">Criminal Defense</h3>
               <span className="text-sm text-gray-500">
-                <span className="text-2xl font-bold text-gray-900">$9.99</span> per month
+                <span className="text-2xl font-black text-gray-900">$9.99</span> / month
               </span>
             </div>
             <p className="text-sm text-gray-600">
@@ -187,7 +209,7 @@ export default function PricingPlans() {
         </p>
 
         {/* How the free month works */}
-        <div {...fade(480, "mt-20")}>
+        <div className="mt-20">
           <h2 className="text-3xl font-bold text-gray-900 text-center mb-10">How the free month works</h2>
           <ol className="grid md:grid-cols-3 gap-6">
             {steps.map((s, i) => (
@@ -201,7 +223,7 @@ export default function PricingPlans() {
         </div>
 
         {/* Bottom CTA */}
-        <div {...fade(600, "mt-16 text-center")}>
+        <div className="mt-16 text-center">
           <div className="inline-flex flex-col items-center gap-6 p-8 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 rounded-2xl border border-primary/10">
             <div className="text-center">
               <h3 className="text-2xl font-bold text-gray-900 mb-2">Need a custom solution?</h3>
