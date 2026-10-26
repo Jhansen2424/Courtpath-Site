@@ -2,7 +2,7 @@ import { createCipheriv, createDecipheriv, randomBytes } from "crypto";
 import type Stripe from "stripe";
 import { getStripe } from "@/lib/stripe";
 import { APP_LOGIN_URL } from "@/lib/site";
-import { freeUntil } from "@/lib/plans";
+import { BASIC_FILINGS, freeUntil } from "@/lib/plans";
 
 /**
  * Website billing: every plan collects a card through Stripe Checkout, and nothing is charged
@@ -37,7 +37,10 @@ export const PLAN_BILLING: Record<PlanKey, { name: string; mode: "setup" | "subs
   platinum: { name: "Unlimited (yearly)", mode: "subscription", priceEnv: "STRIPE_PRICE_PLATINUM", perAttorney: true },
 };
 
-/** The app plan an account gets. The app has no "basic" yet, so Basic accounts are Bronze there. */
+/**
+ * The app plan an account gets. The app has no "basic" yet, so Basic accounts are Bronze there,
+ * created with includedFilings (BASIC_FILINGS), which legacy Bronze accounts don't have.
+ */
 export const APP_PLAN: Record<PlanKey, string> = {
   basic: "bronze", bronze: "bronze", "bronze-plus": "bronze-plus", silver: "silver", gold: "gold", platinum: "platinum",
 };
@@ -189,6 +192,9 @@ export async function finishCheckout(sessionId: string, notify: (r: FinishResult
           firstName: m.firstName, middleName: m.middleName, lastName: m.lastName, bar: m.bar, phone: m.phone,
           address1: m.address1, address2: m.address2, city: m.city, state: m.state, zip: m.zip,
           teamName: m.teamName, attorneyCount: m.attorneyCount,
+          // The app's $4 per filing waits for the end of this account's free period, and Basic's
+          // first BASIC_FILINGS filings each month are included.
+          freeUntil: m.freeUntil || undefined, includedFilings: plan === "basic" ? BASIC_FILINGS : undefined,
         }, 40000) // hashing the password takes the app several seconds; the whole step must fit in 60s
       : { status: 0, data: { error: "the chosen password could not be read" } };
     // No answer in time (or a 5xx): the app may still have finished. An account carrying this very
