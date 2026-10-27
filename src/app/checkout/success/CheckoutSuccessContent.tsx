@@ -9,6 +9,8 @@ import { formatDate, freeUntil, nameForBillingKey } from "@/lib/plans";
 
 type Account = "ready" | "exists" | "linked" | "pending";
 
+const REDIRECT_SECONDS = 4;
+
 export default function CheckoutSuccessContent() {
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -56,6 +58,20 @@ export default function CheckoutSuccessContent() {
     })();
   }, []);
 
+  // Once the account exists, take them on to sign in. The short wait lets the conversion tags
+  // above finish reporting before the page unloads.
+  const [secondsLeft, setSecondsLeft] = useState(REDIRECT_SECONDS);
+  const signInUrl = `${APP_LOGIN_URL.replace(/\/$/, "")}/login${account === "ready" ? "?welcome=1" : ""}`;
+  useEffect(() => {
+    if (status !== "success" || account === "pending") return;
+    if (secondsLeft <= 0) {
+      window.location.assign(signInUrl);
+      return;
+    }
+    const t = setTimeout(() => setSecondsLeft((n) => n - 1), 1000);
+    return () => clearTimeout(t);
+  }, [status, account, secondsLeft, signInUrl]);
+
   if (status === "loading") {
     return (
       <section className="relative min-h-[60vh] flex items-center justify-center bg-gradient-to-b from-white to-gray-50">
@@ -91,7 +107,7 @@ export default function CheckoutSuccessContent() {
   }
 
   const message =
-    account === "ready" ? "Your account is ready. Log in with the email and password you just chose."
+    account === "ready" ? "Your account is ready. We also emailed you a link to confirm your address; confirm it before your first filing."
     : account === "exists" ? "You already had a Courtpath account with this email, so we added your card to it. Log in with your existing password."
     : account === "linked" ? "Your card is on file for your Courtpath plan."
     : "Your card is on file. Please allow 24 hours for us to finish setting up your account.";
@@ -113,10 +129,24 @@ export default function CheckoutSuccessContent() {
             ? "You won't be charged before January 1, 2027."
             : `Your free period on ${nameForBillingKey(planKey)} runs through ${formatDate(freeUntil())}, and your card won't be charged before then.`}
         </p>
-        <p className="text-xl text-gray-600 mb-8">
-          You can login here:{" "}
-          <a href={APP_LOGIN_URL} className="text-accent underline break-all">{APP_LOGIN_URL}</a>
-        </p>
+        {account === "pending" ? (
+          <p className="text-xl text-gray-600 mb-8">
+            You can log in here:{" "}
+            <a href={APP_LOGIN_URL} className="text-accent underline break-all">{APP_LOGIN_URL}</a>
+          </p>
+        ) : (
+          <div className="mb-8">
+            <a
+              href={signInUrl}
+              className="inline-block px-8 py-4 bg-accent hover:bg-accent-dark text-white font-semibold rounded-lg transition-all"
+            >
+              Sign in now
+            </a>
+            <p className="mt-4 text-gray-500" aria-live="polite">
+              {secondsLeft > 0 ? `Taking you to sign in in ${secondsLeft}s…` : "Taking you to sign in…"}
+            </p>
+          </div>
+        )}
         <p className="text-xl font-semibold text-gray-900">Happy filing!</p>
       </div>
     </section>
