@@ -6,15 +6,15 @@ import Footer from "@/components/Footer";
 import { pageMetadata, UTAH_EFSP_LIST_URL, CONTACT } from "@/lib/site";
 
 // Paid-traffic landing page (Google Ads search + display). Offer-first: the
-// free month leads, certification follows. The address dates from the old
-// free-until-2027 launch special; ads still point here. Excluded from search
-// indexing so it never competes with the homepage for organic queries.
+// free month leads, certification follows. /free-until-2027, its address under
+// the old launch special, redirects here. Excluded from search indexing so it
+// never competes with the homepage for organic queries.
 export const metadata = {
   ...pageMetadata({
     title: "Free Utah E-Filing for 30 Days | Courtpath",
     description:
       "Try any Courtpath plan free for 30 days. Certified Utah e-filing for district and justice courts. Sign up in minutes; nothing is charged during your free month.",
-    path: "/free-until-2027",
+    path: "/free-trial",
   }),
   robots: { index: false, follow: false },
 };
@@ -44,7 +44,7 @@ const STEPS = [
   { n: "3", title: "Keep the plan that fits", body: "Basic is $10 a month with 3 filings. File more? Switch to Unlimited anytime." },
 ];
 
-export default function FreeUntil2027Page() {
+export default function FreeTrialPage() {
   return (
     <main>
       <Navbar />
@@ -176,7 +176,7 @@ export default function FreeUntil2027Page() {
           </h2>
           <p className="text-gray-600 mb-6">
             Call us at{" "}
-            <PhoneLink href={`tel:${CONTACT.phoneE164}`} location="lp-free-until-2027" className="font-semibold text-accent hover:underline">
+            <PhoneLink href={`tel:${CONTACT.phoneE164}`} location="lp-free-trial" className="font-semibold text-accent hover:underline">
               {CONTACT.phoneDisplay}
             </PhoneLink>{" "}
             or email{" "}

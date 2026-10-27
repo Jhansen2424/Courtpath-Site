@@ -22,6 +22,8 @@ const legacyRedirects = [
   { source: "/login", destination: APP_LOGIN_URL },
   { source: "/lostpassword", destination: APP_LOGIN_URL },
   { source: "/my-account/:slug*", destination: APP_LOGIN_URL },
+  // the paid-traffic landing page under the old free-until-2027 launch special
+  { source: "/free-until-2027", destination: "/free-trial" },
 ];
 
 const nextConfig: NextConfig = {
