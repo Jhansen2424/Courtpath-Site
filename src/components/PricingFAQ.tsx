@@ -17,7 +17,7 @@ const faqs = [
   },
   {
     question: "Do you offer a free trial?",
-    answer: "Yes. Every new account gets its first 30 days free, and while our launch special runs, new accounts are free until January 1, 2027. You add a card when you sign up, but nothing is charged until your free period ends. Cancel before then and you pay nothing.",
+    answer: "Yes. Every new account gets its first 30 days free. You add a card when you sign up, but nothing is charged until your free month ends. Cancel before then and you pay nothing.",
   },
   {
     question: "What happens to my data if I cancel?",

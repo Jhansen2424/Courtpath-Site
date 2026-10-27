@@ -12,7 +12,7 @@ export const metadata = {
   ...pageMetadata({
     title: "Switch Your Utah E-Filing Provider | Courtpath",
     description:
-      "Switching EFSPs takes minutes, not weeks. Courtpath is certified for Utah district and justice courts, your cases are already connected, and every plan is free until January 1, 2027.",
+      "Switching EFSPs takes minutes, not weeks. Courtpath is certified for Utah district and justice courts, your cases are already connected, and every plan starts with a free month.",
     path: "/switch",
   }),
   robots: { index: false, follow: false },
@@ -29,7 +29,7 @@ const SWITCH_FACTS = [
   },
   {
     title: "Free while you compare",
-    body: "Every Courtpath plan is free until January 1, 2027. A card is required at signup, but nothing is charged before then — run us side-by-side with your current provider for as long as you like.",
+    body: "Every Courtpath plan starts with 30 days free. A card is required at signup, but nothing is charged during your free month — run us side-by-side with your current provider and compare.",
   },
   {
     title: "Same courts, same certification",
@@ -38,7 +38,7 @@ const SWITCH_FACTS = [
 ];
 
 const COMPARISON = [
-  { them: "Per-filing or monthly fees, every month", us: "Free until January 1, 2027 — then from $10 a month" },
+  { them: "Per-filing or monthly fees, every month", us: "Free for 30 days — then from $10 a month" },
   { them: "Interfaces designed years ago", us: "A guided wizard with real-time validation and auto-saved drafts" },
   { them: "One more login your staff tolerates", us: "Attorney + paralegal access designed around how firms actually file" },
   { them: "Support tickets", us: `A real person at ${"(801) 797-3119"}` },
@@ -75,8 +75,8 @@ export default function SwitchPage() {
             <p className="max-w-2xl text-lg sm:text-xl text-white/60 mb-6 leading-relaxed">
               Switching e-filing providers takes minutes, not weeks. Your cases
               are already connected, there&apos;s nothing to migrate, and every
-              Courtpath plan is free until January 1, 2027. A card is required
-              at signup; nothing is charged before then.
+              Courtpath plan starts with a free month. A card is required at
+              signup; nothing is charged for 30 days.
             </p>
 
             <p className="max-w-2xl text-sm sm:text-base text-white/70 mb-10">
@@ -156,8 +156,8 @@ export default function SwitchPage() {
             ))}
           </div>
           <p className="text-xs text-gray-400 text-center mt-4">
-            Launch pricing: all plans free through January 1, 2027. A card is required at signup and your plan bills
-            automatically starting January 1, 2027. Standard pricing is published on our pricing page.
+            Every plan starts with 30 days free. A card is required at signup and your plan bills automatically
+            when your free month ends. Pricing is published on our pricing page.
           </p>
         </div>
       </section>
@@ -177,7 +177,7 @@ export default function SwitchPage() {
               href="/signup/basic"
               className="px-8 py-4 bg-accent text-white font-medium rounded-lg transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(212,164,65,0.3)]"
             >
-              Start Free — No Charge Until 2027
+              Start Free — 30 Days, No Charge
             </Link>
             <PhoneLink
               location="lp-switch"

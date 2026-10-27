@@ -6,13 +6,14 @@ import Footer from "@/components/Footer";
 import { pageMetadata, UTAH_EFSP_LIST_URL, CONTACT } from "@/lib/site";
 
 // Paid-traffic landing page (Google Ads search + display). Offer-first: the
-// free-until-2027 launch special leads, certification follows. Excluded from
-// search indexing so it never competes with the homepage for organic queries.
+// free month leads, certification follows. The address dates from the old
+// free-until-2027 launch special; ads still point here. Excluded from search
+// indexing so it never competes with the homepage for organic queries.
 export const metadata = {
   ...pageMetadata({
-    title: "Free Utah E-Filing Until 2027 | Courtpath",
+    title: "Free Utah E-Filing for 30 Days | Courtpath",
     description:
-      "Every Courtpath plan is free until January 1, 2027. Certified Utah e-filing for district and justice courts. Sign up in minutes and stop paying to file.",
+      "Try any Courtpath plan free for 30 days. Certified Utah e-filing for district and justice courts. Sign up in minutes; nothing is charged during your free month.",
     path: "/free-until-2027",
   }),
   robots: { index: false, follow: false },
@@ -20,8 +21,8 @@ export const metadata = {
 
 const VALUE_PROPS = [
   {
-    title: "Actually free. Every plan.",
-    body: "No per-filing fees and no monthly license until January 1, 2027. A card is required at signup, nothing is charged before then, and pricing starts at $10 a month after that.",
+    title: "Your first month is free.",
+    body: "Every plan starts with 30 days free. A card is required at signup, nothing is charged during your free month, and plans start at $10 a month after that.",
   },
   {
     title: "Certified by the Utah State Courts",
@@ -38,9 +39,9 @@ const VALUE_PROPS = [
 ];
 
 const STEPS = [
-  { n: "1", title: "Pick a plan", body: "All of them are free until January 1, 2027. Most firms choose Gold." },
-  { n: "2", title: "Create your account", body: "A few minutes with your firm and bar details, plus a card for when billing starts January 1, 2027." },
-  { n: "3", title: "File today", body: "District and justice courts, with electronic service included." },
+  { n: "1", title: "Create your account", body: "A few minutes: your name, Utah bar number and a card. You pay $0 today." },
+  { n: "2", title: "File today", body: "District and justice courts, with electronic service included. Free for 30 days." },
+  { n: "3", title: "Keep the plan that fits", body: "Basic is $10 a month with 3 filings. File more? Switch to Unlimited anytime." },
 ];
 
 export default function FreeUntil2027Page() {
@@ -60,22 +61,22 @@ export default function FreeUntil2027Page() {
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/40 bg-accent/10 backdrop-blur-sm mb-8">
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
               <span className="text-sm text-accent-light font-medium">
-                Launch special — ends January 1, 2027
+                Every plan: 30 days free
               </span>
             </div>
 
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight">
               Utah E-Filing.
               <span className="block bg-gradient-to-r from-accent via-accent-light to-accent bg-clip-text text-transparent">
-                Free Until 2027.
+                Free for 30 Days.
               </span>
             </h1>
 
             <p className="max-w-2xl text-lg sm:text-xl text-white/60 mb-6 leading-relaxed">
-              Stop paying to file. Every Courtpath plan — solo to multi-attorney
-              firm — is free until January 1, 2027. A card is required at signup;
-              nothing is charged before then. After that, pricing starts at
-              $10 a month.
+              Try Courtpath on your real filings before you pay anything. Every
+              plan — solo to multi-attorney firm — starts with 30 days free. A
+              card is required at signup; nothing is charged during your free
+              month. After that, plans start at $10 a month.
             </p>
 
             <p className="max-w-2xl text-sm sm:text-base text-white/70 mb-10">
@@ -96,7 +97,7 @@ export default function FreeUntil2027Page() {
                 href="/signup/basic"
                 className="px-8 py-4 bg-accent text-white font-medium rounded-lg transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(212,164,65,0.3)]"
               >
-                Claim Your Free Plan
+                Start Your Free Month
               </a>
               <Link
                 href="/tutorials"

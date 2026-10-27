@@ -293,8 +293,8 @@ export default function Body() {
       <p>
         Every Courtpath plan includes electronic service. When you file, opposing counsel with
         e-filing accounts are served through the court’s system, and the filing stays in your case
-        history. Courtpath is a certified Utah e-filing provider, and user licenses are free until
-        January 1, 2027. <Link href="/pricing">See plans</Link>, or read our step-by-step guide to{" "}
+        history. Courtpath is a certified Utah e-filing provider, and every plan starts with a free
+        month. <Link href="/pricing">See plans</Link>, or read our step-by-step guide to{" "}
         <Link href="/blog/how-to-efile-new-civil-case-utah-district-court">
           e-filing a new civil case
         </Link>

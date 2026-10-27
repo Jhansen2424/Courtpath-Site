@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { BASIC_FILINGS, FREE_DAYS, launchSpecialOn } from "@/lib/plans";
+import { BASIC_FILINGS, FREE_DAYS } from "@/lib/plans";
 
 // Rows every card lists, so the plans compare at a glance; each plan marks which it includes.
 const rows = [
@@ -89,9 +88,6 @@ const Mark = ({ included }: { included: boolean }) =>
  * right under the fixed navbar, so the prices show without scrolling. Landing pages reuse it.
  */
 export default function PricingPlans({ pageTitle = false }: { pageTitle?: boolean }) {
-  // Worked out in the browser so a page built earlier still shows the right offer today.
-  const [launchSpecial, setLaunchSpecial] = useState(false);
-  useEffect(() => setLaunchSpecial(launchSpecialOn()), []);
   const Title = pageTitle ? "h1" : "h2";
 
   return (
@@ -107,11 +103,6 @@ export default function PricingPlans({ pageTitle = false }: { pageTitle?: boolea
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Nothing is charged until your free month ends. Court filing fees are separate on every plan.
           </p>
-          {launchSpecial && (
-            <p className="mt-4 inline-block px-4 py-1.5 bg-primary text-white rounded-full text-sm font-medium">
-              Launch special: sign up now and Courtpath is free until January 1, 2027.
-            </p>
-          )}
         </div>
 
         {/* Plan cards */}

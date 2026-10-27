@@ -23,8 +23,8 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-center gap-2 text-center">
           <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shrink-0" />
           <p className="text-xs sm:text-sm font-medium tracking-wide">
-            <span className="text-accent-light font-semibold">User licenses are free</span>{" "}
-            until January 1st, 2027
+            <span className="text-accent-light font-semibold">Every plan starts with a free month</span>{" "}
+            <span className="hidden sm:inline">· nothing is charged for 30 days</span>
           </p>
         </div>
       </div>

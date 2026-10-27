@@ -6,8 +6,7 @@ import { BASIC_FILINGS, freeUntil } from "@/lib/plans";
 
 /**
  * Website billing: every plan collects a card through Stripe Checkout, and nothing is charged
- * during the free period (lib/plans.ts: 30 days, or until BILLING_START while the launch special
- * runs). The Courtpath account is only created once Checkout completes, with the Stripe customer
+ * during a new account's first 30 days (FREE_DAYS in lib/plans.ts). The Courtpath account is only created once Checkout completes, with the Stripe customer
  * id on it, so every account has a card behind it.
  *
  * The website sells Basic, Criminal Defense, Unlimited and Firm (lib/plans.ts). Apart from basic,
@@ -53,9 +52,9 @@ export function billingStart(): Date {
   return isNaN(d.getTime()) ? new Date("2027-01-01T07:00:00Z") : d;
 }
 
-/** When a signup made now starts paying, as a Unix time: the free month, or BILLING_START if later. */
+/** When a signup made now starts paying, as a Unix time: the end of its free month. */
 export function trialEnd(now = Date.now()): number {
-  return Math.floor(freeUntil(now, billingStart().getTime()).getTime() / 1000);
+  return Math.floor(freeUntil(now).getTime() / 1000);
 }
 
 /**

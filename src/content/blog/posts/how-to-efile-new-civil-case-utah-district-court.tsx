@@ -428,7 +428,7 @@ export default function Body() {
         Courtpath is a certified Utah e-filing provider. It walks you through each step above,
         including the case data, parties and documents, and checks the filing before you submit.
         Watch the <Link href="/tutorials">“Filing a new case” tutorial</Link> to see how it works.
-        User licenses are free until January 1, 2027. <Link href="/pricing">See plans</Link>.
+        Every plan starts with a free month. <Link href="/pricing">See plans</Link>.
       </p>
     </>
   );

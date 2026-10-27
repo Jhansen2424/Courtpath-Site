@@ -10,7 +10,7 @@ import { pageMetadata } from "@/lib/site";
 export const metadata = pageMetadata({
   title: "Utah Court E-Filing for Attorneys | Courtpath",
   description:
-    "Certified Utah e-filing provider since 2019. File and serve in district and justice courts from $10 a month. User licenses are free through January 1, 2027.",
+    "Certified Utah e-filing provider since 2019. File and serve in district and justice courts from $10 a month. Every plan starts with a free month.",
   path: "/",
 });
 
