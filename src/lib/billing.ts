@@ -118,10 +118,20 @@ async function callApp(path: string, body: Record<string, unknown>, timeoutMs = 
   }
 }
 
+/**
+ * Does this email, or this Utah bar number, already have an app account? null when the app could
+ * not be asked. barTaken stays false when no bar number is given.
+ */
+export async function checkAccount(email: string, bar?: string): Promise<{ exists: boolean; barTaken: boolean } | null> {
+  const r = await callApp("/check", bar ? { email, bar } : { email });
+  if (r.status !== 200 || typeof r.data.exists !== "boolean") return null;
+  return { exists: r.data.exists, barTaken: r.data.barTaken === true };
+}
+
 /** Does this email already have an app account? null when the app could not be asked. */
 export async function accountExists(email: string): Promise<boolean | null> {
-  const r = await callApp("/check", { email });
-  return r.status === 200 && typeof r.data.exists === "boolean" ? r.data.exists : null;
+  const r = await checkAccount(email);
+  return r ? r.exists : null;
 }
 
 /* ---- finishing a completed Checkout (success page and webhook both land here) ---- */
@@ -132,6 +142,8 @@ export type FinishResult = {
   plan: PlanKey | null;
   /** ready = account created; exists = email already had one (card linked to it); linked = card added to an existing account; pending = needs a hand. */
   account: "ready" | "exists" | "linked" | "pending";
+  /** The app refused the signup because another account already has its bar number (pending). */
+  barTaken?: boolean;
   error?: string;
 };
 
@@ -222,6 +234,9 @@ export async function finishCheckout(sessionId: string, notify: (r: FinishResult
         result = { ...base, ok: true, account: link.status === 200 ? "exists" : "pending" };
       }
       if (link.status !== 200) detail = `account exists; linking the card failed: ${link.status} ${link.data?.error ?? ""}`.trim();
+    } else if (r.status === 422 && r.data?.user === "bar-taken") {
+      // Another account took this bar number after /api/checkout asked: staff have to sort it out.
+      result = { ...base, ok: true, account: "pending", barTaken: true };
     } else { result = { ...base, ok: true, account: "pending" }; detail = `${r.status} ${r.data?.error ?? ""}`.trim(); }
   }
 

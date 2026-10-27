@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
-import { PLAN_BILLING, isPlan, priceFor, quantityFor, sealPassword, trialEnd, accountExists } from "@/lib/billing";
+import { PLAN_BILLING, isPlan, priceFor, quantityFor, sealPassword, trialEnd, checkAccount } from "@/lib/billing";
 import { formatDate } from "@/lib/plans";
+import { CONTACT } from "@/lib/site";
 
 /**
  * Signup: check the form, then send the attorney to Stripe Checkout to put a card on file.
@@ -32,7 +33,7 @@ export async function POST(request: NextRequest) {
     if (!f.lastName) problems.push("last name");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) problems.push("email");
     if (password.length < 8 || password.length > 200) problems.push("password (8 or more characters)");
-    if (!/^\d{1,10}$/.test(f.bar)) problems.push("bar number (digits only)");
+    if (!/^\d{1,10}$/.test(f.bar) || !/[1-9]/.test(f.bar)) problems.push("bar number (digits only)");
     // Firm is the only plan that needs a firm name; Unlimited yearly is per attorney but one attorney.
     if (plan === "gold" && !f.teamName) problems.push("firm name");
     if (problems.length) return NextResponse.json({ error: `Check these fields: ${problems.join(", ")}` }, { status: 400 });
@@ -44,10 +45,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "This plan is not available online yet. Please call or contact us to sign up." }, { status: 503 });
     }
 
-    if ((await accountExists(f.email)) === true) {
+    const known = await checkAccount(f.email, f.bar);
+    if (known?.exists) {
       return NextResponse.json({
         error: "There is already a Courtpath account with this email. Log in to the app, or add a card to your account at courtpath.com/billing.",
         code: "exists",
+      }, { status: 409 });
+    }
+    // Court messages and filings follow the bar number, so each one can have only one account.
+    if (known?.barTaken) {
+      return NextResponse.json({
+        error: `This Utah bar number already has a Courtpath account. If it's yours, call us at ${CONTACT.phoneDisplay} or email ${CONTACT.email} and we'll help.`,
+        code: "bar-taken",
       }, { status: 409 });
     }
 

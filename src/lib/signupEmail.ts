@@ -25,10 +25,13 @@ export async function sendSignupEmail(r: FinishResult, customer: Stripe.Customer
     r.account === "ready" ? "Account created automatically. Nothing to do."
     : r.account === "exists" ? "An account with this email already existed; the card was put on it. No new account was made."
     : r.account === "linked" ? "Card added to the existing account. Nothing to do."
+    : r.barTaken ? `NOT created: bar number ${m.bar} already has a Courtpath account. Don't create this one by hand: it may be someone using another attorney's bar number. Compare the name with the Utah State Bar listing below. If it's the same attorney, point them to the account they have; if not, cancel this customer's subscription in Stripe.`
     : `Automatic account ${r.kind === "card" ? "linking" : "creation"} FAILED (${detail || "unknown error"}). ${r.kind === "card" ? "Set users.stripeId by hand." : "Create this account by hand."}`;
   const needsHand = r.account === "pending";
   let password = "";
-  if (needsHand && r.kind === "signup" && m.pw) { try { password = openPassword(m.pw); } catch { password = "(could not be read)"; } }
+  if (needsHand && !r.barTaken && r.kind === "signup" && m.pw) { try { password = openPassword(m.pw); } catch { password = "(could not be read)"; } }
+  // The Bar's public directory, to check the name and status that go with the bar number
+  const barListing = m.bar ? `https://services.utahbar.org/Licensee-Directory/Profile/customercd/${m.bar.replace(/^0+/, "")}` : "";
 
   const rows: Array<[string, string]> = [
     ["Account", accountLine],
@@ -39,6 +42,7 @@ export async function sendSignupEmail(r: FinishResult, customer: Stripe.Customer
     ["Last Name", m.lastName ?? ""],
     ["Email", customer.email ?? ""],
     ["Bar Number", m.bar ?? ""],
+    ["Utah State Bar listing", barListing],
     ["Phone", m.phone ?? ""],
     ["Address 1", m.address1 ?? ""],
     ["Address 2", m.address2 ?? ""],
@@ -53,7 +57,7 @@ export async function sendSignupEmail(r: FinishResult, customer: Stripe.Customer
     from: `"Courtpath Website" <${process.env.MAILER_AUTH_USER}>`,
     to: "joshua@webaholics.co",
     replyTo: customer.email ?? undefined,
-    subject: `[Courtpath ${kindWord}] ${planName.toUpperCase()} — ${[m.firstName, m.lastName].filter(Boolean).join(" ") || customer.email}${needsHand ? " — DO BY HAND" : ""}`,
+    subject: `[Courtpath ${kindWord}] ${planName.toUpperCase()} — ${[m.firstName, m.lastName].filter(Boolean).join(" ") || customer.email}${m.bar ? `, bar ${m.bar}` : ""}${r.barTaken ? " — BAR NUMBER ALREADY HAS AN ACCOUNT" : needsHand ? " — DO BY HAND" : ""}`,
     text: rows.filter(([, v]) => v).map(([k, v]) => `${k}: ${v}`).concat(password ? ["", `Password: ${password}`] : []).join("\n"),
     html: `
       <h2>${escapeHtml(kindWord)}: ${escapeHtml(planName)}</h2>
