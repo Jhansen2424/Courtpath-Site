@@ -133,16 +133,33 @@ export type FinishResult = {
   /** ready = account created; exists = email already had one (card linked to it); linked = card added to an existing account; pending = needs a hand. */
   account: "ready" | "exists" | "linked" | "pending";
   error?: string;
+  /** Only when asked for (the success page) and the account is new: a one-time link that opens the app signed in. */
+  loginUrl?: string;
 };
 
 const STATUS_KEY = "courtpath_account";
+
+/** Another one-time sign-in token for the account this customer's checkout just created (the app allows one, in its first minutes). */
+async function signinTokenFor(stripeId: string): Promise<string | undefined> {
+  const r = await callApp("/signin-link", { stripeId });
+  return r.status === 200 && typeof r.data?.signinToken === "string" ? r.data.signinToken : undefined;
+}
 
 /**
  * Verify a Checkout Session really completed with a usable card, make that card the customer's
  * default, then create (signup) or link (card for an existing account) the Courtpath account.
  * Safe to run twice: the outcome is recorded on the Stripe customer and reused.
+ *
+ * With `signin` (the success page, not the webhook, which has no browser to send anywhere), a new
+ * account's result also carries a one-time loginUrl: the token from creating the account, or, when
+ * the webhook created it first, one more from the app. The app refuses that after a token has been
+ * used or past the account's first minutes, so a reload just falls back to the sign-in page.
  */
-export async function finishCheckout(sessionId: string, notify: (r: FinishResult, c: Stripe.Customer, detail?: string) => Promise<void>): Promise<FinishResult> {
+export async function finishCheckout(
+  sessionId: string,
+  notify: (r: FinishResult, c: Stripe.Customer, detail?: string) => Promise<void>,
+  { signin = false }: { signin?: boolean } = {},
+): Promise<FinishResult> {
   const stripe = getStripe();
   const session = await stripe.checkout.sessions.retrieve(sessionId, { expand: ["setup_intent", "subscription", "customer"] });
   const customer = session.customer as Stripe.Customer | null;
@@ -172,8 +189,16 @@ export async function finishCheckout(sessionId: string, notify: (r: FinishResult
     await stripe.customers.update(customer.id, { invoice_settings: { default_payment_method: paymentMethod } });
   }
 
+  const customerId = customer.id;
+  let signinToken: string | undefined;
+  const withLogin = async (r: FinishResult): Promise<FinishResult> => {
+    if (!signin || r.kind !== "signup" || r.account !== "ready") return r;
+    const token = signinToken ?? (await signinTokenFor(customerId));
+    return token ? { ...r, loginUrl: `${appUrl()}/pub/signup/welcome#t=${token}` } : r;
+  };
+
   const done = customer.metadata?.[STATUS_KEY];
-  if (done === "ready" || done === "exists" || done === "linked") return { ...base, ok: true, account: done };
+  if (done === "ready" || done === "exists" || done === "linked") return withLogin({ ...base, ok: true, account: done });
 
   const m = customer.metadata || {};
   let result: FinishResult;
@@ -206,17 +231,19 @@ export async function finishCheckout(sessionId: string, notify: (r: FinishResult
         if (check.status === 200 || check.status === 409) { r = { status: 409, data: {} }; break; }
       }
     }
-    if (r.status === 200 && r.data.user === "created") result = { ...base, ok: true, account: "ready" };
-    else if (r.status === 409) {
+    if (r.status === 200 && r.data.user === "created") {
+      result = { ...base, ok: true, account: "ready" };
+      if (typeof r.data.signinToken === "string") signinToken = r.data.signinToken;
+    } else if (r.status === 409) {
       // Someone else (the webhook or the success page) may have just created it: trust what is recorded.
       const again = (await stripe.customers.retrieve(customer.id)) as Stripe.Customer;
-      if (again.metadata?.[STATUS_KEY] === "ready") return { ...base, ok: true, account: "ready" };
+      if (again.metadata?.[STATUS_KEY] === "ready") return withLogin({ ...base, ok: true, account: "ready" });
       // The email already had an account: put this card on it.
       const link = await callApp("/stripe", { email: customer.email, stripeId: customer.id, plan: appPlan });
       if (link.status === 200 && link.data?.same) {
         // Already carrying this very customer: we created it. Another run still finishing it records it;
         // an earlier run that timed out and said "by hand" is corrected here (and the email says so).
-        if (done !== "pending") return { ...base, ok: true, account: "ready" };
+        if (done !== "pending") return withLogin({ ...base, ok: true, account: "ready" });
         result = { ...base, ok: true, account: "ready" };
       } else {
         result = { ...base, ok: true, account: link.status === 200 ? "exists" : "pending" };
@@ -230,5 +257,5 @@ export async function finishCheckout(sessionId: string, notify: (r: FinishResult
     metadata: { [STATUS_KEY]: result.account, ...(result.account !== "pending" ? { pw: "" } : {}) },
   });
   await notify(result, customer, detail).catch((err) => console.error("Billing notification failed:", err));
-  return result;
+  return withLogin(result);
 }

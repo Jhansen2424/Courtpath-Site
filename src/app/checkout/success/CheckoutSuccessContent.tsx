@@ -17,6 +17,8 @@ export default function CheckoutSuccessContent() {
   const [account, setAccount] = useState<Account>("pending");
   const [kind, setKind] = useState<"signup" | "card">("signup");
   const [planKey, setPlanKey] = useState<string | null>(null);
+  // a one-time link that opens the app already signed in (new accounts only)
+  const [loginUrl, setLoginUrl] = useState<string | null>(null);
   const ran = useRef(false);
 
   useEffect(() => {
@@ -43,6 +45,7 @@ export default function CheckoutSuccessContent() {
         if (!res.ok) { setErrorMsg(data.error || null); setStatus("error"); return; }
         setAccount(data.account);
         setKind(data.kind === "card" ? "card" : "signup");
+        if (typeof data.loginUrl === "string") setLoginUrl(data.loginUrl);
         // Report the "Signup Complete" conversion once per signup, then drop ?plan= so a reload can't count it again.
         if (plan && data.kind !== "card") {
           reportConversion(ADS_SIGNUP_SEND_TO);
@@ -58,10 +61,11 @@ export default function CheckoutSuccessContent() {
     })();
   }, []);
 
-  // Once the account exists, take them on to sign in. The short wait lets the conversion tags
-  // above finish reporting before the page unloads.
+  // Once the account exists, take them on to the app: signed in with the one-time link, or to the
+  // sign-in page without one. The short wait lets the conversion tags above finish reporting
+  // before the page unloads.
   const [secondsLeft, setSecondsLeft] = useState(REDIRECT_SECONDS);
-  const signInUrl = `${APP_LOGIN_URL.replace(/\/$/, "")}/login${account === "ready" ? "?welcome=1" : ""}`;
+  const signInUrl = loginUrl ?? `${APP_LOGIN_URL.replace(/\/$/, "")}/login${account === "ready" ? "?welcome=1" : ""}`;
   useEffect(() => {
     if (status !== "success" || account === "pending") return;
     if (secondsLeft <= 0) {
@@ -140,10 +144,10 @@ export default function CheckoutSuccessContent() {
               href={signInUrl}
               className="inline-block px-8 py-4 bg-accent hover:bg-accent-dark text-white font-semibold rounded-lg transition-all"
             >
-              Sign in now
+              {loginUrl ? "Open Courtpath" : "Sign in now"}
             </a>
             <p className="mt-4 text-gray-500" aria-live="polite">
-              {secondsLeft > 0 ? `Taking you to sign in in ${secondsLeft}s…` : "Taking you to sign in…"}
+              {`Taking you to ${loginUrl ? "Courtpath" : "sign in"}${secondsLeft > 0 ? ` in ${secondsLeft}s` : ""}…`}
             </p>
           </div>
         )}
