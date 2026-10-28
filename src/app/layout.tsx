@@ -62,6 +62,9 @@ gtag('js', new Date());
 gtag('config', '${ADS_ID}');${GA4_ID ? `
 gtag('config', '${GA4_ID}');` : ""}`}
         </Script>
+        {/* Vercel Web Analytics — page views on every page (including
+            client-side navigation) plus the events lib/analytics.ts sends. */}
+        <Script src="/_vercel/insights/script.js" strategy="afterInteractive" />
       </body>
     </html>
   );

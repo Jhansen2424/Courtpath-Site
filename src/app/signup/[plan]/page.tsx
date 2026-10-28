@@ -139,12 +139,14 @@ export default function SignupPage({ params }: { params: Promise<{ plan: string 
   const next = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    track("signup_step", { plan: billingKey, step: STEPS[Math.min(step + 1, 2)] });
     setStep((s) => Math.min(s + 1, 2));
   };
 
   const submit = async () => {
     setError(null);
     setSubmitting(true);
+    track("begin_checkout", { plan: billingKey });
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
