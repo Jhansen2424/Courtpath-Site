@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
     await transporter.sendMail({
       from: `"Courtpath Website" <${process.env.MAILER_AUTH_USER}>`,
       to: "joshua@webaholics.co",
+      cc: "adam@webaholics.ai",
       replyTo: email,
       subject: subjectLine,
       text: [
