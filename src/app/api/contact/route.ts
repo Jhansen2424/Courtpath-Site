@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { escapeHtml } from "@/lib/escapeHtml";
 
 export async function POST(req: NextRequest) {
   try {
@@ -43,16 +44,17 @@ export async function POST(req: NextRequest) {
       ]
         .filter(Boolean)
         .join("\n"),
+      // Visitor text is escaped so typed HTML shows as text instead of real links or buttons.
       html: `
         <h2>New Contact Form Submission</h2>
         <table style="border-collapse:collapse;width:100%;max-width:600px;">
-          <tr><td style="padding:8px;font-weight:bold;">Name</td><td style="padding:8px;">${firstName} ${lastName}</td></tr>
-          <tr><td style="padding:8px;font-weight:bold;">Email</td><td style="padding:8px;"><a href="mailto:${email}">${email}</a></td></tr>
-          ${phone ? `<tr><td style="padding:8px;font-weight:bold;">Phone</td><td style="padding:8px;">${phone}</td></tr>` : ""}
-          ${subject ? `<tr><td style="padding:8px;font-weight:bold;">Subject</td><td style="padding:8px;">${subject}</td></tr>` : ""}
+          <tr><td style="padding:8px;font-weight:bold;">Name</td><td style="padding:8px;">${escapeHtml(firstName)} ${escapeHtml(lastName)}</td></tr>
+          <tr><td style="padding:8px;font-weight:bold;">Email</td><td style="padding:8px;"><a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></td></tr>
+          ${phone ? `<tr><td style="padding:8px;font-weight:bold;">Phone</td><td style="padding:8px;">${escapeHtml(phone)}</td></tr>` : ""}
+          ${subject ? `<tr><td style="padding:8px;font-weight:bold;">Subject</td><td style="padding:8px;">${escapeHtml(subject)}</td></tr>` : ""}
         </table>
         <h3>Message</h3>
-        <p style="white-space:pre-wrap;">${message}</p>
+        <p style="white-space:pre-wrap;">${escapeHtml(message)}</p>
       `,
     });
 

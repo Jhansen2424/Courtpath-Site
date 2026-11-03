@@ -1,9 +1,7 @@
 import nodemailer from "nodemailer";
 import type Stripe from "stripe";
 import { APP_PLAN, openPassword, PLAN_BILLING, type FinishResult } from "@/lib/billing";
-
-const escapeHtml = (v: unknown) =>
-  String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string));
+import { escapeHtml } from "@/lib/escapeHtml";
 
 type Mail = { from: string; to: string; cc?: string; replyTo?: string; subject: string; text: string; html: string };
 
