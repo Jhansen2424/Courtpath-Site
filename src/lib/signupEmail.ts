@@ -5,18 +5,18 @@ import { APP_PLAN, openPassword, PLAN_BILLING, type FinishResult } from "@/lib/b
 const escapeHtml = (v: unknown) =>
   String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string));
 
-type Mail = { from: string; to: string; replyTo?: string; subject: string; text: string; html: string };
+type Mail = { from: string; to: string; cc?: string; replyTo?: string; subject: string; text: string; html: string };
 
 /** Gmail in production. Local testing without mail settings writes the message to the server log instead. */
 const transporter = () => {
   if (!process.env.MAILER_AUTH_USER && process.env.NODE_ENV !== "production") {
-    return { sendMail: async (m: Mail) => { console.log(`[mail not sent: no MAILER_AUTH_USER] to=${m.to} subject=${m.subject}
+    return { sendMail: async (m: Mail) => { console.log(`[mail not sent: no MAILER_AUTH_USER] to=${m.to}${m.cc ? ` cc=${m.cc}` : ""} subject=${m.subject}
 ${m.text}`); return {}; } };
   }
   return nodemailer.createTransport({ service: "gmail", auth: { user: process.env.MAILER_AUTH_USER, pass: process.env.MAILER_AUTH_PASS } });
 };
 
-/** Tell joshua@webaholics.co what happened to a signup or card, in the same shape as before payments. */
+/** Tell joshua@webaholics.co (cc adam@webaholics.ai) what happened to a signup or card, in the same shape as before payments. */
 export async function sendSignupEmail(r: FinishResult, customer: Stripe.Customer, detail?: string) {
   const m = customer.metadata || {};
   // The website name plus the app plan, which is what staff set up by hand.
@@ -52,6 +52,7 @@ export async function sendSignupEmail(r: FinishResult, customer: Stripe.Customer
   await transporter().sendMail({
     from: `"Courtpath Website" <${process.env.MAILER_AUTH_USER}>`,
     to: "joshua@webaholics.co",
+    cc: "adam@webaholics.ai",
     replyTo: customer.email ?? undefined,
     subject: `[Courtpath ${kindWord}] ${planName.toUpperCase()} — ${[m.firstName, m.lastName].filter(Boolean).join(" ") || customer.email}${needsHand ? " — DO BY HAND" : ""}`,
     text: rows.filter(([, v]) => v).map(([k, v]) => `${k}: ${v}`).concat(password ? ["", `Password: ${password}`] : []).join("\n"),
