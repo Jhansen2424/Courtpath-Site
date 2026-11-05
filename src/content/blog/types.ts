@@ -5,6 +5,11 @@ export type PostStatus = "draft" | "published";
 export interface PostMeta {
   slug: string;
   title: string;
+  /**
+   * Shorter title for the <title> tag (" | Courtpath" is appended) when the
+   * H1 is too long for search results. Defaults to `title`.
+   */
+  seoTitle?: string;
   /** Meta description and blog-index summary. */
   description: string;
   /** Topic cluster from the content plan. */
