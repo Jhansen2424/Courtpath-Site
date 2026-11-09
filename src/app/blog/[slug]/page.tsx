@@ -22,7 +22,7 @@ export async function generateMetadata({
   if (!post) return {};
   const { meta } = post;
   const base = pageMetadata({
-    title: `${meta.title} | Courtpath`,
+    title: `${meta.seoTitle ?? meta.title} | Courtpath`,
     description: meta.description,
     path: `/blog/${meta.slug}`,
   });
