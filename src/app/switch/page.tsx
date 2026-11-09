@@ -46,7 +46,7 @@ const COMPARISON = [
 
 export default function SwitchPage() {
   return (
-    <main>
+    <main id="main-content">
       <Navbar />
 
       {/* HERO */}
@@ -95,7 +95,7 @@ export default function SwitchPage() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/pricing"
-                className="px-8 py-4 bg-accent text-white font-medium rounded-lg transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(212,164,65,0.3)]"
+                className="px-8 py-4 bg-accent text-primary-dark font-medium rounded-lg transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(212,164,65,0.3)]"
               >
                 See Plans
               </Link>
@@ -155,7 +155,7 @@ export default function SwitchPage() {
               </div>
             ))}
           </div>
-          <p className="text-xs text-gray-400 text-center mt-4">
+          <p className="text-xs text-gray-500 text-center mt-4">
             Every plan starts with 30 days free. A card is required at signup and your plan bills automatically
             when your free month ends. Pricing is published on our pricing page.
           </p>
@@ -175,7 +175,7 @@ export default function SwitchPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/signup/basic"
-              className="px-8 py-4 bg-accent text-white font-medium rounded-lg transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(212,164,65,0.3)]"
+              className="px-8 py-4 bg-accent text-primary-dark font-medium rounded-lg transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(212,164,65,0.3)]"
             >
               Start Free — 30 Days, No Charge
             </Link>

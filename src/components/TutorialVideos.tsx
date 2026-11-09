@@ -120,7 +120,7 @@ export default function TutorialVideos() {
             </div>
             <a
               href="/contact"
-              className="flex-shrink-0 px-6 py-3 bg-accent hover:bg-accent-dark text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all hover:scale-105"
+              className="flex-shrink-0 px-6 py-3 bg-accent hover:bg-accent-light text-primary-dark font-semibold rounded-lg shadow-md hover:shadow-lg transition-all hover:scale-105"
             >
               Contact Support
             </a>

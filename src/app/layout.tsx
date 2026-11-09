@@ -4,6 +4,8 @@ import "./globals.css";
 import { CONTACT, SITE_NAME, SITE_URL } from "@/lib/site";
 import { ADS_ID } from "@/lib/ads";
 import { GA4_ID } from "@/lib/analytics";
+import CookieConsent from "@/components/CookieConsent";
+import { CONSENT_KEY } from "@/lib/consent";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -43,13 +45,22 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
+        {/* First stop for keyboard and screen-reader users (WCAG 2.4.1); each page's <main id="main-content"> has this id. */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-white focus:px-4 focus:py-3 focus:font-semibold focus:text-primary focus:shadow-lg"
+        >
+          Skip to main content
+        </a>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
         {children}
+        <CookieConsent />
         {/* Google tag — site-wide so ad-click gclids are captured on every
-            possible landing page. Ads conversions live in lib/ads.ts; GA4
+            possible landing page. Consent Mode defaults come first: declined
+            (CookieConsent) or Global Privacy Control means no ad cookies. Ads conversions live in lib/ads.ts; GA4
             (when NEXT_PUBLIC_GA4_ID is set) shares the same gtag.js. */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${ADS_ID}`}
@@ -58,6 +69,9 @@ export default function RootLayout({
         <Script id="google-ads-base" strategy="afterInteractive">
           {`window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
+(function(){var c=null;try{c=localStorage.getItem('${CONSENT_KEY}')}catch(e){}
+var off=c==='denied'||navigator.globalPrivacyControl===true;var v=off?'denied':'granted';
+gtag('consent','default',{ad_storage:v,ad_user_data:v,ad_personalization:v,analytics_storage:v,wait_for_update:500});})();
 gtag('js', new Date());
 gtag('config', '${ADS_ID}');${GA4_ID ? `
 gtag('config', '${GA4_ID}');` : ""}`}

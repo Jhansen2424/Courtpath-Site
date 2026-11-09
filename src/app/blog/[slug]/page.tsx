@@ -85,7 +85,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   ];
 
   return (
-    <main>
+    <main id="main-content">
       <Navbar />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
@@ -153,7 +153,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <ul className="space-y-2">
               {related.map((r) => (
                 <li key={r.meta.slug}>
-                  <Link href={`/blog/${r.meta.slug}`} className="text-primary font-medium hover:text-accent">
+                  <Link href={`/blog/${r.meta.slug}`} className="text-primary font-medium hover:text-accent-text">
                     {r.meta.title}
                   </Link>
                 </li>

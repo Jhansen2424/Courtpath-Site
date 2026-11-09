@@ -46,7 +46,7 @@ const STEPS = [
 
 export default function FreeTrialPage() {
   return (
-    <main>
+    <main id="main-content">
       <Navbar />
 
       {/* HERO — offer first */}
@@ -95,7 +95,7 @@ export default function FreeTrialPage() {
             <div className="flex flex-col sm:flex-row gap-4 mb-14">
               <a
                 href="/signup/basic"
-                className="px-8 py-4 bg-accent text-white font-medium rounded-lg transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(212,164,65,0.3)]"
+                className="px-8 py-4 bg-accent text-primary-dark font-medium rounded-lg transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(212,164,65,0.3)]"
               >
                 Start Your Free Month
               </a>
@@ -152,7 +152,7 @@ export default function FreeTrialPage() {
           <div className="grid sm:grid-cols-3 gap-8">
             {STEPS.map((s) => (
               <div key={s.n} className="text-center">
-                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent text-white text-xl font-bold">
+                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent text-primary-dark text-xl font-bold">
                   {s.n}
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-2">{s.title}</h3>
@@ -176,11 +176,11 @@ export default function FreeTrialPage() {
           </h2>
           <p className="text-gray-600 mb-6">
             Call us at{" "}
-            <PhoneLink href={`tel:${CONTACT.phoneE164}`} location="lp-free-trial" className="font-semibold text-accent hover:underline">
+            <PhoneLink href={`tel:${CONTACT.phoneE164}`} location="lp-free-trial" className="font-semibold text-accent-text hover:underline">
               {CONTACT.phoneDisplay}
             </PhoneLink>{" "}
             or email{" "}
-            <a href={`mailto:${CONTACT.email}`} className="font-semibold text-accent hover:underline">
+            <a href={`mailto:${CONTACT.email}`} className="font-semibold text-accent-text hover:underline">
               {CONTACT.email}
             </a>
             . A real person answers.

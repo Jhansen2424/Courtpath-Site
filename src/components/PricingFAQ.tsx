@@ -86,7 +86,7 @@ export default function PricingFAQ() {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent rounded-full text-sm font-medium mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent-text rounded-full text-sm font-medium mb-6">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
               </svg>
@@ -139,7 +139,7 @@ export default function PricingFAQ() {
                     <div
                       className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all ${
                         isOpen
-                          ? "bg-accent text-white rotate-180"
+                          ? "bg-accent text-primary-dark rotate-180"
                           : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                       }`}
                     >
@@ -199,7 +199,7 @@ export default function PricingFAQ() {
             </div>
             <a
               href="/contact"
-              className="flex-shrink-0 px-6 py-3 bg-accent hover:bg-accent-dark text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all hover:scale-105"
+              className="flex-shrink-0 px-6 py-3 bg-accent hover:bg-accent-light text-primary-dark font-semibold rounded-lg shadow-md hover:shadow-lg transition-all hover:scale-105"
             >
               Contact Us
             </a>

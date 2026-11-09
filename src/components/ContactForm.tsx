@@ -98,7 +98,7 @@ export default function ContactForm() {
                   Need help using Courtpath? Our{" "}
                   <a
                     href="/tutorials"
-                    className="text-accent hover:text-accent-dark font-semibold underline decoration-accent/30 hover:decoration-accent transition-colors"
+                    className="text-accent-text hover:text-accent-text font-semibold underline decoration-accent/30 hover:decoration-accent transition-colors"
                   >
                     tutorial videos
                   </a>{" "}
@@ -112,7 +112,7 @@ export default function ContactForm() {
                   You can also send us an email at{" "}
                   <a
                     href="mailto:support@courtpath.com"
-                    className="text-accent hover:text-accent-dark font-semibold underline decoration-accent/30 hover:decoration-accent transition-colors"
+                    className="text-accent-text hover:text-accent-text font-semibold underline decoration-accent/30 hover:decoration-accent transition-colors"
                   >
                     support@courtpath.com
                   </a>{" "}
@@ -175,7 +175,7 @@ export default function ContactForm() {
                         htmlFor="firstName"
                         className="block text-sm font-semibold text-gray-700 mb-2"
                       >
-                        Name <span className="text-accent">*</span>
+                        Name <span className="text-accent-text">*</span>
                       </label>
                       <input
                         type="text"
@@ -219,7 +219,7 @@ export default function ContactForm() {
                     </div>
                     <div>
                       <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                        Email <span className="text-accent">*</span>
+                        Email <span className="text-accent-text">*</span>
                       </label>
                       <input
                         type="email"
@@ -255,7 +255,7 @@ export default function ContactForm() {
                   {/* Message */}
                   <div>
                     <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
-                      What can we help you with? <span className="text-accent">*</span>
+                      What can we help you with? <span className="text-accent-text">*</span>
                     </label>
                     <textarea
                       id="message"
@@ -294,7 +294,7 @@ export default function ContactForm() {
                   <button
                     type="submit"
                     disabled={status === "sending"}
-                    className="w-full sm:w-auto px-10 py-4 bg-accent hover:bg-accent-dark text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="w-full sm:w-auto px-10 py-4 bg-accent hover:bg-accent-light text-primary-dark font-bold rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
                     <span>{status === "sending" ? "Sending..." : "Submit"}</span>
                     <svg
@@ -315,10 +315,10 @@ export default function ContactForm() {
                   {/* Privacy note */}
                   <p className="text-xs text-gray-500 text-center sm:text-left">
                     By submitting this form, you agree to our{" "}
-                    <a href="/about" className="text-accent hover:text-accent-dark underline">
+                    <a href="/privacy" className="text-accent-text underline">
                       Privacy Policy
                     </a>
-                    . We respect your privacy and will never share your information.
+                    . We never sell your information.
                   </p>
                 </form>
               </div>

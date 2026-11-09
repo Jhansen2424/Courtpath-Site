@@ -74,7 +74,7 @@ const Icon = ({ name, className }: { name: string; className: string }) => (
 
 const Mark = ({ included }: { included: boolean }) =>
   included ? (
-    <svg className="w-4 h-4 text-accent mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-label="Included">
+    <svg className="w-4 h-4 text-accent-text mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-label="Included">
       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
     </svg>
   ) : (
@@ -94,7 +94,7 @@ export default function PricingPlans({ pageTitle = false }: { pageTitle?: boolea
     <section id="plans" className={`relative bg-gradient-to-b from-white to-gray-50 ${pageTitle ? "pt-36 sm:pt-40 pb-20" : "py-20"}`}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
-          <p className="inline-block px-3 py-1 bg-accent/10 text-accent-dark rounded-full text-sm font-semibold mb-4">
+          <p className="inline-block px-3 py-1 bg-accent/10 text-accent-text rounded-full text-sm font-semibold mb-4">
             Every plan starts with a free month
           </p>
           <Title className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
@@ -115,21 +115,21 @@ export default function PricingPlans({ pageTitle = false }: { pageTitle?: boolea
               }`}
             >
               {plan.popular && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-accent text-white rounded-full text-xs font-bold uppercase tracking-wide shadow">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-accent text-primary-dark rounded-full text-xs font-bold uppercase tracking-wide shadow">
                   Most popular
                 </span>
               )}
               <div className="flex items-center gap-3 mb-4">
                 <span
                   className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                    plan.planId === "firm" ? "bg-accent text-white" : plan.popular ? "bg-accent/15 text-accent-dark" : "bg-gray-100 text-gray-500"
+                    plan.planId === "firm" ? "bg-accent text-primary-dark" : plan.popular ? "bg-accent/15 text-accent-text" : "bg-gray-100 text-gray-500"
                   }`}
                 >
                   <Icon name={plan.icon} className="w-5 h-5" />
                 </span>
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 leading-tight">{plan.name}</h3>
-                  <p className="text-xs font-semibold text-accent-dark">{plan.tag}</p>
+                  <p className="text-xs font-semibold text-accent-text">{plan.tag}</p>
                 </div>
               </div>
 
@@ -146,15 +146,15 @@ export default function PricingPlans({ pageTitle = false }: { pageTitle?: boolea
 
               <Link
                 href={`/signup/${plan.planId}`}
-                className={`block w-full py-3 px-6 font-bold text-sm rounded-lg text-center text-white transition-all hover:shadow-lg ${
-                  plan.popular ? "bg-accent hover:bg-accent-dark" : "bg-primary hover:bg-primary-dark"
+                className={`block w-full py-3 px-6 font-bold text-sm rounded-lg text-center transition-all hover:shadow-lg ${
+                  plan.popular ? "bg-accent hover:bg-accent-light text-primary-dark" : "bg-primary hover:bg-primary-dark text-white"
                 }`}
               >
                 Start free month
               </Link>
               <div className="h-7 mt-1.5 mb-3 text-center text-sm">
                 {plan.yearlyHref && (
-                  <Link href={plan.yearlyHref} className="text-gray-500 hover:text-accent underline">
+                  <Link href={plan.yearlyHref} className="text-gray-500 hover:text-accent-text underline">
                     Or start yearly at $240
                   </Link>
                 )}
@@ -164,7 +164,7 @@ export default function PricingPlans({ pageTitle = false }: { pageTitle?: boolea
                 {rows.map((row, i) => (
                   <li key={row} className="flex items-start gap-2">
                     <Mark included={i < plan.includes} />
-                    <span className={i < plan.includes ? "text-gray-700" : "text-gray-400 line-through"}>{row}</span>
+                    <span className={i < plan.includes ? "text-gray-700" : "text-gray-500 line-through"}>{row}</span>
                   </li>
                 ))}
               </ul>
@@ -205,7 +205,7 @@ export default function PricingPlans({ pageTitle = false }: { pageTitle?: boolea
           <ol className="grid md:grid-cols-3 gap-6">
             {steps.map((s, i) => (
               <li key={s.title} className="bg-white rounded-2xl border border-gray-200 p-6">
-                <span className="w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center text-sm font-bold mb-4">{i + 1}</span>
+                <span className="w-8 h-8 rounded-full bg-accent text-primary-dark flex items-center justify-center text-sm font-bold mb-4">{i + 1}</span>
                 <h3 className="font-bold text-gray-900 mb-2">{s.title}</h3>
                 <p className="text-sm text-gray-600">{s.body}</p>
               </li>

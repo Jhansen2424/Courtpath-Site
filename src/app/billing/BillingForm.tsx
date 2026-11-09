@@ -71,7 +71,7 @@ export default function BillingForm() {
         </div>
       )}
       {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">{error}</div>}
-      <button type="submit" disabled={busy} className="w-full py-4 bg-accent hover:bg-accent-dark text-white font-bold rounded-lg transition-all disabled:opacity-60">
+      <button type="submit" disabled={busy} className="w-full py-4 bg-accent hover:bg-accent-light text-primary-dark font-bold rounded-lg transition-all disabled:opacity-60">
         {busy ? "Sending…" : "Email me a secure link"}
       </button>
       <p className="text-xs text-gray-500 text-center">Cards are handled by Stripe. Courtpath never sees your card number.</p>

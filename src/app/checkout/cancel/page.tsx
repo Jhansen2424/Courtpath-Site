@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function CheckoutCancelPage() {
   return (
-    <main>
+    <main id="main-content">
       <Navbar />
       <section className="relative min-h-[60vh] flex items-center justify-center bg-gradient-to-b from-white to-gray-50">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
@@ -49,7 +49,7 @@ export default function CheckoutCancelPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/pricing"
-              className="px-8 py-4 bg-accent hover:bg-accent-dark text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105"
+              className="px-8 py-4 bg-accent hover:bg-accent-light text-primary-dark font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105"
             >
               View Plans
             </Link>

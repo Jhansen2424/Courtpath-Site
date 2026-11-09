@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 export default function BlogIndexPage() {
   return (
-    <main>
+    <main id="main-content">
       <Navbar />
       <header className="bg-gradient-to-br from-primary-dark via-primary to-primary-light pt-40 pb-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -42,7 +42,7 @@ export default function BlogIndexPage() {
                 key={meta.slug}
                 className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow"
               >
-                <p className="text-xs font-semibold uppercase tracking-wide text-accent">{meta.category}</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-accent-text">{meta.category}</p>
                 <h2 className="mt-2 text-xl font-bold text-gray-900">
                   <Link href={`/blog/${meta.slug}`} className="hover:text-primary">
                     {meta.title}

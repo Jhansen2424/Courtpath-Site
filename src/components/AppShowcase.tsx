@@ -82,7 +82,7 @@ export default function AppShowcase() {
               isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-12"
             }`}
           >
-            <span className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent rounded-full text-sm font-medium mb-6">
+            <span className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent-text rounded-full text-sm font-medium mb-6">
               <svg
                 className="w-4 h-4"
                 fill="none"

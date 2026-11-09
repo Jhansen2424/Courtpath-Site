@@ -42,7 +42,7 @@ export default function ContactInfo() {
           >
             {/* Section header */}
             <div className="mb-12">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent rounded-full text-sm font-medium mb-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent-text rounded-full text-sm font-medium mb-6">
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                 </svg>
@@ -86,7 +86,7 @@ export default function ContactInfo() {
                       href="https://maps.google.com/?q=480+E+Winchester+St,+Murray,+UT+84107"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 mt-3 text-accent hover:text-accent-dark font-medium transition-colors"
+                      className="inline-flex items-center gap-2 mt-3 text-accent-text hover:text-accent-text font-medium transition-colors"
                     >
                       <span>Get Directions</span>
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,7 +116,7 @@ export default function ContactInfo() {
                     </h3>
                     <PhoneLink
                       href="tel:+18017973119"
-                      className="text-2xl font-bold text-gray-900 hover:text-accent transition-colors"
+                      className="text-2xl font-bold text-gray-900 hover:text-accent-text transition-colors"
                       location="contact-page"
                       adsConversion={false}
                     >
@@ -146,7 +146,7 @@ export default function ContactInfo() {
                     </h3>
                     <a
                       href="mailto:support@courtpath.com"
-                      className="text-xl font-bold text-gray-900 hover:text-accent transition-colors break-all"
+                      className="text-xl font-bold text-gray-900 hover:text-accent-text transition-colors break-all"
                     >
                       support@courtpath.com
                     </a>
@@ -165,7 +165,7 @@ export default function ContactInfo() {
             >
               <div className="flex items-center gap-4">
                 <div className="flex-shrink-0 w-12 h-12 rounded-full bg-white flex items-center justify-center">
-                  <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-accent-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
@@ -216,9 +216,10 @@ export default function ContactInfo() {
                     href="https://maps.google.com/?q=480+E+Winchester+St,+Murray,+UT+84107"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-shrink-0 p-2 rounded-lg bg-accent hover:bg-accent-dark text-white transition-colors"
+                    className="flex-shrink-0 p-2 rounded-lg bg-accent hover:bg-accent-light text-primary-dark transition-colors"
+                    aria-label="Open the Courtpath office in Google Maps (opens in a new tab)"
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                     </svg>
                   </a>
@@ -229,7 +230,7 @@ export default function ContactInfo() {
             {/* Info cards below map */}
             <div className="grid grid-cols-2 gap-4 mt-6">
               <div className="p-4 rounded-xl bg-white shadow-md border border-gray-100">
-                <div className="flex items-center gap-2 text-accent mb-2">
+                <div className="flex items-center gap-2 text-accent-text mb-2">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
                   </svg>
@@ -238,7 +239,7 @@ export default function ContactInfo() {
                 <p className="text-xs text-gray-600">Free parking available</p>
               </div>
               <div className="p-4 rounded-xl bg-white shadow-md border border-gray-100">
-                <div className="flex items-center gap-2 text-accent mb-2">
+                <div className="flex items-center gap-2 text-accent-text mb-2">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
                   </svg>

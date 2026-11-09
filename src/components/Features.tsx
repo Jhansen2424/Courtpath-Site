@@ -142,7 +142,7 @@ function FeatureSection({ title, description, imagePosition, features, icon, ima
             }`}
             style={{ transitionDelay: "200ms" }}
           >
-            <ClockIcon className="w-7 h-7 text-accent" />
+            <ClockIcon className="w-7 h-7 text-accent-text" />
           </div>
 
           {/* Speed badge */}
@@ -287,7 +287,7 @@ function FeatureSection({ title, description, imagePosition, features, icon, ima
             style={{ transitionDelay: `${500 + index * 100}ms` }}
           >
             <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-              <svg className="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-accent-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
@@ -350,7 +350,7 @@ export default function Features() {
               headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
           >
-            <span className="inline-block px-4 py-1.5 bg-accent/10 text-accent text-sm font-medium rounded-full mb-4">
+            <span className="inline-block px-4 py-1.5 bg-accent/10 text-accent-text text-sm font-medium rounded-full mb-4">
               Why Choose Us
             </span>
             <h2 className="text-4xl sm:text-5xl font-bold text-gray-900">

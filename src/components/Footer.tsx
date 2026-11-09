@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import PhoneLink from "@/components/PhoneLink";
 import { getPublishedPosts } from "@/content/blog";
+import PrivacyChoicesLink from "@/components/PrivacyChoicesLink";
 
 const quickLinks = [
   { name: "Home", href: "/" },
@@ -106,6 +107,11 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-gray-200">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-600">
             <p>&copy; {new Date().getFullYear()} Courtpath Incorporated. All rights reserved.</p>
+            <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+              <Link href="/privacy" className="hover:text-primary underline-offset-2 hover:underline">Privacy Policy</Link>
+              <Link href="/accessibility" className="hover:text-primary underline-offset-2 hover:underline">Accessibility</Link>
+              <PrivacyChoicesLink className="hover:text-primary underline-offset-2 hover:underline" />
+            </nav>
             <div className="flex items-center gap-6">
               <a
                 href="https://www.linkedin.com/company/courtpath"

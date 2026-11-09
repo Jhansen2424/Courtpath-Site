@@ -12,7 +12,7 @@ export const metadata = pageMetadata({
 
 export default function TutorialsPage() {
   return (
-    <main>
+    <main id="main-content">
       <Navbar />
       <TutorialsHero />
       <TutorialVideos />

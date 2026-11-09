@@ -15,7 +15,7 @@ export const metadata = pageMetadata({
 
 export default function AboutPage() {
   return (
-    <main>
+    <main id="main-content">
       <Navbar />
       <AboutHero />
       <WhyWeBuilt />

@@ -107,7 +107,7 @@ export default function DashboardContent({ stats }: { stats: Stats }) {
   ];
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <main id="main-content" className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Header */}
       <header className="bg-gradient-to-r from-primary-dark via-primary to-primary-light text-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

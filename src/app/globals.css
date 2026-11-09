@@ -7,6 +7,7 @@
   --color-accent: #d4a441;
   --color-accent-dark: #b8892e;
   --color-accent-light: #e6bc5c;
+  --color-accent-text: #8a6417; /* gold for text on light backgrounds: 5.36:1 on white (WCAG AA) */
 }
 
 body {
@@ -57,5 +58,17 @@ body {
   }
   .post-body dd {
     @apply mt-1;
+  }
+}
+
+/* WCAG 2.3.3: visitors who ask their system for reduced motion get no animations or smooth scrolling. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

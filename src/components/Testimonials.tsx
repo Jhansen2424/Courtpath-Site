@@ -116,7 +116,7 @@ export default function Testimonials() {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent rounded-full text-sm font-medium mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent-text rounded-full text-sm font-medium mb-6">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
               </svg>
@@ -162,7 +162,7 @@ export default function Testimonials() {
                       {[...Array(testimonial.rating)].map((_, i) => (
                         <svg
                           key={i}
-                          className="w-6 h-6 text-accent"
+                          className="w-6 h-6 text-accent-text"
                           fill="currentColor"
                           viewBox="0 0 20 20"
                         >
@@ -184,7 +184,7 @@ export default function Testimonials() {
                       <div>
                         <p className="font-bold text-xl text-gray-900">{testimonial.author}</p>
                         <p className="text-gray-600">{testimonial.role}</p>
-                        <p className="text-accent font-medium">{testimonial.firm}</p>
+                        <p className="text-accent-text font-medium">{testimonial.firm}</p>
                       </div>
                     </div>
                   </div>
@@ -219,13 +219,19 @@ export default function Testimonials() {
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`transition-all duration-300 rounded-full ${
-                  index === currentIndex
-                    ? "w-12 h-3 bg-accent"
-                    : "w-3 h-3 bg-gray-300 hover:bg-gray-400"
-                }`}
+                className="group flex h-6 min-w-6 items-center justify-center"
                 aria-label={`Go to testimonial ${index + 1}`}
-              />
+                aria-current={index === currentIndex ? "true" : undefined}
+              >
+                <span
+                  aria-hidden="true"
+                  className={`block transition-all duration-300 rounded-full ${
+                    index === currentIndex
+                      ? "w-12 h-3 bg-accent"
+                      : "w-3 h-3 bg-gray-300 group-hover:bg-gray-400"
+                  }`}
+                />
+              </button>
             ))}
           </div>
         </div>

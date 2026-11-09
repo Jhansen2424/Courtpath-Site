@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function BillingPage() {
   return (
-    <main>
+    <main id="main-content">
       <Navbar />
       <section className="bg-gradient-to-b from-white to-gray-50 min-h-[70vh] pt-32 pb-16">
         <div className="max-w-xl mx-auto px-4 sm:px-6">

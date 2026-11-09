@@ -12,7 +12,7 @@ export const metadata = pageMetadata({
 
 export default function PricingPage() {
   return (
-    <main>
+    <main id="main-content">
       <Navbar />
       <PricingPlans pageTitle />
       <PricingFAQ />

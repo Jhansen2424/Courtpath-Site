@@ -235,8 +235,8 @@ export default function ExclusiveFeatures() {
                 <div
                   className={`absolute -top-3 -left-3 w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-500 ${
                     isHovered
-                      ? "bg-accent text-white scale-110"
-                      : "bg-white text-gray-400 border-2 border-gray-200 scale-100"
+                      ? "bg-accent text-primary-dark scale-110"
+                      : "bg-white text-gray-500 border-2 border-gray-200 scale-100"
                   }`}
                 >
                   {index + 1}
@@ -348,8 +348,8 @@ export default function ExclusiveFeatures() {
                   <div
                     className={`absolute -top-3 -left-3 w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-500 ${
                       isHovered
-                        ? "bg-accent text-white scale-110"
-                        : "bg-white text-gray-400 border-2 border-gray-200 scale-100"
+                        ? "bg-accent text-primary-dark scale-110"
+                        : "bg-white text-gray-500 border-2 border-gray-200 scale-100"
                     }`}
                   >
                     {index + 1}
@@ -376,7 +376,7 @@ export default function ExclusiveFeatures() {
             </div>
             <a
               href="/signup/basic"
-              className="flex-shrink-0 px-8 py-4 bg-accent hover:bg-accent-dark text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105"
+              className="flex-shrink-0 px-8 py-4 bg-accent hover:bg-accent-light text-primary-dark font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105"
             >
               Get Started Free
             </a>

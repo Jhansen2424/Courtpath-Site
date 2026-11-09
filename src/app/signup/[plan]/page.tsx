@@ -57,11 +57,11 @@ function SignupHeader() {
           <Image src="/images/courtlogo.png" alt="Courtpath" fill className="object-contain object-left" sizes="144px" priority />
         </Link>
         <div className="flex items-center gap-5 text-sm">
-          <PhoneLink href={`tel:${CONTACT.phoneE164}`} location="signup" className="hidden sm:inline text-gray-500 hover:text-accent">
+          <PhoneLink href={`tel:${CONTACT.phoneE164}`} location="signup" className="hidden sm:inline text-gray-500 hover:text-accent-text">
             Questions? {CONTACT.phoneDisplay}
           </PhoneLink>
           <a href={APP_LOGIN_URL} className="text-gray-600 whitespace-nowrap">
-            Have an account? <span className="font-semibold text-accent hover:underline">Log in</span>
+            Have an account? <span className="font-semibold text-accent-text hover:underline">Log in</span>
           </a>
         </div>
       </div>
@@ -106,16 +106,16 @@ export default function SignupPage({ params }: { params: Promise<{ plan: string 
     if (top !== undefined && top < 120) window.scrollTo({ top: window.scrollY + top - 120, behavior: "smooth" });
   }, [step, error]);
 
-  if (legacy) return <main className="min-h-screen" />;
+  if (legacy) return <main id="main-content" className="min-h-screen" />;
 
   if (!plan) {
     return (
-      <main>
+      <main id="main-content">
         <SignupHeader />
         <section className="min-h-[60vh] flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">Plan not found</h1>
-            <a href="/pricing" className="text-accent underline">See the plans</a>
+            <a href="/pricing" className="text-accent-text underline">See the plans</a>
           </div>
         </section>
       </main>
@@ -170,16 +170,16 @@ export default function SignupPage({ params }: { params: Promise<{ plan: string 
     "w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent";
   const labelClass = "block text-sm font-medium text-gray-700 mb-1";
   const primaryButton =
-    "flex-1 py-4 bg-accent hover:bg-accent-dark text-white font-bold rounded-lg transition-all hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed";
+    "flex-1 py-4 bg-accent hover:bg-accent-light text-primary-dark font-bold rounded-lg transition-all hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed";
   const backButton = "px-6 py-4 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors";
 
   return (
-    <main>
+    <main id="main-content">
       <SignupHeader />
 
       <section className="bg-gradient-to-b from-white to-gray-50 min-h-screen pt-8 pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <a href="/pricing" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-accent mb-8 transition-colors">
+          <a href="/pricing" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-accent-text mb-8 transition-colors">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
@@ -191,16 +191,16 @@ export default function SignupPage({ params }: { params: Promise<{ plan: string 
             <div className="lg:col-span-2 order-2 lg:order-none">
               <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 lg:sticky lg:top-8">
                 <div className="flex items-center justify-between gap-4 mb-4">
-                  <div className="inline-block px-3 py-1 bg-accent/10 text-accent text-xs font-semibold rounded-full uppercase tracking-wide">
+                  <div className="inline-block px-3 py-1 bg-accent/10 text-accent-text text-xs font-semibold rounded-full uppercase tracking-wide">
                     {info.name} plan
                   </div>
-                  <a href="/pricing" className="text-sm text-gray-500 hover:text-accent underline">Change plan</a>
+                  <a href="/pricing" className="text-sm text-gray-500 hover:text-accent-text underline">Change plan</a>
                 </div>
                 <div className="mb-1">
                   <span className="text-4xl font-bold text-gray-900">$0</span>
                   <span className="text-gray-500 text-sm ml-2">today</span>
                 </div>
-                <p className="text-accent font-semibold text-sm mb-1">Free until {untilLong}</p>
+                <p className="text-accent-text font-semibold text-sm mb-1">Free until {untilLong}</p>
                 <p className="text-gray-600 text-sm mb-5">Then {priceAfter}</p>
 
                 {plan === "unlimited" && (
@@ -223,7 +223,7 @@ export default function SignupPage({ params }: { params: Promise<{ plan: string 
                 <ul className="space-y-3">
                   {PLAN_POINTS[plan].points.map((p) => (
                     <li key={p} className="flex items-start gap-3 text-sm text-gray-700">
-                      <svg className="w-4 h-4 text-accent mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-4 h-4 text-accent-text mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                       {p}
@@ -242,7 +242,7 @@ export default function SignupPage({ params }: { params: Promise<{ plan: string 
                     <li key={label} className={`flex items-center gap-2 ${i < STEPS.length - 1 ? "flex-1" : ""}`}>
                       <span
                         className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
-                          i < step ? "bg-accent/15 text-accent" : i === step ? "bg-accent text-white" : "bg-gray-100 text-gray-400"
+                          i < step ? "bg-accent/15 text-accent-text" : i === step ? "bg-accent text-primary-dark" : "bg-gray-100 text-gray-400"
                         }`}
                         aria-current={i === step ? "step" : undefined}
                       >

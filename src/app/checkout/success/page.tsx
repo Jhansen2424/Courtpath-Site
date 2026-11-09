@@ -11,7 +11,7 @@ export const metadata = {
 
 export default function CheckoutSuccessPage() {
   return (
-    <main>
+    <main id="main-content">
       <Navbar />
       <Suspense fallback={<LoadingState />}>
         <CheckoutSuccessContent />

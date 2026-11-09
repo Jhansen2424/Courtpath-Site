@@ -98,7 +98,7 @@ export default function CheckoutSuccessContent() {
             We couldn&apos;t confirm your signup. If you entered a card, it is safe: contact us and we&apos;ll finish setting you up.
           </p>
           {errorMsg && <p className="text-sm text-red-600 bg-red-50 rounded-lg px-4 py-2 mb-6">{errorMsg}</p>}
-          <Link href="/contact" className="inline-block px-8 py-4 bg-accent hover:bg-accent-dark text-white font-semibold rounded-lg transition-all">
+          <Link href="/contact" className="inline-block px-8 py-4 bg-accent hover:bg-accent-light text-primary-dark font-semibold rounded-lg transition-all">
             Contact Support
           </Link>
         </div>
@@ -132,13 +132,13 @@ export default function CheckoutSuccessContent() {
         {account === "pending" ? (
           <p className="text-xl text-gray-600 mb-8">
             You can log in here:{" "}
-            <a href={APP_LOGIN_URL} className="text-accent underline break-all">{APP_LOGIN_URL}</a>
+            <a href={APP_LOGIN_URL} className="text-accent-text underline break-all">{APP_LOGIN_URL}</a>
           </p>
         ) : (
           <div className="mb-8">
             <a
               href={signInUrl}
-              className="inline-block px-8 py-4 bg-accent hover:bg-accent-dark text-white font-semibold rounded-lg transition-all"
+              className="inline-block px-8 py-4 bg-accent hover:bg-accent-light text-primary-dark font-semibold rounded-lg transition-all"
             >
               Sign in now
             </a>

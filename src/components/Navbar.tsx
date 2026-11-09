@@ -23,7 +23,7 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-center gap-2 text-center">
           <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shrink-0" />
           <p className="text-xs sm:text-sm font-medium tracking-wide">
-            <span className="text-accent-light font-semibold">Every plan starts with a free month</span>{" "}
+            <span className="text-[#f2d48a] font-semibold">Every plan starts with a free month</span>{" "}
             <span className="hidden sm:inline">· nothing is charged for 30 days</span>
           </p>
         </div>
@@ -68,7 +68,7 @@ export default function Navbar() {
             </a>
             <Link
               href="/signup/basic"
-              className="px-6 py-2.5 text-sm text-white bg-accent hover:bg-accent-dark rounded-lg transition-colors font-semibold shadow-md hover:shadow-lg"
+              className="px-6 py-2.5 text-sm text-primary-dark bg-accent hover:bg-accent-light rounded-lg transition-colors font-semibold shadow-md hover:shadow-lg"
             >
               Get Started
             </Link>
@@ -78,8 +78,12 @@ export default function Navbar() {
           <button
             className="md:hidden text-gray-700 p-2 hover:bg-gray-100 rounded-lg transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
           >
             <svg
+              aria-hidden="true"
               className="w-6 h-6"
               fill="none"
               stroke="currentColor"
@@ -106,7 +110,7 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 bg-white">
+          <div id="mobile-menu" className="md:hidden border-t border-gray-200 bg-white">
             <div className="flex flex-col py-2">
               {navLinks.map((link) => (
                 <Link
@@ -128,7 +132,7 @@ export default function Navbar() {
               </a>
               <Link
                 href="/signup/basic"
-                className="mx-4 my-2 px-4 py-3 text-center text-white bg-accent hover:bg-accent-dark rounded-lg transition-colors font-semibold"
+                className="mx-4 my-2 px-4 py-3 text-center text-primary-dark bg-accent hover:bg-accent-light rounded-lg transition-colors font-semibold"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Get Started

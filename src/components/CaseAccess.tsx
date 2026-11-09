@@ -71,10 +71,10 @@ export default function CaseAccess() {
           >
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 mb-6">
-              <svg className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-4 h-4 text-accent-text" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
               </svg>
-              <span className="text-sm font-medium text-accent">Case Management</span>
+              <span className="text-sm font-medium text-accent-text">Case Management</span>
             </div>
 
             {/* Title with gradient underline */}
@@ -144,7 +144,7 @@ export default function CaseAccess() {
             >
               <a
                 href="/pricing"
-                className="inline-flex items-center gap-2 text-accent hover:text-accent-dark font-medium group"
+                className="inline-flex items-center gap-2 text-accent-text hover:text-accent-text font-medium group"
               >
                 Learn more about case management
                 <svg
@@ -235,7 +235,7 @@ export default function CaseAccess() {
               style={{ transitionDelay: "800ms" }}
             >
               <div className="text-center">
-                <p className="text-2xl font-bold text-accent">100%</p>
+                <p className="text-2xl font-bold text-accent-text">100%</p>
                 <p className="text-xs text-gray-600">Accessible</p>
               </div>
             </div>
