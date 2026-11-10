@@ -12,10 +12,10 @@ export const metadata = pageMetadata({
 
 const EFFECTIVE = "2018-01-01";
 const EFFECTIVE_LABEL = "January 1, 2018";
-const UPDATED = "2026-11-09";
-const UPDATED_LABEL = "November 9, 2026";
+const UPDATED = "2026-11-10";
+const UPDATED_LABEL = "November 10, 2026";
 
-// The address as the Terms give it (West Jordan); CONTACT, used on the Privacy page, has the Murray office.
+// The registered agent's address, the company's legal address for notices. CONTACT has the Murray office.
 const TERMS_ADDRESS = "7533 S Center View Ct., Ste. R, West Jordan, UT 84084, USA";
 
 export default function TermsPage() {
@@ -320,9 +320,10 @@ export default function TermsPage() {
             federal law or non-waivable consumer protections apply.
           </p>
           <p>
-            Any lawsuit arising out of or related to these Terms or the Services must be brought in the state or federal
-            courts located in the Third Judicial District Court, Salt Lake County, Utah, and each party consents to that
-            jurisdiction and venue, except where applicable law requires otherwise.
+            Any lawsuit arising out of or related to these Terms or the Services must be brought in the state courts of
+            the Third Judicial District in Salt Lake County, Utah, or in the United States District Court for the
+            District of Utah, and each party consents to that jurisdiction and venue, except where applicable law
+            requires otherwise.
           </p>
 
           <h2 id="general">18. General terms</h2>
