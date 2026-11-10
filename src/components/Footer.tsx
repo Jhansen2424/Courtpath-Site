@@ -108,6 +108,7 @@ export default function Footer() {
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-600">
             <p>&copy; {new Date().getFullYear()} Courtpath Incorporated. All rights reserved.</p>
             <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+              <Link href="/terms" className="hover:text-primary underline-offset-2 hover:underline">Terms of Service</Link>
               <Link href="/privacy" className="hover:text-primary underline-offset-2 hover:underline">Privacy Policy</Link>
               <Link href="/accessibility" className="hover:text-primary underline-offset-2 hover:underline">Accessibility</Link>
               <PrivacyChoicesLink className="hover:text-primary underline-offset-2 hover:underline" />
