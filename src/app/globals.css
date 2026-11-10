@@ -32,6 +32,10 @@ body {
   .post-body h3 {
     @apply mt-8 text-xl font-bold text-gray-900;
   }
+  /* In-page links (#section) land below the fixed navbar, not under it. */
+  .post-body [id] {
+    @apply scroll-mt-36;
+  }
   .post-body a {
     @apply text-primary font-medium underline decoration-accent/50 underline-offset-2 hover:decoration-accent;
   }
