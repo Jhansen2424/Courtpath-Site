@@ -350,6 +350,13 @@ export default function SignupPage({ params }: { params: Promise<{ plan: string 
                     <p className="text-sm text-gray-500">
                       Next you&apos;ll enter your card on Stripe&apos;s secure page, then come straight back. Cancel before {untilShort} and you won&apos;t be charged.
                     </p>
+                    {/* Links open in a new tab so the form keeps what was typed. */}
+                    <p className="text-sm text-gray-500">
+                      By creating an account you agree to the{" "}
+                      <Link href="/terms" target="_blank" rel="noopener noreferrer" className="font-medium text-primary underline underline-offset-2">Terms of Service</Link>{" "}
+                      and{" "}
+                      <Link href="/privacy" target="_blank" rel="noopener noreferrer" className="font-medium text-primary underline underline-offset-2">Privacy Policy</Link>.
+                    </p>
                     <div className="flex gap-3">
                       <button type="button" onClick={() => setStep(1)} className={backButton} disabled={submitting}>Back</button>
                       <button type="button" onClick={submit} disabled={submitting} className={primaryButton}>
