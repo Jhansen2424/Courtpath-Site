@@ -6,6 +6,7 @@ import { ADS_ID } from "@/lib/ads";
 import { GA4_ID } from "@/lib/analytics";
 import CookieConsent from "@/components/CookieConsent";
 import { CONSENT_KEY } from "@/lib/consent";
+import { SITE_DEMO } from "@/lib/plans";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -57,6 +58,11 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
         {children}
+        {SITE_DEMO && (
+          <div role="note" className="fixed bottom-3 left-3 z-[55] rounded-full bg-amber-100 text-amber-900 text-xs font-medium px-3 py-1.5 shadow-md">
+            Preview copy, not the live site
+          </div>
+        )}
         <CookieConsent />
         {/* Google tag — site-wide so ad-click gclids are captured on every
             possible landing page. Consent Mode defaults come first: declined

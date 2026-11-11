@@ -8,8 +8,8 @@ import PhoneLink from "@/components/PhoneLink";
 import { APP_LOGIN_URL, CONTACT } from "@/lib/site";
 import { track } from "@/lib/analytics";
 import {
-  BAR_STATES, BASIC_FILINGS, CALIFORNIA_SIGNUP_OPEN, CA_RATE, FIRM_RATE, LEGACY_PLANS, PLANS, billingKeyFor, formatDate, freeUntil,
-  isPublicPlan, type BarState, type PublicPlan,
+  BAR_STATES, BASIC_FILINGS, CALIFORNIA_SIGNUP_OPEN, CA_RATE, FIRM_RATE, LEGACY_PLANS, PLANS, SITE_DEMO, billingKeyFor, formatDate,
+  freeUntil, isPublicPlan, type BarState, type PublicPlan,
 } from "@/lib/plans";
 
 // What each plan's summary card lists under the price.
@@ -97,6 +97,8 @@ export default function SignupPage({ params }: { params: Promise<{ plan: string 
     firstName: "", lastName: "", email: "", password: "", bar: "", teamName: "", attorneyCount: "2",
   });
   const [submitting, setSubmitting] = useState(false);
+  // Preview copies stop before the card: this explains what the live site does next.
+  const [demoNote, setDemoNote] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // Fire signup_start once, on the first field the visitor touches.
   const started = useRef(false);
@@ -197,6 +199,10 @@ export default function SignupPage({ params }: { params: Promise<{ plan: string 
 
   const submit = async () => {
     setError(null);
+    if (SITE_DEMO) {
+      setDemoNote(true);
+      return;
+    }
     setSubmitting(true);
     track("begin_checkout", { plan: billingKey });
     try {
@@ -231,11 +237,11 @@ export default function SignupPage({ params }: { params: Promise<{ plan: string 
 
       <section className="bg-gradient-to-b from-white to-gray-50 min-h-screen pt-8 pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <a href="/pricing" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-accent-text mb-8 transition-colors">
+          <a href={ca ? "/california" : "/pricing"} className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-accent-text mb-8 transition-colors">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Compare plans
+            {ca ? "California pricing" : "Compare plans"}
           </a>
 
           <div className="grid lg:grid-cols-5 gap-10 items-start">
@@ -450,6 +456,13 @@ export default function SignupPage({ params }: { params: Promise<{ plan: string 
                       and{" "}
                       <Link href="/privacy" target="_blank" rel="noopener noreferrer" className="font-medium text-primary underline underline-offset-2">Privacy Policy</Link>.
                     </p>
+                    {demoNote && (
+                      <div role="status" className="bg-amber-50 border border-amber-200 text-amber-900 rounded-lg px-4 py-3 text-sm">
+                        This is a preview copy of the website, so it stops here. On courtpath.com the attorney now adds a card on
+                        Stripe&apos;s secure page ($0 today) and comes straight back to Courtpath with the account ready
+                        {ca ? " to file in California" : ""}.
+                      </div>
+                    )}
                     <div className="flex gap-3">
                       <button type="button" onClick={() => setStep(1)} className={backButton} disabled={submitting}>Back</button>
                       <button type="button" onClick={submit} disabled={submitting} className={primaryButton}>

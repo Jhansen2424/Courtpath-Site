@@ -31,11 +31,18 @@ export const freeUntil = (now = Date.now()) => new Date(now + FREE_DAYS * 24 * 3
 export const CA_RATE = 175;
 
 /**
- * California sign-up is built but switched off until Courtpath files in California courts for real
- * (Tyler's California production). Go-live: create the Stripe price, set STRIPE_PRICE_CALIFORNIA,
- * set NEXT_PUBLIC_CALIFORNIA_SIGNUP=1 and redeploy (NEXT_PUBLIC_ values are fixed at build time).
+ * California sign-up and the /california page are built but switched off on courtpath.com until
+ * Courtpath files in California courts for real (Tyler's California production). Preview
+ * deployments have them on (next.config.ts). Go-live: create the Stripe price, set
+ * STRIPE_PRICE_CALIFORNIA, set NEXT_PUBLIC_CALIFORNIA_SIGNUP=1 and redeploy (fixed at build time).
  */
 export const CALIFORNIA_SIGNUP_OPEN = process.env.NEXT_PUBLIC_CALIFORNIA_SIGNUP === "1";
+
+/**
+ * A preview copy of the site (next.config.ts): it says so, and sign-up stops before the card
+ * (previews can't create accounts anyway: the signup keys exist only in Production).
+ */
+export const SITE_DEMO = process.env.NEXT_PUBLIC_SITE_DEMO === "1";
 
 /** The states sign-up offers: where the attorney files, which decides the plans and the bar. */
 export type BarState = "UT" | "CA";

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { PLAN_BILLING, isPlan, priceFor, quantityFor, sealPassword, trialEnd, accountExists } from "@/lib/billing";
-import { CALIFORNIA_SIGNUP_OPEN, formatDate } from "@/lib/plans";
+import { CALIFORNIA_SIGNUP_OPEN, SITE_DEMO, formatDate } from "@/lib/plans";
 
 /**
  * Signup: check the form, then send the attorney to Stripe Checkout to put a card on file.
@@ -18,6 +18,10 @@ export async function POST(request: NextRequest) {
     const plan = text(b.plan, 30).toLowerCase();
     if (!isPlan(plan)) {
       return NextResponse.json({ error: "Pick a plan on the pricing page first." }, { status: 400 });
+    }
+    // A preview copy never starts a real checkout (the Stripe key is the live one in every environment).
+    if (SITE_DEMO) {
+      return NextResponse.json({ error: "This is a preview copy of the website, so no account or card is created here." }, { status: 403 });
     }
     if (plan === "california" && !CALIFORNIA_SIGNUP_OPEN) {
       return NextResponse.json({ error: "California sign-up opens when Courtpath starts filing in California courts." }, { status: 403 });
