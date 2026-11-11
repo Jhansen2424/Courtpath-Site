@@ -7,19 +7,42 @@
  *   criminal-defense  -> bronze-plus   $9.99 / month
  *   unlimited         -> silver        $25 / month, or platinum (one attorney) at $240 / year
  *   firm              -> gold          $21 per attorney a month
+ *   california        -> california    $175 per attorney a month, unlimited California filings
  *
- * Every new account is free for its first FREE_DAYS, then its plan starts. Only accounts made
- * before these plans keep the old promise of free until January 1, 2027 (lib/billing.ts).
+ * Every new account is free for its first FREE_DAYS, then its plan starts, California included.
+ * Only accounts made before these plans keep the old promise of free until January 1, 2027
+ * (lib/billing.ts).
  */
 
-export type PublicPlan = "basic" | "criminal-defense" | "unlimited" | "firm";
-export type BillingKey = "basic" | "bronze" | "bronze-plus" | "silver" | "gold" | "platinum";
+export type PublicPlan = "basic" | "criminal-defense" | "unlimited" | "firm" | "california";
+export type BillingKey = "basic" | "bronze" | "bronze-plus" | "silver" | "gold" | "platinum" | "california";
 
 export const FREE_DAYS = 30;
 /** Filings a month included in Basic before the $4 per-filing charge applies. */
 export const BASIC_FILINGS = 3;
 /** The moment a signup made at `now` stops being free. */
 export const freeUntil = (now = Date.now()) => new Date(now + FREE_DAYS * 24 * 3600 * 1000);
+
+/**
+ * California pricing (Devin's proposal, Nov 2026): one price per attorney a month for unlimited
+ * California filings and e-service, no Courtpath fee per filing; court fees and Tyler's e-filing
+ * and card fees are charged at cost by the court's payment system.
+ */
+export const CA_RATE = 175;
+
+/**
+ * California sign-up is built but switched off until Courtpath files in California courts for real
+ * (Tyler's California production). Go-live: create the Stripe price, set STRIPE_PRICE_CALIFORNIA,
+ * set NEXT_PUBLIC_CALIFORNIA_SIGNUP=1 and redeploy (NEXT_PUBLIC_ values are fixed at build time).
+ */
+export const CALIFORNIA_SIGNUP_OPEN = process.env.NEXT_PUBLIC_CALIFORNIA_SIGNUP === "1";
+
+/** The states sign-up offers: where the attorney files, which decides the plans and the bar. */
+export type BarState = "UT" | "CA";
+export const BAR_STATES: Record<BarState, { name: string; bar: string }> = {
+  UT: { name: "Utah", bar: "Utah bar number" },
+  CA: { name: "California", bar: "California State Bar number" },
+};
 
 export const formatDate = (d: Date, month: "long" | "short" = "long") =>
   d.toLocaleDateString("en-US", { timeZone: "America/Denver", month, day: "numeric", year: "numeric" });
@@ -29,6 +52,7 @@ export const PLANS: Record<PublicPlan, { name: string; price: string; unit: stri
   "criminal-defense": { name: "Criminal Defense", price: "$9.99", unit: "per month", after: "$9.99 a month" },
   unlimited: { name: "Unlimited", price: "$25", unit: "per month", after: "$25 a month" },
   firm: { name: "Firm", price: "$21", unit: "per attorney / month", after: "$21 per attorney a month" },
+  california: { name: "California Unlimited", price: "$175", unit: "per attorney / month", after: "$175 per attorney a month" },
 };
 
 export const isPublicPlan = (v: unknown): v is PublicPlan => typeof v === "string" && v in PLANS;
@@ -46,13 +70,14 @@ export function billingKeyFor(plan: PublicPlan, yearly = false): BillingKey {
   if (plan === "basic") return "basic";
   if (plan === "criminal-defense") return "bronze-plus";
   if (plan === "firm") return "gold";
+  if (plan === "california") return "california";
   return yearly ? "platinum" : "silver";
 }
 
 /** The display name for a billing key, e.g. on the success page and in staff emails. */
 export const nameForBillingKey = (key: string | null | undefined) =>
   key === "basic" ? "Basic" : key === "bronze" ? "Bronze" : key === "bronze-plus" ? "Criminal Defense" : key === "silver" ? "Unlimited"
-    : key === "platinum" ? "Unlimited (yearly)" : key === "gold" ? "Firm" : "Courtpath";
+    : key === "platinum" ? "Unlimited (yearly)" : key === "gold" ? "Firm" : key === "california" ? "California Unlimited" : "Courtpath";
 
 /** Firm price per attorney a month, the same at every firm size (Stripe's Gold price). */
 export const FIRM_RATE = 21;

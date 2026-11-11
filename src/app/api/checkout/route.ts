@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { PLAN_BILLING, isPlan, priceFor, quantityFor, sealPassword, trialEnd, accountExists } from "@/lib/billing";
-import { formatDate } from "@/lib/plans";
+import { CALIFORNIA_SIGNUP_OPEN, formatDate } from "@/lib/plans";
 
 /**
  * Signup: check the form, then send the attorney to Stripe Checkout to put a card on file.
@@ -19,11 +19,16 @@ export async function POST(request: NextRequest) {
     if (!isPlan(plan)) {
       return NextResponse.json({ error: "Pick a plan on the pricing page first." }, { status: 400 });
     }
+    if (plan === "california" && !CALIFORNIA_SIGNUP_OPEN) {
+      return NextResponse.json({ error: "California sign-up opens when Courtpath starts filing in California courts." }, { status: 403 });
+    }
     const f = {
       firstName: text(b.firstName, 100), middleName: text(b.middleName, 100), lastName: text(b.lastName, 100),
       email: text(b.email, 200).toLowerCase(), bar: text(b.bar, 12), phone: text(b.phone, 30),
       address1: text(b.address1), address2: text(b.address2), city: text(b.city, 100), state: text(b.state, 30), zip: text(b.zip, 15),
       teamName: text(b.teamName, 120),
+      // Where the attorney files: the California plan is California's; everything else is Utah's.
+      barState: plan === "california" ? "CA" : "UT",
     };
     const password = typeof b.password === "string" ? b.password : "";
     // The same rules the app applies when it creates the account, checked before any card is taken.

@@ -20,12 +20,14 @@ import { BASIC_FILINGS, freeUntil } from "@/lib/plans";
  *   silver       $25 / month     -> subscription, quantity 1
  *   gold         $21 / attorney  -> subscription, quantity = attorneys
  *   platinum     per attorney/yr -> subscription, quantity = attorneys (Unlimited yearly: 1)
+ *   california   $175 / attorney -> subscription, quantity = attorneys (CALIFORNIA_SIGNUP_OPEN
+ *                                   in lib/plans.ts switches it on)
  *
  * Subscriptions start with a trial that ends when the free period does, so the first invoice is
  * on that date.
  */
 
-export type PlanKey = "basic" | "bronze" | "bronze-plus" | "silver" | "gold" | "platinum";
+export type PlanKey = "basic" | "bronze" | "bronze-plus" | "silver" | "gold" | "platinum" | "california";
 
 export const PLAN_BILLING: Record<PlanKey, { name: string; mode: "setup" | "subscription"; priceEnv?: string; perAttorney?: boolean; detail?: string }> = {
   basic: { name: "Basic", mode: "subscription", priceEnv: "STRIPE_PRICE_BASIC", detail: "$10 a month with 3 filings included, then $4 a filing" },
@@ -34,6 +36,8 @@ export const PLAN_BILLING: Record<PlanKey, { name: string; mode: "setup" | "subs
   silver: { name: "Unlimited", mode: "subscription", priceEnv: "STRIPE_PRICE_SILVER" },
   gold: { name: "Firm", mode: "subscription", priceEnv: "STRIPE_PRICE_GOLD", perAttorney: true },
   platinum: { name: "Unlimited (yearly)", mode: "subscription", priceEnv: "STRIPE_PRICE_PLATINUM", perAttorney: true },
+  // No Stripe price yet: until STRIPE_PRICE_CALIFORNIA is set, checkout answers "not available online yet".
+  california: { name: "California Unlimited", mode: "subscription", priceEnv: "STRIPE_PRICE_CALIFORNIA", perAttorney: true, detail: "$175 per attorney a month, unlimited California filings" },
 };
 
 /**
@@ -42,6 +46,7 @@ export const PLAN_BILLING: Record<PlanKey, { name: string; mode: "setup" | "subs
  */
 export const APP_PLAN: Record<PlanKey, string> = {
   basic: "bronze", bronze: "bronze", "bronze-plus": "bronze-plus", silver: "silver", gold: "gold", platinum: "platinum",
+  california: "california",
 };
 
 export const isPlan = (v: unknown): v is PlanKey => typeof v === "string" && v in PLAN_BILLING;
@@ -191,6 +196,8 @@ export async function finishCheckout(sessionId: string, notify: (r: FinishResult
           firstName: m.firstName, middleName: m.middleName, lastName: m.lastName, bar: m.bar, phone: m.phone,
           address1: m.address1, address2: m.address2, city: m.city, state: m.state, zip: m.zip,
           teamName: m.teamName, attorneyCount: m.attorneyCount,
+          // Where the attorney files (UT or CA): the bar number belongs to that state's bar.
+          barState: m.barState || undefined,
           // The app's $4 per filing waits for the end of this account's free period, and Basic's
           // first BASIC_FILINGS filings each month are included.
           freeUntil: m.freeUntil || undefined, includedFilings: plan === "basic" ? BASIC_FILINGS : undefined,
