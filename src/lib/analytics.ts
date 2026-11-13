@@ -2,9 +2,10 @@
 //
 // Every event goes to Vercel Web Analytics as a custom event (at most 2
 // properties each on our plan); its script loads site-wide from the root
-// layout. GA4 gets them too once NEXT_PUBLIC_GA4_ID is set (e.g. "G-XXXXXXX"
-// in Vercel). Google Ads conversions are separate and live in lib/ads.ts.
-export const GA4_ID = process.env.NEXT_PUBLIC_GA4_ID;
+// layout. GA4 gets them too: property 564209366 (courtpath.com stream), which
+// OneApp reads; NEXT_PUBLIC_GA4_ID overrides it. Google Ads conversions are
+// separate and live in lib/ads.ts.
+export const GA4_ID = process.env.NEXT_PUBLIC_GA4_ID || "G-YK4F37FH3B";
 
 type EventParams = Record<string, string | number | undefined>;
 

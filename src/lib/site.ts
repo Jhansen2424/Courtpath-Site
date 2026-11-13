@@ -16,7 +16,7 @@ export const CONTACT = {
   phoneE164: "+18017973119",
   email: "support@courtpath.com",
   linkedIn: "https://www.linkedin.com/company/courtpath",
-  street: "480 E Winchester St",
+  street: "488 E Winchester St",
   city: "Murray",
   region: "UT",
   postalCode: "84107",
