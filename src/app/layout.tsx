@@ -61,7 +61,7 @@ export default function RootLayout({
         {/* Google tag — site-wide so ad-click gclids are captured on every
             possible landing page. Consent Mode defaults come first: declined
             (CookieConsent) or Global Privacy Control means no ad cookies. Ads conversions live in lib/ads.ts; GA4
-            (when NEXT_PUBLIC_GA4_ID is set) shares the same gtag.js. */}
+            (lib/analytics.ts) shares the same gtag.js. */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${ADS_ID}`}
           strategy="afterInteractive"
