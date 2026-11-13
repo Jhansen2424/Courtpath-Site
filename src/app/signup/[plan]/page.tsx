@@ -38,12 +38,12 @@ const PLAN_POINTS: Record<PublicPlan, { description: string; points: string[] }>
   california: {
     description: "Unlimited California e-filing for each attorney, with no Courtpath fee on any filing.",
     points: [
-      "Unlimited filings in California's Tyler (eFileCA) courts",
+      "Unlimited filings in California superior courts on eFileCA",
       "Electronic service included",
       "No Courtpath fee per filing",
       "Court and Tyler fees at cost, shown before you file",
-      "A monthly cost-by-case report to bill your clients",
-      "Paralegals and staff file under your account",
+      "The monthly Costs by case report, for client billing",
+      "Paralegals and staff file for you at no extra cost",
     ],
   },
 };
@@ -353,7 +353,7 @@ export default function SignupPage({ params }: { params: Promise<{ plan: string 
                       </div>
                       {ca && (
                         <p className="text-xs text-gray-500 mt-2">
-                          California is priced per attorney: ${CA_RATE} a month for unlimited filings in California&apos;s Tyler (eFileCA) courts.
+                          California is priced per attorney: ${CA_RATE} a month for unlimited filings in California superior courts on Tyler&apos;s eFileCA system.
                         </p>
                       )}
                     </fieldset>}

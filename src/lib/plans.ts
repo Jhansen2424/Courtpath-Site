@@ -48,7 +48,7 @@ export const SITE_DEMO = process.env.NEXT_PUBLIC_SITE_DEMO === "1";
 export type BarState = "UT" | "CA";
 export const BAR_STATES: Record<BarState, { name: string; bar: string }> = {
   UT: { name: "Utah", bar: "Utah bar number" },
-  CA: { name: "California", bar: "California State Bar number" },
+  CA: { name: "California", bar: "State Bar number (SBN)" },
 };
 
 export const formatDate = (d: Date, month: "long" | "short" = "long") =>
