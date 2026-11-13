@@ -80,10 +80,10 @@ export default function ContactInfo() {
                     <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">
                       Address
                     </h3>
-                    <p className="text-lg font-semibold text-gray-900">480 E Winchester St</p>
+                    <p className="text-lg font-semibold text-gray-900">488 E Winchester St</p>
                     <p className="text-lg text-gray-700">Murray, UT 84107</p>
                     <a
-                      href="https://maps.google.com/?q=480+E+Winchester+St,+Murray,+UT+84107"
+                      href="https://maps.google.com/?q=488+E+Winchester+St,+Murray,+UT+84107"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 mt-3 text-accent-text hover:text-accent-text font-medium transition-colors"
@@ -189,7 +189,7 @@ export default function ContactInfo() {
               <div className="relative aspect-[4/3] bg-gray-200">
                 <iframe
                   title="Map of the Courtpath office in Murray, Utah"
-                  src="https://maps.google.com/maps?q=480+E+Winchester+St,+Murray,+UT+84107&output=embed"
+                  src="https://maps.google.com/maps?q=488+E+Winchester+St,+Murray,+UT+84107&output=embed"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -210,10 +210,10 @@ export default function ContactInfo() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-bold text-gray-900">Courtpath Office</p>
-                    <p className="text-sm text-gray-600 truncate">480 E Winchester St, Murray, UT</p>
+                    <p className="text-sm text-gray-600 truncate">488 E Winchester St, Murray, UT</p>
                   </div>
                   <a
-                    href="https://maps.google.com/?q=480+E+Winchester+St,+Murray,+UT+84107"
+                    href="https://maps.google.com/?q=488+E+Winchester+St,+Murray,+UT+84107"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-shrink-0 p-2 rounded-lg bg-accent hover:bg-accent-light text-primary-dark transition-colors"
