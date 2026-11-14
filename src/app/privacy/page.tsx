@@ -10,8 +10,8 @@ export const metadata = pageMetadata({
   path: "/privacy",
 });
 
-const UPDATED = "2026-11-09";
-const UPDATED_LABEL = "November 9, 2026";
+const UPDATED = "2026-11-13";
+const UPDATED_LABEL = "November 13, 2026";
 
 export default function PrivacyPage() {
   return (
@@ -40,7 +40,7 @@ export default function PrivacyPage() {
               <strong>Contact form:</strong> your name, email address, phone number and message.
             </li>
             <li>
-              <strong>Account sign-up:</strong> your name, email address, password, Utah bar number and the number of
+              <strong>Account sign-up:</strong> your name, email address, password, bar number, firm name (if you give one) and the number of
               attorneys at your firm, used to create your Courtpath account.
             </li>
             <li>
@@ -49,7 +49,7 @@ export default function PrivacyPage() {
             </li>
             <li>
               <strong>Site usage:</strong> pages visited and general device information, through Vercel Web Analytics
-              (which uses no cookies), and ad-click information through the Google Ads tag described under{" "}
+              (which uses no cookies) and Google Analytics, and ad-click information through the Google Ads tag, as described under{" "}
               <a href="#cookies">Cookies</a>.
             </li>
           </ul>
@@ -66,7 +66,7 @@ export default function PrivacyPage() {
           <p>
             We do not sell your personal information. We share it only with service providers that run parts of our
             service for us: Stripe (payments), Vercel (website hosting and analytics), Railway (hosting of the Courtpath
-            application), our email provider (delivering messages) and Google (ad measurement, if you allow it). We may
+            application), our email provider (delivering messages) and Google (site analytics and ad measurement, unless you decline). We may
             also disclose information when the law requires it.
           </p>
           <p>
@@ -76,20 +76,22 @@ export default function PrivacyPage() {
 
           <h2 id="cookies">Cookies</h2>
           <p>
-            Courtpath&rsquo;s own pages set no cookies. The Google Ads tag can set a cookie (named <code>_gcl_au</code>,
-            kept for about 90 days) so we can tell which of our ads led to a visit or sign-up. Vercel Web Analytics sets
-            no cookies.
+            Courtpath&rsquo;s own pages set no cookies. Google&rsquo;s tag can set two kinds. The Google Ads cookie (named{" "}
+            <code>_gcl_au</code>, kept for about 90 days) lets us tell which of our ads led to a visit or sign-up. Google
+            Analytics cookies (named <code>_ga</code> and <code>_ga_</code> followed by an ID, kept for up to 2 years) show
+            us how the site is used. Vercel Web Analytics sets no cookies.
           </p>
           <p>
-            When you first visit, we ask whether to allow the Google Ads cookie. You can change your answer at any time
+            Google&rsquo;s cookies are on unless you decline them or your browser sends a Global Privacy Control signal. The
+            notice on your first visit lets you decline, and you can change your answer at any time
             with <PrivacyChoicesLink className="font-medium text-primary underline" /> at the bottom of every page. Your
             choice is remembered in your browser&rsquo;s local storage, not in a cookie.
           </p>
 
           <h2>Global Privacy Control and Do Not Track</h2>
           <p>
-            If your browser sends a Global Privacy Control signal, we treat it as a request to opt out, and the Google Ads
-            cookie is not used. Our site does not change its behavior in response to the older &ldquo;Do Not Track&rdquo;
+            If your browser sends a Global Privacy Control signal, we treat it as a request to opt out, and Google&rsquo;s
+            cookies are not used. Our site does not change its behavior in response to the older &ldquo;Do Not Track&rdquo;
             browser setting.
           </p>
 
