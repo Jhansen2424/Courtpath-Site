@@ -19,7 +19,7 @@ export default function PricingPage() {
       {CALIFORNIA_SIGNUP_OPEN && (
         <p className="text-center text-gray-600 -mt-6 mb-12 px-4">
           Filing in California?{" "}
-          <a href="/california" className="font-semibold text-accent-text underline underline-offset-2">See California pricing: $175 per attorney, unlimited filings</a>
+          <a href="/california/pricing" className="font-semibold text-accent-text underline underline-offset-2">See California pricing: $175 per attorney, unlimited filings</a>
         </p>
       )}
       <PricingFAQ />

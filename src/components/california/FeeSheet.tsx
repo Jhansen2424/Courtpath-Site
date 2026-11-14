@@ -9,7 +9,7 @@ const money = (n: number) => `$${n.toFixed(2)}`;
 const FEES = [
   { label: "Court filing fee (complaint)", amount: 435 },
   // Tyler's "Total Service Fees" 4.95 + "Total Court Service Fees" 2.05: Tyler's and the court's, so a neutral name
-  { label: "E-filing and service fees", amount: 7 },
+  { label: "E-filing fees", amount: 7 },
   { label: "Card convenience fee", amount: 12.16 },
 ];
 

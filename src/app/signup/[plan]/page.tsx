@@ -39,10 +39,10 @@ const PLAN_POINTS: Record<PublicPlan, { description: string; points: string[] }>
     description: "Unlimited California e-filing for each attorney, with no Courtpath fee on any filing.",
     points: [
       "Unlimited filings in California superior courts on eFileCA",
-      "Electronic service included",
+      "Electronic service where permitted",
       "No Courtpath fee per filing",
-      "Court and Tyler fees at cost, shown before you file",
-      "The monthly Costs by case report, for client billing",
+      "Court, Tyler and card fees at cost, shown before you file",
+      "The monthly Costs by case report",
       "Paralegals and staff file for you at no extra cost",
     ],
   },
@@ -237,7 +237,7 @@ export default function SignupPage({ params }: { params: Promise<{ plan: string 
 
       <section className="bg-gradient-to-b from-white to-gray-50 min-h-screen pt-8 pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <a href={ca ? "/california" : "/pricing"} className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-accent-text mb-8 transition-colors">
+          <a href={ca ? "/california/pricing" : "/pricing"} className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-accent-text mb-8 transition-colors">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>

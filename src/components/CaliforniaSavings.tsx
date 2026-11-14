@@ -8,6 +8,7 @@ const whole = (v: string, min: number, max: number) => Math.min(max, Math.max(mi
 /** The fewest filings a month at which `fee` per filing costs more than `flat` (at exactly equal, neither is cheaper). */
 const breakEven = (flat: number, fee: number) => Math.floor(flat / fee) + 1;
 const LADDER = [5, 10, 15, 20];
+const filingsText = (n: number) => `${n} filing${n === 1 ? "" : "s"}`;
 
 /**
  * Courtpath's flat price per attorney against a service that charges on every filing, in the
@@ -49,7 +50,7 @@ export default function CaliforniaSavings({ signupHref }: { signupHref: string }
             <span className="pointer-events-none absolute left-3.5 top-1/2 mt-0.5 -translate-y-1/2 text-slate-500">$</span>
             <input id="ca-fee" type="text" inputMode="decimal" value={fee} onChange={(e) => setFee(e.target.value)} className={`${input} pl-7`} aria-describedby="ca-fee-help" />
           </div>
-          <p id="ca-fee-help" className="mt-1 text-sm text-slate-500">Its own fee only. Leave out court, Tyler and card fees.</p>
+          <p id="ca-fee-help" className="mt-1 text-sm text-slate-500">Their fee only, not court, Tyler or card fees.</p>
         </div>
       </div>
 
@@ -62,7 +63,7 @@ export default function CaliforniaSavings({ signupHref }: { signupHref: string }
               <div>
                 <dt className="text-sm text-slate-500">Paying per filing</dt>
                 <dd className="mt-1 text-2xl sm:text-3xl font-semibold text-slate-900">{money(perFiling)}</dd>
-                <dd className="text-sm text-slate-500">{f} filing{f === 1 ? "" : "s"} at {money(p)}</dd>
+                <dd className="text-sm text-slate-500">{filingsText(f)} at {money(p)}</dd>
               </div>
               <div>
                 <dt className="text-sm text-slate-500">Courtpath</dt>
@@ -72,14 +73,14 @@ export default function CaliforniaSavings({ signupHref }: { signupHref: string }
             </dl>
             <p className="mt-6 text-lg text-slate-900">
               {difference > 0 ? (
-                <>That&apos;s <strong className="font-semibold">{money(difference)} a month less</strong> in service fees, for you or your clients.</>
+                <>That&apos;s <strong className="font-semibold">{money(difference)} a month less</strong> in service fees.</>
               ) : difference === 0 ? (
-                <>At {f} filings a month the two cost the same.</>
+                <>At {filingsText(f)} a month the two cost the same.</>
               ) : (
-                <>At {f} filings a month, paying per filing costs {money(-difference)} less.</>
+                <>At {filingsText(f)} a month, paying per filing costs {money(-difference)} less.</>
               )}
             </p>
-            {p > 0 && <p className="mt-1 text-sm text-slate-600">Courtpath costs less from {breakEven(courtpath, p)} filings a month{a > 1 ? ` across ${a} attorneys` : ""}.</p>}
+            {p > 0 && <p className="mt-1 text-sm text-slate-600">Courtpath costs less from {filingsText(breakEven(courtpath, p))} a month{a > 1 ? ` across ${a} attorneys` : ""}.</p>}
           </>
         ) : (
           <>
@@ -95,12 +96,12 @@ export default function CaliforniaSavings({ signupHref }: { signupHref: string }
                 {LADDER.map((rate) => (
                   <tr key={rate}>
                     <td className="py-1.5 text-slate-700">{money(rate)}</td>
-                    <td className="py-1.5 text-right text-slate-900">{breakEven(courtpath, rate)} filings a month</td>
+                    <td className="py-1.5 text-right text-slate-900">{filingsText(breakEven(courtpath, rate))} a month</td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            {f > 0 && <p className="mt-3 text-sm text-slate-700">At {f} filings a month, {money(courtpath)} comes to {money(courtpath / f)} a filing.</p>}
+            {f > 0 && <p className="mt-3 text-sm text-slate-700">At {filingsText(f)} a month, {money(courtpath)} comes to {money(courtpath / f)} a filing.</p>}
             <p className="mt-2 text-sm text-slate-500">Enter what your e-filing service charges to see your own numbers.</p>
           </>
         )}

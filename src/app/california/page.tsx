@@ -5,89 +5,78 @@ import { Source_Serif_4 } from "next/font/google";
 import PhoneLink from "@/components/PhoneLink";
 import PrivacyChoicesLink from "@/components/PrivacyChoicesLink";
 import CaliforniaSavings from "@/components/CaliforniaSavings";
-import FeeSheet from "@/components/california/FeeSheet";
-import CaseCostSheet from "@/components/california/CaseCostSheet";
+import FilingWindow from "@/components/california/FilingWindow";
 import { CALIFORNIA_SIGNUP_OPEN, CA_RATE, FREE_DAYS } from "@/lib/plans";
 import { APP_LOGIN_URL, CONTACT, UTAH_EFSP_LIST_URL, pageMetadata } from "@/lib/site";
 
-// California landing page. Off on courtpath.com until California filing goes live, on in preview
-// copies (CALIFORNIA_SIGNUP_OPEN in lib/plans.ts). Pricing per Devin's proposal (Nov 2026): one
-// price per attorney, unlimited filings and e-service, no Courtpath fee per filing; court fees,
-// Tyler's fees and the card fee passed through at cost. No claims about other providers: the
-// savings calculator uses the visitor's own fee. Reviewed in two rounds by a two-model council
-// (Claude Opus, GPT Sol).
+// California ad landing page: where paid traffic lands. It sells the switch (no provider fee on each
+// filing, one monthly price, a free month) and shows the product; the detail lives on
+// /california/pricing. Off on courtpath.com until California filing goes live, on in preview copies
+// (CALIFORNIA_SIGNUP_OPEN in lib/plans.ts). Not indexed: ads only. No testimonials, customer counts,
+// competitor names or competitor prices. Reviewed by a two-model council (Claude Opus, GPT Sol).
+// At go-live: change "launching in California" to "now filing in California" and link it to the
+// court or Tyler list of approved providers, the way the Utah list is linked.
 
-// Headlines in a serif, the voice of a court document (a deliberate choice for this page; the rest of
-// the site, sign-up included, is the system sans).
 const serif = Source_Serif_4({ subsets: ["latin"], weight: ["600"], display: "swap" });
 
 const SIGNUP = "/signup/california";
+const PRICING = "/california/pricing";
 
-// While California is switched off the page is a 404, so it carries no title or description either.
 const base = pageMetadata({
-  title: "California E-Filing: $175 per Attorney a Month | Courtpath",
+  title: "California E-Filing | $175 per Attorney a Month | Courtpath",
   description:
-    "Unlimited e-filing and e-service in California superior courts on Tyler's eFileCA system for $175 per attorney a month, with no Courtpath fee per filing. Court, Tyler and card fees at cost. First 30 days free.",
+    "Unlimited e-filing in California superior courts on eFileCA, with e-service where permitted, for $175 per attorney a month. No Courtpath fee per filing. First 30 days free.",
   path: "/california",
 });
-// The share card is California's own (california/opengraph-image.tsx), not the site's Utah one.
 const shareImage = { url: "/california/opengraph-image", width: 1200, height: 630, alt: "Courtpath: unlimited California e-filing for $175 per attorney a month" };
 export const metadata = CALIFORNIA_SIGNUP_OPEN
-  ? { ...base, openGraph: { ...base.openGraph, images: [shareImage] }, twitter: { ...base.twitter, images: [shareImage.url] } }
+  ? { ...base, openGraph: { ...base.openGraph, images: [shareImage] }, twitter: { ...base.twitter, images: [shareImage.url] }, robots: { index: false, follow: false } }
   : { robots: { index: false, follow: false } };
 
-const buttonBase = "inline-block rounded-md bg-accent px-6 py-3 font-semibold text-primary-dark hover:bg-accent-light focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2";
+const buttonBase = "inline-block rounded-md bg-accent px-6 py-3.5 text-base font-semibold text-primary-dark hover:bg-accent-light focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2";
 const buttonOnNavy = `${buttonBase} focus-visible:ring-white focus-visible:ring-offset-primary-dark`;
 const buttonOnWhite = `${buttonBase} focus-visible:ring-primary`;
-const terms = `No subscription charge for ${FREE_DAYS} days, then $${CA_RATE} per attorney a month. Card required. Court, Tyler and card fees apply to filings.`;
+const terms = `No subscription charge for ${FREE_DAYS} days, then $${CA_RATE} per attorney a month. Card required; cancel any time by email or phone. Court, Tyler and card fees apply to filings.`;
 const link = "font-medium text-primary underline underline-offset-2";
+const nowrap = (s: string) => <span className="whitespace-nowrap">{s}</span>;
 
-const INCLUDED = [
-  "Unlimited filings in California superior courts on eFileCA",
-  "Electronic service included where permitted",
-  "Paralegals and staff file for you at no extra cost",
-  "The monthly Costs by case report",
+// What the California product does today (all of it in the app on staging). One sentence each.
+const FEATURES: { title: string; body: string }[] = [
+  { title: "No Courtpath fee per filing", body: "Unlimited filings in supported eFileCA courts for one monthly price per attorney, with nothing added for e-service." },
+  { title: "Fees before you submit", body: "The court, e-filing, service and card fees are itemized for each envelope, so you see the total before it goes." },
+  { title: "PDFs checked before the clerk sees them", body: "Each PDF's format, size and page count are checked against the court's limits before you submit." },
+  { title: "Serve with the filing", body: "Add opposing counsel and e-serve them with the filing, where permitted." },
+  { title: "Status, conformed copies, fixes", body: "Emails when the clerk accepts or returns a filing, conformed copies saved with the case, and fix and resubmit for returned filings." },
+  { title: "Costs by case", body: "A monthly report of each case's share of the subscription and its fees, to download for client billing as your fee agreement allows." },
+];
+
+const STEPS: [string, string][] = [
+  ["Create your account", `Name, State Bar number (SBN) and a card. No subscription charge for your first ${FREE_DAYS} days.`],
+  ["Link your eFileCA login", "Use the login you already have, or create one from Courtpath."],
+  ["File into your cases", "Find an existing case by party name and file into it, or open a new one."],
 ];
 
 const FAQ: { q: string; a: React.ReactNode }[] = [
   {
-    q: "Which courts can I file in?",
+    q: "Which courts?",
     a: (
       <>
-        Superior courts that use Tyler&apos;s eFileCA system. Los Angeles civil isn&apos;t covered: it uses a different e-filing system.
-        We&apos;re confirming the court list with Tyler ahead of launch; email <a href={`mailto:${CONTACT.email}`} className={link}>{CONTACT.email}</a> to
-        ask about your county.
+        California superior courts on eFileCA, Tyler Technologies&apos; e-filing system. Los Angeles civil uses a different system and isn&apos;t covered.
+        Ask about your county at <a href={`mailto:${CONTACT.email}`} className={link}>{CONTACT.email}</a>.
       </>
     ),
   },
   {
     q: "What do I still pay when I file?",
-    a: "The court's filing fee, the e-filing and service fees for the envelope, and the card convenience fee. Each is passed through at cost with no markup, shown before you submit, and settled when the clerk accepts the filing. eCheck accounts work too.",
+    a: "The court's filing fee, the e-filing fees and the card convenience fee, passed through at cost with no markup and shown before you submit. Courtpath's own fee per filing is $0.",
   },
   {
-    q: "What if the clerk returns a filing?",
-    a: "Fees are settled when the clerk accepts a filing. Tyler places a temporary hold on your card when you submit; if the clerk returns the filing, the hold is released and nothing is charged. Fix it and resubmit from Courtpath.",
-  },
-  {
-    q: "Can I file under a fee waiver?",
-    a: "Yes. If the court has granted the party a fee waiver, choose a fee-waiver payment account at checkout; the court still reviews it. Courtpath charges nothing per filing either way, and fee-waiver filings take no share of your subscription in the Costs by case report.",
-  },
-  {
-    q: "Who counts as an attorney?",
-    a: "Each attorney whose name and State Bar number go on filings sent through Courtpath. Paralegals and staff who file for them don't count.",
-  },
-  {
-    q: "Can I bill clients for it?",
-    a: "The Costs by case report splits your subscription across your cases by filing count, with no markup, and lists each case's court, Tyler and card fees. Fee-waiver filings take no share. Whether you pass any of it to clients is up to your fee agreement and your professional obligations.",
-  },
-  {
-    q: `What happens after the first ${FREE_DAYS} days?`,
+    q: "Can I cancel?",
     a: (
       <>
-        Your card is charged ${CA_RATE} per attorney on day {FREE_DAYS + 1} unless you cancel. Cancel any time by email at{" "}
-        <a href={`mailto:${CONTACT.email}`} className={link}>{CONTACT.email}</a> or by phone at{" "}
-        <a href={`tel:${CONTACT.phoneE164}`} className={link}>{CONTACT.phoneDisplay}</a>; cancel before day {FREE_DAYS + 1} and you aren&apos;t charged
-        for the subscription.
+        Any time, by email at <a href={`mailto:${CONTACT.email}`} className={link}>{CONTACT.email}</a> or by phone at{" "}
+        <a href={`tel:${CONTACT.phoneE164}`} className={link}>{CONTACT.phoneDisplay}</a>. Cancel within the first {FREE_DAYS} days and you&apos;re
+        not charged for the subscription.
       </>
     ),
   },
@@ -95,40 +84,29 @@ const FAQ: { q: string; a: React.ReactNode }[] = [
     q: "Who is Courtpath?",
     a: (
       <>
-        Courtpath Incorporated, {CONTACT.street}, {CONTACT.city}, Utah. We&apos;ve been{" "}
-        <a href={UTAH_EFSP_LIST_URL} target="_blank" rel="noopener noreferrer" className={link}>certified by the Utah State Courts</a>{" "}
-        for e-filing since 2019, and we&apos;re bringing the same service to California.
+        An e-filing service provider based in {CONTACT.city}, Utah,{" "}
+        <a href={UTAH_EFSP_LIST_URL} target="_blank" rel="noopener noreferrer" className={link}>certified by the Utah State Courts</a> since 2019 and
+        launching in California on eFileCA.
       </>
     ),
   },
 ];
 
-const STEPS: [string, string][] = [
-  ["Create your account", "Your name, State Bar number (SBN) and a card. $0 today."],
-  ["Link your eFileCA login", "Use the eFileCA login you have, or create one from Courtpath."],
-  ["File and serve", "Unlimited filings, with e-service where permitted, from the first day."],
-];
-
-function Check({ className = "text-accent" }: { className?: string }) {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor" className={`mt-1 h-4 w-4 shrink-0 ${className}`}>
-      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-    </svg>
-  );
-}
-
-export default function CaliforniaPage() {
+export default function CaliforniaLandingPage() {
   if (!CALIFORNIA_SIGNUP_OPEN) notFound();
 
   return (
     <>
-      {/* A focused header: this page signs up California attorneys, so no Utah plans or menus. */}
-      <header className="border-b border-slate-200 bg-white">
+      {/* Stays on screen, so the button is always one tap away on a long phone page. */}
+      <header className="sticky top-0 z-40 border-b border-slate-200 bg-white">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-          <Link href="/" className="relative h-9 w-32 shrink-0" aria-label="Courtpath home">
+          <Link href="/california" className="relative h-9 w-32 shrink-0" aria-label="Courtpath California">
             <Image src="/images/courtlogo.png" alt="Courtpath" fill className="object-contain object-left" sizes="128px" priority />
           </Link>
           <nav aria-label="Account" className="flex items-center gap-4 sm:gap-6 text-sm">
+            <PhoneLink href={`tel:${CONTACT.phoneE164}`} location="lp-california-header" className="hidden md:inline text-slate-600 hover:text-primary">
+              {CONTACT.phoneDisplay}
+            </PhoneLink>
             <a href={APP_LOGIN_URL} className="text-slate-600 hover:text-primary">Log in</a>
             <a href={SIGNUP} className="rounded-md bg-accent px-3.5 py-2 font-semibold text-primary-dark hover:bg-accent-light">
               <span className="sm:hidden">Start free</span>
@@ -139,99 +117,55 @@ export default function CaliforniaPage() {
       </header>
 
       <main id="main-content" className="bg-white text-slate-800">
-        {/* HERO: the offer beside an example filing's fees, Courtpath's line at $0.00 */}
+        {/* HERO: what it is, the price and the free month in three lines, beside the product */}
         <section className="bg-primary-dark text-white">
-          <div className="mx-auto grid max-w-6xl gap-12 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)] lg:items-center lg:px-8">
+          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 px-4 pb-16 pt-6 sm:px-6 sm:pt-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-center lg:gap-14 lg:px-8 lg:pb-20">
             <div>
-              <p className="text-sm text-white/70">For California superior courts on Tyler&apos;s eFileCA system</p>
-              <h1 className={`${serif.className} mt-4 text-balance text-[2.5rem] leading-[1.1] sm:text-5xl lg:text-[3.5rem]`}>
-                Unlimited California <span className="whitespace-nowrap">e-filing,</span> ${CA_RATE} per attorney a month.
+              <p className="text-sm font-medium text-white/75">California {nowrap("e-filing")} for superior courts on eFileCA</p>
+              <h1 className={`${serif.className} mt-4 text-balance text-[2.125rem] leading-[1.1] sm:text-[3.1rem] lg:text-[2.75rem]`}>
+                Stop paying a provider fee on every California filing.
               </h1>
-              <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/80">
-                E-service included where permitted. The court&apos;s fee, the e-filing and service fees and the card convenience fee pass
-                through at cost, and you see the total before you submit.
+              <p className="mt-5 text-xl font-semibold text-accent-light">${CA_RATE} per attorney a month. {nowrap(`First ${FREE_DAYS} days free.`)}</p>
+              <p className="mt-3 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
+                Unlimited {nowrap("e-filing")}, with {nowrap("e-service")} where permitted, and your staff file at no extra cost. Court, Tyler and card
+                fees pass through at cost; Courtpath adds nothing per filing.
               </p>
-              <ul className="mt-6 space-y-2 text-white/90">
-                <li className="flex gap-3"><Check />$0 Courtpath fee on every filing and e-service</li>
-                <li className="flex gap-3"><Check />Paralegals and staff at no extra cost</li>
-                <li className="flex gap-3"><Check />A monthly Costs by case report for client billing</li>
-              </ul>
-              <div className="mt-8">
+              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
                 <a href={SIGNUP} className={buttonOnNavy}>Start your free month</a>
-                <p className="mt-3 max-w-md text-sm text-white/60">{terms}</p>
+                <a href={PRICING} className="text-sm font-medium text-white underline decoration-white/40 underline-offset-4 hover:decoration-white">
+                  See pricing and fees
+                </a>
               </div>
+              <p className="mt-3 max-w-md text-sm text-white/60">{terms}</p>
+              <p className="mt-2 max-w-md text-sm text-white/60">
+                Los Angeles civil isn&apos;t covered.{" "}
+                <a href={`${PRICING}#courts`} className="underline decoration-white/30 underline-offset-2 hover:decoration-white">Court coverage</a>
+              </p>
               <p className="mt-8 border-t border-white/15 pt-5 text-sm text-white/70">
                 <a href={UTAH_EFSP_LIST_URL} target="_blank" rel="noopener noreferrer" className="underline decoration-white/30 underline-offset-2 hover:decoration-white">
                   Certified by the Utah State Courts
                 </a>{" "}
-                for e-filing since 2019.
+                for {nowrap("e-filing")} since 2019, and launching in California on eFileCA, Tyler Technologies&apos; {nowrap("e-filing")} system.
               </p>
             </div>
-            <FeeSheet serifClass={serif.className} />
+            <FilingWindow />
           </div>
         </section>
 
-        {/* CALCULATOR */}
-        <section id="savings" className="scroll-mt-4 border-b border-slate-200 bg-slate-50">
-          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-            <h2 className={`${serif.className} max-w-2xl text-balance text-3xl sm:text-4xl text-slate-900`}>What per-filing fees cost you</h2>
-            <p className="mt-3 max-w-2xl text-slate-600">Use your own numbers. We don&apos;t guess what your e-filing service charges.</p>
-            <div className="mt-10">
-              <CaliforniaSavings signupHref={SIGNUP} />
-            </div>
-          </div>
-        </section>
-
-        {/* CLIENT BILLING */}
+        {/* SWITCHING: answer "can I use this for my current cases?" right away */}
         <section className="border-b border-slate-200">
-          <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:items-center lg:gap-12 lg:px-8">
-            <div>
-              <h2 className={`${serif.className} text-balance text-3xl sm:text-4xl text-slate-900`}>See what each case cost</h2>
-              <p className="mt-4 leading-relaxed text-slate-600">
-                Each month the Costs by case report splits your subscription across your cases by filing count, with no markup,
-                and adds each case&apos;s court, Tyler and card fees. Fee-waiver filings take no share. Download it to support
-                client billing, as your fee agreement allows.
-              </p>
-            </div>
-            <CaseCostSheet />
-          </div>
-        </section>
-
-        {/* THE PLAN */}
-        <section id="pricing" className="scroll-mt-4 border-b border-slate-200 bg-slate-50">
-          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-            <h2 className={`${serif.className} text-balance text-3xl sm:text-4xl text-slate-900`}>One plan. No Courtpath fee per filing.</h2>
-            <div className="mt-10 grid overflow-hidden rounded-lg border border-slate-200 bg-white lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
-              <div className="border-b border-slate-200 p-7 sm:p-8 lg:border-b-0 lg:border-r">
-                <p className="font-semibold text-slate-900">California Unlimited</p>
-                <p className="mt-3 text-slate-900"><span className="text-4xl font-semibold tabular-nums">${CA_RATE}</span> per attorney a month</p>
-                <p className="mt-1 text-sm text-slate-600">First {FREE_DAYS} days free. Card required.</p>
-                <a href={SIGNUP} className={`${buttonOnWhite} mt-6`}>Start your free month</a>
-              </div>
-              <div className="grid gap-8 p-7 sm:grid-cols-2 sm:p-8">
-                <div>
-                  <p className="font-medium text-slate-900">Included</p>
-                  <ul className="mt-3 space-y-2 text-slate-700">
-                    {INCLUDED.map((i) => <li key={i} className="flex gap-3"><Check className="text-primary" />{i}</li>)}
-                  </ul>
-                </div>
-                <div>
-                  <p className="font-medium text-slate-900">Passed through at cost, shown before you submit</p>
-                  <ul className="mt-3 space-y-3 text-slate-700">
-                    <li>The court&apos;s filing fee, set by the court</li>
-                    <li>E-filing and service fees for each envelope, set by Tyler and the court</li>
-                    <li>The card convenience fee, charged by Tyler&apos;s payment processor (eCheck accounts work too)</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <ol className="mt-10 grid gap-6 sm:grid-cols-3">
+          <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
+            <h2 className={`${serif.className} max-w-2xl text-balance text-3xl sm:text-4xl text-slate-900`}>Switching takes three steps</h2>
+            <p className="mt-3 max-w-2xl text-slate-600">
+              Your cases already live in the court&apos;s system, so you can find them in Courtpath and file into them. Keep your current service while you try it.
+            </p>
+            <ol className="mt-10 grid gap-8 sm:grid-cols-3">
               {STEPS.map(([title, body], i) => (
                 <li key={title} className="flex gap-4">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-dark text-sm font-semibold text-white">{i + 1}</span>
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-dark text-sm font-semibold text-white">{i + 1}</span>
                   <div>
-                    <p className="font-medium text-slate-900">{title}</p>
-                    <p className="mt-1 text-sm text-slate-600">{body}</p>
+                    <p className="font-semibold text-slate-900">{title}</p>
+                    <p className="mt-1 text-slate-600">{body}</p>
                   </div>
                 </li>
               ))}
@@ -239,10 +173,57 @@ export default function CaliforniaPage() {
           </div>
         </section>
 
-        {/* QUESTIONS */}
-        <section id="faq" className="scroll-mt-4">
+        {/* WHAT YOU GET */}
+        <section className="border-b border-slate-200 bg-slate-50">
+          <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-20 lg:px-8">
+            <h2 className={`${serif.className} max-w-2xl text-balance text-3xl sm:text-4xl text-slate-900`}>What ${CA_RATE} per attorney a month covers</h2>
+            <dl className="mt-8 grid gap-x-12 gap-y-6 sm:mt-12 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-3">
+              {FEATURES.map((f) => (
+                <div key={f.title} className="border-t-2 border-primary-dark pt-4">
+                  <dt className="font-semibold text-slate-900">{f.title}</dt>
+                  <dd className="mt-2 leading-relaxed text-slate-600">{f.body}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
+
+        {/* SAVINGS */}
+        <section id="savings" className="scroll-mt-20 border-b border-slate-200">
           <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-            <h2 className={`${serif.className} text-3xl sm:text-4xl text-slate-900`}>Before you start</h2>
+            <h2 className={`${serif.className} max-w-2xl text-balance text-3xl sm:text-4xl text-slate-900`}>What do per-filing fees cost you?</h2>
+            <p className="mt-3 max-w-2xl text-slate-600">Compare using your current service&apos;s fee and your monthly filings.</p>
+            <div className="mt-10">
+              <CaliforniaSavings signupHref={SIGNUP} />
+            </div>
+          </div>
+        </section>
+
+        {/* PRICE */}
+        <section className="border-b border-slate-200 bg-slate-50">
+          <div className="mx-auto grid max-w-6xl gap-8 px-4 py-14 sm:px-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center lg:px-8">
+            <div>
+              <p className="text-slate-900">
+                <span className={`${serif.className} text-5xl`}>${CA_RATE}</span>
+                <span className="ml-2 text-lg">per attorney a month</span>
+              </p>
+              <p className="mt-3 max-w-xl text-slate-600">
+                Unlimited filings, {nowrap("e-service")} where permitted, and paralegals and staff at no extra cost. First {FREE_DAYS} days free.
+              </p>
+            </div>
+            <div className="lg:text-right">
+              <a href={SIGNUP} className={buttonOnWhite}>Start your free month</a>
+              <p className="mt-3 text-sm">
+                <a href={PRICING} className={link}>Full pricing, fees and answers</a>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* QUESTIONS */}
+        <section>
+          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+            <h2 className={`${serif.className} text-3xl sm:text-4xl text-slate-900`}>Questions</h2>
             <div className="mt-8 max-w-3xl divide-y divide-slate-200 border-y border-slate-200">
               {FAQ.map((f) => (
                 <details key={f.q} className="group py-4">
@@ -254,6 +235,9 @@ export default function CaliforniaPage() {
                 </details>
               ))}
             </div>
+            <p className="mt-6 text-slate-600">
+              More on fees, fee waivers, client billing and the free month: <a href={PRICING} className={link}>California pricing and FAQ</a>.
+            </p>
           </div>
         </section>
 
@@ -261,22 +245,20 @@ export default function CaliforniaPage() {
         <section className="bg-primary-dark text-white">
           <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:flex lg:items-center lg:justify-between lg:gap-12 lg:px-8">
             <div>
-              <h2 className={`${serif.className} text-balance text-3xl sm:text-4xl`}>Try a month of unlimited California filing.</h2>
+              <h2 className={`${serif.className} text-balance text-3xl sm:text-4xl`}>Try unlimited California {nowrap("e-filing")} free for {FREE_DAYS} days.</h2>
               <p className="mt-3 max-w-xl text-white/70">{terms}</p>
             </div>
             <div className="mt-8 shrink-0 lg:mt-0 lg:text-right">
               <a href={SIGNUP} className={buttonOnNavy}>Start your free month</a>
               <p className="mt-3 text-sm text-white/70">
                 Questions?{" "}
-                <PhoneLink href={`tel:${CONTACT.phoneE164}`} location="lp-california" className="text-white underline decoration-white/30 underline-offset-2">{CONTACT.phoneDisplay}</PhoneLink>{" "}
-                or <a href={`mailto:${CONTACT.email}`} className="text-white underline decoration-white/30 underline-offset-2">{CONTACT.email}</a>
+                <PhoneLink href={`tel:${CONTACT.phoneE164}`} location="lp-california" className="text-white underline decoration-white/30 underline-offset-2">{CONTACT.phoneDisplay}</PhoneLink>
               </p>
             </div>
           </div>
         </section>
       </main>
 
-      {/* A short footer: who we are and the legal links, without the site's Utah menus */}
       <footer className="bg-white text-sm text-slate-500">
         <div className="mx-auto max-w-6xl space-y-3 px-4 py-8 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
