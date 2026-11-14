@@ -102,7 +102,6 @@ export default function CaliforniaSavings({ signupHref }: { signupHref: string }
               </tbody>
             </table>
             {f > 0 && <p className="mt-3 text-sm text-slate-700">At {filingsText(f)} a month, {money(courtpath)} comes to {money(courtpath / f)} a filing.</p>}
-            <p className="mt-2 text-sm text-slate-500">Enter what your e-filing service charges to see your own numbers.</p>
           </>
         )}
         </div>
@@ -110,9 +109,6 @@ export default function CaliforniaSavings({ signupHref }: { signupHref: string }
           <a href={signupHref} className="inline-block rounded-md bg-accent px-6 py-3 font-semibold text-primary-dark hover:bg-accent-light focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
             Start your free month
           </a>
-          <p className="mt-3 text-sm text-slate-500">
-            A comparison of service fees only: court, Tyler and card fees are left out of both sides.
-          </p>
         </div>
       </div>
     </div>
