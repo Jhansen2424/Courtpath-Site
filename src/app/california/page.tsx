@@ -151,22 +151,23 @@ export default function CaliforniaLandingPage() {
                 <a href={`${PRICING}#courts`} className="underline decoration-white/30 underline-offset-2 hover:decoration-white">Courts</a>
               </p>
             </div>
-            <figure>
-              <a href="/images/california/app-review.webp" target="_blank" rel="noopener noreferrer" className="relative block cursor-zoom-in overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
+            {/* The fee lines from the app's Review & Submit step, close up; it links to the whole screen. */}
+            <figure className="mx-auto w-full max-w-[560px]">
+              <a href="/images/california/app-review.webp" target="_blank" rel="noopener noreferrer" className="relative block cursor-zoom-in overflow-hidden rounded-xl bg-[#fafaf9] shadow-2xl ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
                 <Image
-                  src="/images/california/app-review.webp"
-                  width={1600}
-                  height={1344}
+                  src="/images/california/app-fees.webp"
+                  width={1140}
+                  height={672}
                   priority
-                  sizes="(min-width: 1152px) 620px, (min-width: 1024px) 55vw, 100vw"
+                  sizes="(min-width: 640px) 560px, 100vw"
                   className="block h-auto w-full"
-                  alt="Courtpath's Review & Submit step for a new Santa Cruz civil case: case initiation fee $435.00, court service fees $2.05, service fees $4.95, convenience fee $12.16, Courtpath fee $0.00, total $454.16"
+                  alt="Fees on Courtpath's Review & Submit step for a new Santa Cruz civil case: case initiation fee $435.00, court service fees $2.05, service fees $4.95, convenience fee $12.16, Courtpath fee $0.00, total due on acceptance $454.16"
                 />
                 {/* the Courtpath fee row */}
-                <span aria-hidden="true" className="pointer-events-none absolute left-[31.4%] top-[49.7%] h-[7%] w-[61.4%] rounded-md ring-[3px] ring-accent shadow-[0_0_0_6px_rgba(212,164,65,0.25)]" />
-                <span className="sr-only"> (opens the full-size screenshot)</span>
+                <span aria-hidden="true" className="pointer-events-none absolute left-[1.8%] top-[70%] h-[17.3%] w-[96.4%] rounded-md ring-[3px] ring-accent shadow-[0_0_0_6px_rgba(212,164,65,0.25)]" />
+                <span className="sr-only"> (opens the whole Review &amp; Submit screen)</span>
               </a>
-              <figcaption className="mt-3 text-sm text-white/60">Courtpath fee: $0.00. Sample case; other fees vary by court.</figcaption>
+              <figcaption className="mt-3 text-sm text-white/60">From Courtpath&apos;s Review &amp; Submit step. Sample case; other fees vary by court.</figcaption>
             </figure>
           </div>
         </section>
