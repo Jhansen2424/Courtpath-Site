@@ -31,9 +31,10 @@ export const freeUntil = (now = Date.now()) => new Date(now + FREE_DAYS * 24 * 3
 export const CA_RATE = 175;
 
 /**
- * California sign-up and the /california page are built but switched off on courtpath.com until
- * Courtpath files in California courts for real (Tyler's California production). Preview
- * deployments have them on (next.config.ts). Go-live: create the Stripe price, set
+ * California sign-up is built but switched off on courtpath.com until Courtpath files in California
+ * courts for real (Tyler's California production); its link says "California is coming". The two
+ * California pages (/california, /california/pricing) are public but unlisted and not indexed, so the
+ * team can review them. Preview deployments have sign-up on (next.config.ts). Go-live: create the Stripe price, set
  * STRIPE_PRICE_CALIFORNIA, set NEXT_PUBLIC_CALIFORNIA_SIGNUP=1 and redeploy (fixed at build time).
  */
 export const CALIFORNIA_SIGNUP_OPEN = process.env.NEXT_PUBLIC_CALIFORNIA_SIGNUP === "1";

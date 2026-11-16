@@ -27,8 +27,8 @@ const legacyRedirects = [
 ];
 
 // Preview deployments (every branch but main) are the website's staging copies. California sign-up
-// and the /california page are on there and off on courtpath.com until California filing goes
-// live (CALIFORNIA_SIGNUP_OPEN in src/lib/plans.ts); previews also say they're a copy (SITE_DEMO).
+// is on there and off on courtpath.com until California filing goes live (CALIFORNIA_SIGNUP_OPEN in
+// src/lib/plans.ts); previews also say they're a copy (SITE_DEMO).
 // Fixed at build time, like every NEXT_PUBLIC_ value.
 const preview = process.env.VERCEL_ENV === "preview";
 

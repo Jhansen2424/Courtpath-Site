@@ -1,17 +1,17 @@
-import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Source_Serif_4 } from "next/font/google";
 import PhoneLink from "@/components/PhoneLink";
 import PrivacyChoicesLink from "@/components/PrivacyChoicesLink";
 import CaliforniaSavings from "@/components/CaliforniaSavings";
-import { CALIFORNIA_SIGNUP_OPEN, CA_RATE, FREE_DAYS } from "@/lib/plans";
+import { CA_RATE, FREE_DAYS } from "@/lib/plans";
 import { APP_LOGIN_URL, CONTACT, UTAH_EFSP_LIST_URL, pageMetadata } from "@/lib/site";
 
 // California ad landing page: where paid traffic lands. It sells the switch (no provider fee on each
 // filing, one monthly price, a free month) with real screens from the app; the detail lives on
-// /california/pricing. Off on courtpath.com until California filing goes live, on in preview copies
-// (CALIFORNIA_SIGNUP_OPEN in lib/plans.ts). Not indexed: ads only. No testimonials, customer counts or
+// /california/pricing. Public on courtpath.com but unlisted (nothing on the Utah site links here) and never
+// indexed: ads only. Until California sign-up opens (CALIFORNIA_SIGNUP_OPEN in lib/plans.ts), its buttons
+// lead to "California is coming". No testimonials, customer counts or
 // competitor names. The savings calculator opens on a common per-filing price (see COMMON_FEE in
 // components/CaliforniaSavings.tsx), never attributed to a provider.
 // Screenshots (public/images/california): the app's California screens on staging, run locally with
@@ -31,9 +31,7 @@ const base = pageMetadata({
   path: "/california",
 });
 const shareImage = { url: "/california/opengraph-image", width: 1200, height: 630, alt: "Courtpath: unlimited California e-filing for $175 per attorney a month" };
-export const metadata = CALIFORNIA_SIGNUP_OPEN
-  ? { ...base, openGraph: { ...base.openGraph, images: [shareImage] }, twitter: { ...base.twitter, images: [shareImage.url] }, robots: { index: false, follow: false } }
-  : { robots: { index: false, follow: false } };
+export const metadata = { ...base, openGraph: { ...base.openGraph, images: [shareImage] }, twitter: { ...base.twitter, images: [shareImage.url] }, robots: { index: false, follow: false } };
 
 const buttonBase = "inline-block rounded-md bg-accent px-6 py-3.5 text-base font-semibold text-primary-dark hover:bg-accent-light focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2";
 const buttonOnNavy = `${buttonBase} focus-visible:ring-white focus-visible:ring-offset-primary-dark`;
@@ -105,8 +103,6 @@ const FAQ: { q: string; a: React.ReactNode }[] = [
 ];
 
 export default function CaliforniaLandingPage() {
-  if (!CALIFORNIA_SIGNUP_OPEN) notFound();
-
   return (
     <>
       {/* Stays on screen, so the button is always one tap away on a long phone page. */}

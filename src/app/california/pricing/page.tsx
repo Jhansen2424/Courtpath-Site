@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Source_Serif_4 } from "next/font/google";
@@ -10,9 +9,9 @@ import CaseCostSheet from "@/components/california/CaseCostSheet";
 import { CALIFORNIA_SIGNUP_OPEN, CA_RATE, FREE_DAYS } from "@/lib/plans";
 import { APP_LOGIN_URL, CONTACT, UTAH_EFSP_LIST_URL, pageMetadata } from "@/lib/site";
 
-// California pricing and FAQ: the detailed reference the ad landing page (/california) links to. Off on
-// courtpath.com until California filing goes live, on in preview copies (CALIFORNIA_SIGNUP_OPEN in
-// lib/plans.ts). Pricing per Devin's proposal (Nov 2026): one price per attorney, unlimited filings and
+// California pricing and FAQ: the detailed reference the ad landing page (/california) links to. Public on
+// courtpath.com but unlisted and not indexed until California sign-up opens (CALIFORNIA_SIGNUP_OPEN in
+// lib/plans.ts); until then its buttons lead to "California is coming". Pricing per Devin's proposal (Nov 2026): one price per attorney, unlimited filings and
 // e-service, no Courtpath fee per filing; court fees, Tyler's fees and the card fee passed through at
 // cost. No claims about other providers: the savings calculator uses the visitor's own fee. Reviewed in
 // three rounds by a two-model council (Claude Opus, GPT Sol).
@@ -23,7 +22,6 @@ const serif = Source_Serif_4({ subsets: ["latin"], weight: ["600"], display: "sw
 
 const SIGNUP = "/signup/california";
 
-// While California is switched off the page is a 404, so it carries no title or description either.
 const base = pageMetadata({
   title: "California E-Filing Pricing and FAQ | Courtpath",
   description:
@@ -32,9 +30,12 @@ const base = pageMetadata({
 });
 // The share card is California's own (california/opengraph-image.tsx), not the site's Utah one.
 const shareImage = { url: "/california/opengraph-image", width: 1200, height: 630, alt: "Courtpath: unlimited California e-filing for $175 per attorney a month" };
-export const metadata = CALIFORNIA_SIGNUP_OPEN
-  ? { ...base, openGraph: { ...base.openGraph, images: [shareImage] }, twitter: { ...base.twitter, images: [shareImage.url] } }
-  : { robots: { index: false, follow: false } };
+export const metadata = {
+  ...base,
+  openGraph: { ...base.openGraph, images: [shareImage] },
+  twitter: { ...base.twitter, images: [shareImage.url] },
+  ...(CALIFORNIA_SIGNUP_OPEN ? {} : { robots: { index: false, follow: false } }),
+};
 
 const buttonBase = "inline-block rounded-md bg-accent px-6 py-3 font-semibold text-primary-dark hover:bg-accent-light focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2";
 const buttonOnNavy = `${buttonBase} focus-visible:ring-white focus-visible:ring-offset-primary-dark`;
@@ -120,8 +121,6 @@ function Check({ className = "text-accent" }: { className?: string }) {
 }
 
 export default function CaliforniaPage() {
-  if (!CALIFORNIA_SIGNUP_OPEN) notFound();
-
   return (
     <>
       {/* A focused header: this page signs up California attorneys, so no Utah plans or menus. */}
