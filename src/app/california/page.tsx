@@ -11,8 +11,9 @@ import { APP_LOGIN_URL, CONTACT, UTAH_EFSP_LIST_URL, pageMetadata } from "@/lib/
 // California ad landing page: where paid traffic lands. It sells the switch (no provider fee on each
 // filing, one monthly price, a free month) with real screens from the app; the detail lives on
 // /california/pricing. Off on courtpath.com until California filing goes live, on in preview copies
-// (CALIFORNIA_SIGNUP_OPEN in lib/plans.ts). Not indexed: ads only. No testimonials, customer counts,
-// competitor names or competitor prices.
+// (CALIFORNIA_SIGNUP_OPEN in lib/plans.ts). Not indexed: ads only. No testimonials, customer counts or
+// competitor names. The savings calculator opens on a common per-filing price (see COMMON_FEE in
+// components/CaliforniaSavings.tsx), never attributed to a provider.
 // Screenshots (public/images/california): the app's California screens on staging, run locally with
 // sample data and Tyler's test-system fee amounts. Retake them if those screens change.
 // At go-live: change "launching in California" to "now filing in California" and link it to the
@@ -172,6 +173,17 @@ export default function CaliforniaLandingPage() {
           </div>
         </section>
 
+        {/* SAVINGS: right under the offer, opening on a common per-filing price */}
+        <section id="savings" className="scroll-mt-20 border-b border-slate-200 bg-slate-50">
+          <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
+            <h2 className={`${serif.className} max-w-2xl text-balance text-3xl sm:text-4xl text-slate-900`}>See what you&apos;d save</h2>
+            <p className="mt-2 text-slate-600">Against a service that charges on every filing.</p>
+            <div className="mt-8 sm:mt-10">
+              <CaliforniaSavings signupHref={SIGNUP} />
+            </div>
+          </div>
+        </section>
+
         {/* THE APP: real screens, sample cases */}
         <section className="border-b border-slate-200">
           <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
@@ -210,16 +222,6 @@ export default function CaliforniaLandingPage() {
                 </div>
               ))}
             </dl>
-          </div>
-        </section>
-
-        {/* SAVINGS */}
-        <section id="savings" className="scroll-mt-20 border-b border-slate-200">
-          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-            <h2 className={`${serif.className} max-w-2xl text-balance text-3xl sm:text-4xl text-slate-900`}>What do per-filing fees cost you?</h2>
-            <div className="mt-10">
-              <CaliforniaSavings signupHref={SIGNUP} />
-            </div>
           </div>
         </section>
 
