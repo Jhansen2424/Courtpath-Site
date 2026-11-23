@@ -5,6 +5,8 @@ import * as courtHolidays from "./posts/utah-court-holidays-deadlines";
 import * as filingFees from "./posts/utah-court-filing-fees";
 import * as efilingRejected from "./posts/utah-efiling-rejected";
 import * as noticeOfAppearance from "./posts/notice-of-appearance-utah";
+import * as defaultJudgment from "./posts/utah-default-judgment";
+import * as rule7Motions from "./posts/utah-rule-7-motions";
 
 const allPosts: Post[] = [
   newCivilCase,
@@ -13,6 +15,8 @@ const allPosts: Post[] = [
   filingFees,
   efilingRejected,
   noticeOfAppearance,
+  defaultJudgment,
+  rule7Motions,
 ].map((p) => ({ meta: p.meta, Body: p.default }));
 
 export function getPost(slug: string): Post | undefined {
