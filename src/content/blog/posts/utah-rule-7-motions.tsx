@@ -19,7 +19,8 @@ export const meta: PostMeta = {
   description:
     "Utah Rule 7 motion practice: 14-day response, 7-day reply, page limits, the Request to Submit for Decision, 7(j) proposed orders and ex parte motions.",
   category: "Rules and fees",
-  status: "draft",
+  status: "published",
+  publishedAt: "2026-11-23",
   updatedAt: "2026-11-23",
   author: "Courtpath",
   faqs: [

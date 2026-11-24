@@ -11,7 +11,8 @@ export const meta: PostMeta = {
   description:
     "Step by step for Utah attorneys: which courthouses accept new cases, entering case and party data, formatting and redacting the complaint, the 2026 filing fees, and issuing and serving the summons.",
   category: "How-to filing",
-  status: "draft",
+  status: "published",
+  publishedAt: "2026-11-23",
   updatedAt: "2026-10-02",
   author: "Courtpath",
   faqs: [

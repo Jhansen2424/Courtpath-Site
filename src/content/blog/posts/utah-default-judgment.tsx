@@ -14,7 +14,8 @@ export const meta: PostMeta = {
   description:
     "How to get a default judgment in Utah under URCP 55: default certificate, clerk vs. court judgment, SCRA declaration, proposed judgment, and setting aside.",
   category: "How-to filing",
-  status: "draft",
+  status: "published",
+  publishedAt: "2026-11-23",
   updatedAt: "2026-11-23",
   author: "Courtpath",
   faqs: [

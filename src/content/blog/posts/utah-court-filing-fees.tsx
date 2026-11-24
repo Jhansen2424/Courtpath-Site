@@ -18,7 +18,8 @@ export const meta: PostMeta = {
   description:
     "Utah court filing fees after SB 283 (May 6, 2026): complaints $105-$375, divorce $350, writs $75, jury demand $250, small claims, waivers and e-filing.",
   category: "Rules and fees",
-  status: "draft",
+  status: "published",
+  publishedAt: "2026-11-23",
   updatedAt: "2026-11-03",
   author: "Courtpath",
   faqs: [

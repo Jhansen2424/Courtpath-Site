@@ -17,7 +17,8 @@ export const meta: PostMeta = {
   description:
     "Why Utah e-filings get rejected: searchable PDFs, RTF orders, the 7 MB limit, redaction, document types, and what happens to your filing date.",
   category: "Rules and fees",
-  status: "draft",
+  status: "published",
+  publishedAt: "2026-11-23",
   updatedAt: "2026-11-13",
   author: "Courtpath",
   faqs: [

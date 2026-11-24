@@ -21,7 +21,8 @@ export const meta: PostMeta = {
   description:
     "How to enter, limit, substitute and withdraw an appearance in Utah state court: URCP 74, 75 and 86, plus how e-filing attaches you for e-service.",
   category: "How-to filing",
-  status: "draft",
+  status: "published",
+  publishedAt: "2026-11-23",
   updatedAt: "2026-11-13",
   author: "Courtpath",
   faqs: [

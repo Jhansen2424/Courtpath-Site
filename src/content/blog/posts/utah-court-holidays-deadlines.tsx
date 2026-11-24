@@ -16,7 +16,8 @@ export const meta: PostMeta = {
   description:
     "Utah court holidays for late 2026 and 2027 with observed dates, plus how URCP 6 counts filing deadlines, the before-midnight e-filing rule and mail time.",
   category: "Rules and fees",
-  status: "draft",
+  status: "published",
+  publishedAt: "2026-11-23",
   updatedAt: "2026-11-03",
   author: "Courtpath",
   faqs: [

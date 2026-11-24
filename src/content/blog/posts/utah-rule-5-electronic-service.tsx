@@ -13,7 +13,8 @@ export const meta: PostMeta = {
   description:
     "If the other side has a lawyer, e-filing serves them. If they’re self-represented, it doesn’t. How Utah Rule 5 service works, when you need a certificate of service, and why discovery and proposed orders are different.",
   category: "Rules and fees",
-  status: "draft",
+  status: "published",
+  publishedAt: "2026-11-23",
   updatedAt: "2026-10-02",
   author: "Courtpath",
   faqs: [
